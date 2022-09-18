@@ -28,6 +28,13 @@ private:
 	}
 };
 
+struct NumericStatsData
+{
+	double minimum = std::numeric_limits<double>::infinity();
+	double maximum = -std::numeric_limits<double>::infinity();
+	double accumulatedValue = 0;
+};
+
 class StatsDisplay : public IObserver<WeatherInfo>
 {
 private:
@@ -37,28 +44,45 @@ private:
 	*/
 	void Update(const WeatherInfo& data) override
 	{
-		if (m_minTemperature > data.temperature)
-		{
-			m_minTemperature = data.temperature;
-		}
-		if (m_maxTemperature < data.temperature)
-		{
-			m_maxTemperature = data.temperature;
-		}
-		m_accTemperature += data.temperature;
-		++m_countAcc;
+		UpdateNumericStatsData(data.temperature, m_temperatureStats);
+		UpdateNumericStatsData(data.humidity, m_humidityStats);
+		UpdateNumericStatsData(data.pressure, m_pressureStats);
 
-		std::cout << "Max Temp " << m_maxTemperature << std::endl;
-		std::cout << "Min Temp " << m_minTemperature << std::endl;
-		std::cout << "Average Temp " << (m_accTemperature / m_countAcc) << std::endl;
+		++m_count;
+
+		DisplayNumericStatsData(m_temperatureStats, "Temperature");
+		DisplayNumericStatsData(m_humidityStats, "Humidity");
+		DisplayNumericStatsData(m_pressureStats, "Pressure");
+	}
+
+	void UpdateNumericStatsData(double current, NumericStatsData& statsData)
+	{
+		if (statsData.minimum > current)
+		{
+			statsData.minimum = current;
+		}
+
+		if (statsData.maximum < current)
+		{
+			statsData.maximum = current;
+		}
+
+		statsData.accumulatedValue += current;
+	}
+
+	void DisplayNumericStatsData(const NumericStatsData& statsData, const char* text)
+	{
+		std::cout << "Max " << text << " " << statsData.maximum << std::endl;
+		std::cout << "Min " << text << " " << statsData.minimum << std::endl;
+		std::cout << "Average " << text << " " << (statsData.accumulatedValue / m_count) << std::endl;
 		std::cout << "----------------" << std::endl;
 	}
 
-	double m_minTemperature = std::numeric_limits<double>::infinity();
-	double m_maxTemperature = -std::numeric_limits<double>::infinity();
-	double m_accTemperature = 0;
-	unsigned m_countAcc = 0;
+	NumericStatsData m_temperatureStats;
+	NumericStatsData m_humidityStats;
+	NumericStatsData m_pressureStats;
 
+	unsigned m_count = 0;
 };
 
 class WeatherData : public CObservable<WeatherInfo>
