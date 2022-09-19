@@ -46,15 +46,21 @@ public:
 	void NotifyObservers() override
 	{
 		T data = GetChangedData();
+
+		m_observersLock = true;
 		for (auto& observer : m_observers)
 		{
 			observer->Update(data);
 		}
+		m_observersLock = false;
 	}
 
 	void RemoveObserver(ObserverType& observer) override
 	{
-		m_observers.erase(&observer);
+		if (!m_observersLock)
+		{
+			m_observers.erase(&observer);
+		}
 	}
 
 protected:
@@ -63,5 +69,6 @@ protected:
 	virtual T GetChangedData() const = 0;
 
 private:
+	bool m_observersLock;
 	std::set<ObserverType*> m_observers;
 };
