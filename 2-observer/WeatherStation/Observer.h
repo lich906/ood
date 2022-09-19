@@ -61,6 +61,11 @@ public:
 		{
 			m_observers.erase(&observer);
 		}
+		else
+		{
+			m_observersLock = false;
+			throw std::logic_error("Cannnot delete observer during notifying process");
+		}
 	}
 
 protected:
@@ -69,6 +74,6 @@ protected:
 	virtual T GetChangedData() const = 0;
 
 private:
-	bool m_observersLock;
+	bool m_observersLock = false;
 	std::set<ObserverType*> m_observers;
 };
