@@ -6,9 +6,9 @@
 
 using namespace std;
 
-typedef std::function<void()> FlyBehavior;
-typedef std::function<void()> QuackBehavior;
-typedef std::function<void()> DanceBehavior;
+typedef function<void()> FlyBehavior;
+typedef function<void()> QuackBehavior;
+typedef function<void()> DanceBehavior;
 
 FlyBehavior flyWithWings = [flightsCount = 0]() mutable {
 	cout << "I'm flying with wings!!" << endl;
