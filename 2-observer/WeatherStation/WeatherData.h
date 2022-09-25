@@ -1,9 +1,9 @@
 ﻿#pragma once
-#include <iostream>
-#include <vector>
+#include "Observer.h"
 #include <algorithm>
 #include <climits>
-#include "Observer.h"
+#include <iostream>
+#include <vector>
 
 struct WeatherInfo
 {
@@ -12,14 +12,58 @@ struct WeatherInfo
 	double pressure = 0;
 };
 
-class Display: public IObserver<WeatherInfo>
+template <class T>
+class DuoDisplay : public IObserver<T>
 {
+public:
+	DuoDisplay() {}
+
+	DuoDisplay(IObservable<T>* insideData, IObservable<T>* outsideData)
+		: m_insideSourcePtr(insideData)
+		, m_outsideSourcePtr(outsideData)
+	{
+	}
+
+	virtual ~DuoDisplay() {}
+
+protected:
+	virtual void DisplayInfo(const WeatherInfo& data) = 0;
+
 private:
 	/* Метод Update сделан приватным, чтобы ограничить возможность его вызова напрямую
 		Классу CObservable он будет доступен все равно, т.к. в интерфейсе IObserver он
-		остается публичным
+		остается публичным.
+
+		В данном классе метод Update реализован как шаблонный. Информации о том, с какого датчика
+		поступила информация, выводится здесь, а вывод информации о погоде в нужном виде делегируется
+		дочерним классам.
 	*/
-	void Update(const WeatherInfo& data) override
+	void Update(const WeatherInfo& data, const IObservable<WeatherInfo>* observablePtr) override
+	{
+		if (observablePtr == m_insideSourcePtr)
+			std::cout << "Info inside:" << std::endl;
+		else if (observablePtr == m_outsideSourcePtr)
+			std::cout << "Info outside:" << std::endl;
+
+		DisplayInfo(data);
+	}
+
+	IObservable<T>* m_insideSourcePtr = nullptr;
+	IObservable<T>* m_outsideSourcePtr = nullptr;
+};
+
+class Display : public DuoDisplay<WeatherInfo>
+{
+public:
+	Display() {}
+
+	Display(IObservable<WeatherInfo>* insideData, IObservable<WeatherInfo>* outsideData)
+		: DuoDisplay(insideData, outsideData)
+	{
+	}
+
+private:
+	void DisplayInfo(const WeatherInfo& data) override
 	{
 		std::cout << "Current Temp " << data.temperature << std::endl;
 		std::cout << "Current Hum " << data.humidity << std::endl;
@@ -35,14 +79,24 @@ struct NumericStatsData
 	double accumulatedValue = 0;
 };
 
-class StatsDisplay : public IObserver<WeatherInfo>
+class StatsDisplay : public DuoDisplay<WeatherInfo>
 {
+public:
+	StatsDisplay()
+	{
+	}
+
+	StatsDisplay(IObservable<WeatherInfo>* insideData, IObservable<WeatherInfo>* outsideData)
+		: DuoDisplay(insideData, outsideData)
+	{
+	}
+
 private:
 	/* Метод Update сделан приватным, чтобы ограничить возможность его вызова напрямую
 	Классу CObservable он будет доступен все равно, т.к. в интерфейсе IObserver он
 	остается публичным
 	*/
-	void Update(const WeatherInfo& data) override
+	void DisplayInfo(const WeatherInfo& data) override
 	{
 		UpdateNumericStatsData(data.temperature, m_temperatureStats);
 		UpdateNumericStatsData(data.humidity, m_humidityStats);
@@ -89,17 +143,17 @@ class WeatherData : public CObservable<WeatherInfo>
 {
 public:
 	// Температура в градусах Цельсия
-	double GetTemperature()const
+	double GetTemperature() const
 	{
 		return m_temperature;
 	}
 	// Относительная влажность (0...100)
-	double GetHumidity()const
+	double GetHumidity() const
 	{
 		return m_humidity;
 	}
 	// Атмосферное давление (в мм.рт.ст)
-	double GetPressure()const
+	double GetPressure() const
 	{
 		return m_pressure;
 	}
@@ -117,8 +171,9 @@ public:
 
 		MeasurementsChanged();
 	}
+
 protected:
-	WeatherInfo GetChangedData()const override
+	WeatherInfo GetChangedData() const override
 	{
 		WeatherInfo info;
 		info.temperature = GetTemperature();
@@ -126,8 +181,9 @@ protected:
 		info.pressure = GetPressure();
 		return info;
 	}
+
 private:
 	double m_temperature = 0.0;
-	double m_humidity = 0.0;	
-	double m_pressure = 760.0;	
+	double m_humidity = 0.0;
+	double m_pressure = 760.0;
 };

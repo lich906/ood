@@ -3,6 +3,9 @@
 #include <map>
 #include <functional>
 
+template <typename T>
+class IObservable;
+
 /*
 Шаблонный интерфейс IObserver. Его должен реализовывать класс, 
 желающий получать уведомления от соответствующего IObservable
@@ -13,7 +16,7 @@ template <typename T>
 class IObserver
 {
 public:
-	virtual void Update(const T& data) = 0;
+	virtual void Update(const T& data, const IObservable<T>* observablePtr) = 0;
 	virtual ~IObserver() = default;
 };
 
@@ -50,7 +53,7 @@ public:
 		m_observersLock = true;
 		for (auto& observer : m_observers)
 		{
-			(observer.second)->Update(data);
+			(observer.second)->Update(data, this);
 		}
 		m_observersLock = false;
 	}
