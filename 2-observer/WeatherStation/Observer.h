@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <set>
+#include <map>
 #include <functional>
 
 /*
@@ -26,7 +26,7 @@ class IObservable
 {
 public:
 	virtual ~IObservable() = default;
-	virtual void RegisterObserver(IObserver<T>& observer) = 0;
+	virtual void RegisterObserver(IObserver<T>& observer, const int priority = 0) = 0;
 	virtual void NotifyObservers() = 0;
 	virtual void RemoveObserver(IObserver<T>& observer) = 0;
 };
@@ -38,9 +38,9 @@ class CObservable : public IObservable<T>
 public:
 	typedef IObserver<T> ObserverType;
 
-	void RegisterObserver(ObserverType& observer) override
+	void RegisterObserver(ObserverType& observer, const int priority = 0) override
 	{
-		m_observers.insert(&observer);
+		m_observers.insert(std::pair<int, ObserverType*>(priority, &observer));
 	}
 
 	void NotifyObservers() override
@@ -50,16 +50,26 @@ public:
 		m_observersLock = true;
 		for (auto& observer : m_observers)
 		{
-			observer->Update(data);
+			(observer.second)->Update(data);
 		}
 		m_observersLock = false;
 	}
 
-	void RemoveObserver(ObserverType& observer) override
+	void RemoveObserver(ObserverType& observerToRemove) override
 	{
 		if (!m_observersLock)
 		{
-			m_observers.erase(&observer);
+			std::multimap<int, ObserverType*, std::greater<int>> observersCopy;
+
+			for (const auto& observer : m_observers)
+			{
+				if ((observer.second) != &observerToRemove)
+				{
+					observersCopy.insert(observer);
+				}
+			}
+			
+			std::swap(observersCopy, m_observers);
 		}
 		else
 		{
@@ -75,5 +85,5 @@ protected:
 
 private:
 	bool m_observersLock = false;
-	std::set<ObserverType*> m_observers;
+	std::multimap<int, ObserverType*, std::greater<int>> m_observers;
 };

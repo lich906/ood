@@ -21,6 +21,9 @@
     <ClCompile Include="invoke_RemoveObserver_in_Update.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NotifyObservers_with_prority.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\WeatherStation\Observer.h">

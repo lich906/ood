@@ -14,6 +14,7 @@ int main()
 	wd.SetMeasurements(4, 0.8, 761);
 
 	wd.RemoveObserver(statsDisplay);
+	std::cout << "===========================" << std::endl;
 
 	wd.SetMeasurements(10, 0.8, 761);
 	wd.SetMeasurements(-10, 0.8, 761);
