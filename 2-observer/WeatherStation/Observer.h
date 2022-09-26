@@ -40,6 +40,7 @@ public:
 
 	void RegisterObserver(ObserverType& observer, const int priority = 0) override
 	{
+		RemoveObserver(observer);
 		m_observers.insert(std::pair<int, ObserverType*>(priority, &observer));
 	}
 

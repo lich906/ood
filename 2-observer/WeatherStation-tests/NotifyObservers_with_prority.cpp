@@ -36,6 +36,7 @@ TEST_CASE("Mock displays are notified in correct order")
 	wd.RegisterObserver(display4, -1);
 	wd.RegisterObserver(display1, 3);
 	wd.RegisterObserver(display2, 2);
+	wd.RegisterObserver(display2, 2);
 
 	wd.MeasurementsChanged();
 
