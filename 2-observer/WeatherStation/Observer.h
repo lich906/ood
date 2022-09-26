@@ -57,6 +57,7 @@ public:
 
 	void RemoveObserver(ObserverType& observer) override
 	{
+		// наблюдатель должен мочь удалять себя из метода Update()
 		if (!m_observersLock)
 		{
 			m_observers.erase(&observer);
