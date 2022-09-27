@@ -10,6 +10,7 @@ struct WeatherInfo
 	double temperature = 0;
 	double humidity = 0;
 	double pressure = 0;
+	const IObservable<WeatherInfo>* sourcePtr;
 };
 
 class Display: public IObserver<WeatherInfo>
@@ -58,16 +59,10 @@ private:
 	void UpdateNumericStatsData(double current, NumericStatsData& statsData)
 	{
 		// std::min
-		if (statsData.minimum > current)
-		{
-			statsData.minimum = current;
-		}
+		statsData.minimum = std::min(statsData.minimum, current);
 
 		//std::max
-		if (statsData.maximum < current)
-		{
-			statsData.maximum = current;
-		}
+		statsData.maximum = std::min(statsData.maximum, current);
 
 		statsData.accumulatedValue += current;
 	}
@@ -85,6 +80,45 @@ private:
 	NumericStatsData m_pressureStats;
 
 	unsigned m_count = 0;
+};
+
+class DuoDisplay : public IObserver<WeatherInfo>
+{
+public:
+	DuoDisplay(const IObservable<WeatherInfo>* insideSourcePtr, const IObservable<WeatherInfo>* outsideSourcePtr)
+		: m_insideSourcePtr(insideSourcePtr)
+		, m_outsideSourcePtr(outsideSourcePtr)
+	{
+	}
+
+protected:
+	void ShowSourceInfo(const IObservable<WeatherInfo>* sourcePtr)
+	{
+		if (sourcePtr == m_insideSourcePtr)
+		{
+			std::cout << "Info inside:";
+		}
+		else if (sourcePtr == m_outsideSourcePtr)
+		{
+			std::cout << "Info outside:";
+		}
+
+		std::cout << std::endl;
+	}
+
+private:
+	void Update(const WeatherInfo& data) override
+	{
+		ShowSourceInfo(data.sourcePtr);
+
+		std::cout << "Current Temp " << data.temperature << std::endl;
+		std::cout << "Current Hum " << data.humidity << std::endl;
+		std::cout << "Current Pressure " << data.pressure << std::endl;
+		std::cout << "----------------" << std::endl;
+	}
+
+	const IObservable<WeatherInfo>* m_insideSourcePtr;
+	const IObservable<WeatherInfo>* m_outsideSourcePtr;
 };
 
 class WeatherData : public CObservable<WeatherInfo>
@@ -126,6 +160,7 @@ protected:
 		info.temperature = GetTemperature();
 		info.humidity = GetHumidity();
 		info.pressure = GetPressure();
+		info.sourcePtr = this;
 		return info;
 	}
 private:
