@@ -1,11 +1,13 @@
 #include "..\..\catch2\catch.hpp"
 #include "..\WeatherStation\WeatherData.h"
+#include <sstream>
 
 class MockDisplay : public IObserver<WeatherInfo>
 {
 public:
-	MockDisplay(CObservable<WeatherInfo>& observableRef)
+	MockDisplay(CObservable<WeatherInfo>& observableRef, std::ostream& output)
 		: m_observableRef(observableRef)
+		, m_output(output)
 	{
 	}
 
@@ -13,34 +15,47 @@ private:
 	void RemoveSelfFromObservers()
 	{
 		m_observableRef.RemoveObserver(*this);
+		m_output << "removed";
 	}
 
 	void Update(const WeatherInfo& data) override
 	{
-		std::cout << "Current Temp " << data.temperature << std::endl;
-		std::cout << "Current Hum " << data.humidity << std::endl;
-		std::cout << "Current Pressure " << data.pressure << std::endl;
-		std::cout << "----------------" << std::endl;
-
 		RemoveSelfFromObservers();
 	}
 
 	CObservable<WeatherInfo>& m_observableRef;
+	std::ostream& m_output;
 };
 
 TEST_CASE("Invoke RemoveObserver in observer's Update method")
 {
 	WeatherData wd;
+	std::ostringstream oss;
 
-	MockDisplay mockDisplay(wd);
-	wd.RegisterObserver(mockDisplay);
+	SECTION("Single observer removes itself in Update() method")
+	{
+		MockDisplay mock(wd, oss);
+		wd.RegisterObserver(mock);
 
-	REQUIRE_THROWS_AS(wd.SetMeasurements(3, 0.7, 760), std::logic_error);
+		wd.MeasurementsChanged(); // single observer removed, string "removed" has been written to oss
 
-	REQUIRE_NOTHROW(wd.RemoveObserver(mockDisplay));
+		wd.MeasurementsChanged(); // no observers left to notify
 
-	Display display;
-	wd.RegisterObserver(display);
+		REQUIRE(oss.str() == "removed");
+	}
 
-	REQUIRE_NOTHROW(wd.SetMeasurements(3, 0.7, 760));
+	SECTION("Two observers removes themselves in Update() method")
+	{
+		MockDisplay mock(wd, oss);
+		MockDisplay mock2(wd, oss);
+
+		wd.RegisterObserver(mock);
+		wd.RegisterObserver(mock2);
+
+		wd.MeasurementsChanged(); // all observers removed, string "removed" has been written to oss twice
+
+		wd.MeasurementsChanged(); // no observers left to notify
+
+		REQUIRE(oss.str() == "removedremoved");
+	}
 }

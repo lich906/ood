@@ -47,26 +47,17 @@ public:
 	{
 		T data = GetChangedData();
 
-		m_observersLock = true;
-		for (auto& observer : m_observers)
+		auto observersCopy = m_observers;
+		for (auto& observer : observersCopy)
 		{
 			observer->Update(data);
 		}
-		m_observersLock = false;
 	}
 
 	void RemoveObserver(ObserverType& observer) override
 	{
 		// наблюдатель должен мочь удалять себя из метода Update()
-		if (!m_observersLock)
-		{
-			m_observers.erase(&observer);
-		}
-		else
-		{
-			m_observersLock = false;
-			throw std::logic_error("Cannnot delete observer during notifying process");
-		}
+		m_observers.erase(&observer);
 	}
 
 protected:
