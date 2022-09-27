@@ -57,17 +57,17 @@ public:
 
 	void RemoveObserver(ObserverType& observerToRemove) override
 	{
-			std::multimap<int, ObserverType*, std::greater<int>> observersCopy;
+		std::multimap<int, ObserverType*, std::greater<int>> observersCopy;
 
-			for (const auto& observer : m_observers)
+		for (const auto& observer : m_observers)
+		{
+			if ((observer.second) != &observerToRemove)
 			{
-				if ((observer.second) != &observerToRemove)
-				{
-					observersCopy.insert(observer);
-				}
+				observersCopy.insert(observer);
 			}
+		}
 			
-			std::swap(observersCopy, m_observers);
+		std::swap(observersCopy, m_observers);
 	}
 
 protected:
@@ -76,6 +76,5 @@ protected:
 	virtual T GetChangedData() const = 0;
 
 private:
-	bool m_observersLock = false;
 	std::multimap<int, ObserverType*, std::greater<int>> m_observers;
 };
