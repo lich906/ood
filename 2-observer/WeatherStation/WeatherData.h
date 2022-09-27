@@ -10,12 +10,12 @@ struct WeatherInfo
 	double temperature = 0;
 	double humidity = 0;
 	double pressure = 0;
-	const IObservable<WeatherInfo>* sourcePtr;
+	const IObservable<WeatherInfo>* sourcePtr = nullptr;
 };
 
 class Display: public IObserver<WeatherInfo>
 {
-private:
+protected:
 	/* Метод Update сделан приватным, чтобы ограничить возможность его вызова напрямую
 		Классу CObservable он будет доступен все равно, т.к. в интерфейсе IObserver он
 		остается публичным
@@ -38,7 +38,7 @@ struct NumericStatsData
 
 class StatsDisplay : public IObserver<WeatherInfo>
 {
-private:
+protected:
 	/* Метод Update сделан приватным, чтобы ограничить возможность его вызова напрямую
 	Классу CObservable он будет доступен все равно, т.к. в интерфейсе IObserver он
 	остается публичным
@@ -56,6 +56,7 @@ private:
 		DisplayNumericStatsData(m_pressureStats, "Pressure");
 	}
 
+private:
 	void UpdateNumericStatsData(double current, NumericStatsData& statsData)
 	{
 		// std::min
@@ -82,7 +83,7 @@ private:
 	unsigned m_count = 0;
 };
 
-class DuoDisplay : public IObserver<WeatherInfo>
+class DuoDisplay : public Display
 {
 public:
 	DuoDisplay(const IObservable<WeatherInfo>* insideSourcePtr, const IObservable<WeatherInfo>* outsideSourcePtr)
@@ -111,10 +112,43 @@ private:
 	{
 		ShowSourceInfo(data.sourcePtr);
 
-		std::cout << "Current Temp " << data.temperature << std::endl;
-		std::cout << "Current Hum " << data.humidity << std::endl;
-		std::cout << "Current Pressure " << data.pressure << std::endl;
-		std::cout << "----------------" << std::endl;
+		Display::Update(data);
+	}
+
+	const IObservable<WeatherInfo>* m_insideSourcePtr;
+	const IObservable<WeatherInfo>* m_outsideSourcePtr;
+};
+
+class DuoStatsDisplay : public StatsDisplay
+{
+public:
+	DuoStatsDisplay(const IObservable<WeatherInfo>* insideSourcePtr, const IObservable<WeatherInfo>* outsideSourcePtr)
+		: m_insideSourcePtr(insideSourcePtr)
+		, m_outsideSourcePtr(outsideSourcePtr)
+	{
+	}
+
+protected:
+	void ShowSourceInfo(const IObservable<WeatherInfo>* sourcePtr)
+	{
+		if (sourcePtr == m_insideSourcePtr)
+		{
+			std::cout << "Info inside:";
+		}
+		else if (sourcePtr == m_outsideSourcePtr)
+		{
+			std::cout << "Info outside:";
+		}
+
+		std::cout << std::endl;
+	}
+
+private:
+	void Update(const WeatherInfo& data) override
+	{
+		ShowSourceInfo(data.sourcePtr);
+
+		StatsDisplay::Update(data);
 	}
 
 	const IObservable<WeatherInfo>* m_insideSourcePtr;
