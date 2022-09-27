@@ -48,18 +48,15 @@ public:
 	{
 		T data = GetChangedData();
 
-		m_observersLock = true;
-		for (auto& observer : m_observers)
+		auto observersCopy = m_observers;
+		for (auto& observer : observersCopy)
 		{
 			(observer.second)->Update(data);
 		}
-		m_observersLock = false;
 	}
 
 	void RemoveObserver(ObserverType& observerToRemove) override
 	{
-		if (!m_observersLock)
-		{
 			std::multimap<int, ObserverType*, std::greater<int>> observersCopy;
 
 			for (const auto& observer : m_observers)
@@ -71,12 +68,6 @@ public:
 			}
 			
 			std::swap(observersCopy, m_observers);
-		}
-		else
-		{
-			m_observersLock = false;
-			throw std::logic_error("Cannnot delete observer during notifying process");
-		}
 	}
 
 protected:

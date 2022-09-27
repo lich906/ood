@@ -57,11 +57,13 @@ private:
 
 	void UpdateNumericStatsData(double current, NumericStatsData& statsData)
 	{
+		// std::min
 		if (statsData.minimum > current)
 		{
 			statsData.minimum = current;
 		}
 
+		//std::max
 		if (statsData.maximum < current)
 		{
 			statsData.maximum = current;
