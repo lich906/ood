@@ -1,4 +1,6 @@
-#include "WeatherData.h"
+#include "include/WeatherData.hpp"
+#include "include/DuoDisplay.hpp"
+#include "include/DuoStatsDisplay.hpp"
 
 int main()
 {
