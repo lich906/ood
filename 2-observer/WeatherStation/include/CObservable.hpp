@@ -22,7 +22,7 @@ public:
 		auto observersCopy = m_observers;
 		for (auto& observer : observersCopy)
 		{
-			(observer.second)->Update(data, this);
+			(observer.second)->Update(data);
 		}
 	}
 

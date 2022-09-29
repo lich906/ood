@@ -10,7 +10,7 @@ class AbstractDuoDisplay : public IObserver<T>
 public:
 	AbstractDuoDisplay() {}
 
-	AbstractDuoDisplay(IObservable<T>* insideData, IObservable<T>* outsideData)
+	AbstractDuoDisplay(const IObservable<T>* insideData, const IObservable<T>* outsideData)
 		: m_insideSourcePtr(insideData)
 		, m_outsideSourcePtr(outsideData)
 	{
@@ -30,16 +30,16 @@ private:
 		поступила информация, выводится здесь, а вывод информации о погоде в нужном виде делегируется
 		дочерним классам.
 	*/
-	void Update(const WeatherInfo& data, const IObservable<WeatherInfo>* observablePtr) override
+	void Update(const WeatherInfo& data) override
 	{
-		if (observablePtr == m_insideSourcePtr)
+		if (data.sourcePtr == m_insideSourcePtr)
 			std::cout << "Info inside:" << std::endl;
-		else if (observablePtr == m_outsideSourcePtr)
+		else if (data.sourcePtr == m_outsideSourcePtr)
 			std::cout << "Info outside:" << std::endl;
 
 		DisplayInfo(data);
 	}
 
-	IObservable<T>* m_insideSourcePtr = nullptr;
-	IObservable<T>* m_outsideSourcePtr = nullptr;
+	const IObservable<T>* m_insideSourcePtr = nullptr;
+	const IObservable<T>* m_outsideSourcePtr = nullptr;
 };
