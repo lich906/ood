@@ -2,11 +2,11 @@
 #include "..\WeatherStation\WeatherData.h"
 #include <sstream>
 
-class MockDuoDisplay : public DuoDisplay<WeatherInfo>
+class MockDuoDisplay : public AbstractDuoDisplay<WeatherInfo>
 {
 public:
 	MockDuoDisplay(IObservable<WeatherInfo>* insideData, IObservable<WeatherInfo>* outsideData)
-		: DuoDisplay(insideData, outsideData)
+		: AbstractDuoDisplay(insideData, outsideData)
 	{
 	}
 

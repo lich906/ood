@@ -13,18 +13,18 @@ struct WeatherInfo
 };
 
 template <class T>
-class DuoDisplay : public IObserver<T>
+class AbstractDuoDisplay : public IObserver<T>
 {
 public:
-	DuoDisplay() {}
+	AbstractDuoDisplay() {}
 
-	DuoDisplay(IObservable<T>* insideData, IObservable<T>* outsideData)
+	AbstractDuoDisplay(IObservable<T>* insideData, IObservable<T>* outsideData)
 		: m_insideSourcePtr(insideData)
 		, m_outsideSourcePtr(outsideData)
 	{
 	}
 
-	virtual ~DuoDisplay() {}
+	virtual ~AbstractDuoDisplay() {}
 
 protected:
 	virtual void DisplayInfo(const WeatherInfo& data) = 0;
@@ -52,13 +52,13 @@ private:
 	IObservable<T>* m_outsideSourcePtr = nullptr;
 };
 
-class Display : public DuoDisplay<WeatherInfo>
+class DuoDisplay : public AbstractDuoDisplay<WeatherInfo>
 {
 public:
-	Display() {}
+	DuoDisplay() {}
 
-	Display(IObservable<WeatherInfo>* insideData, IObservable<WeatherInfo>* outsideData)
-		: DuoDisplay(insideData, outsideData)
+	DuoDisplay(IObservable<WeatherInfo>* insideData, IObservable<WeatherInfo>* outsideData)
+		: AbstractDuoDisplay(insideData, outsideData)
 	{
 	}
 
@@ -79,15 +79,15 @@ struct NumericStatsData
 	double accumulatedValue = 0;
 };
 
-class StatsDisplay : public DuoDisplay<WeatherInfo>
+class DuoStatsDisplay : public AbstractDuoDisplay<WeatherInfo>
 {
 public:
-	StatsDisplay()
+	DuoStatsDisplay()
 	{
 	}
 
-	StatsDisplay(IObservable<WeatherInfo>* insideData, IObservable<WeatherInfo>* outsideData)
-		: DuoDisplay(insideData, outsideData)
+	DuoStatsDisplay(IObservable<WeatherInfo>* insideData, IObservable<WeatherInfo>* outsideData)
+		: AbstractDuoDisplay(insideData, outsideData)
 	{
 	}
 

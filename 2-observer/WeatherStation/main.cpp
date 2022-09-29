@@ -4,10 +4,10 @@ int main()
 {
 	WeatherData wd;
 
-	Display display;
+	DuoDisplay display;
 	wd.RegisterObserver(display);
 
-	StatsDisplay statsDisplay;
+	DuoStatsDisplay statsDisplay;
 	wd.RegisterObserver(statsDisplay);
 
 	wd.SetMeasurements(3, 0.7, 760);
