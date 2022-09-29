@@ -154,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AbstractDuoDisplay.hpp" />
+    <ClInclude Include="include\DisplayPro.h" />
     <ClInclude Include="include\DuoDisplay.hpp" />
     <ClInclude Include="include\DuoStatsDisplay.hpp" />
     <ClInclude Include="include\IObservable.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="include\CObservable.hpp" />
     <ClInclude Include="include\WeatherData.hpp" />
     <ClInclude Include="include\WeatherInfo.h" />
+    <ClInclude Include="include\WeatherInfoPro.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
