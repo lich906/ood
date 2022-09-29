@@ -11,6 +11,7 @@ public:
 
 	void RegisterObserver(ObserverType& observer, const int priority = 0) override
 	{
+		RemoveObserver(observer);
 		m_observers.insert(std::pair<int, ObserverType*>(priority, &observer));
 	}
 
@@ -18,35 +19,26 @@ public:
 	{
 		T data = GetChangedData();
 
-		m_observersLock = true;
-		for (auto& observer : m_observers)
+		auto observersCopy = m_observers;
+		for (auto& observer : observersCopy)
 		{
 			(observer.second)->Update(data, this);
 		}
-		m_observersLock = false;
 	}
 
 	void RemoveObserver(ObserverType& observerToRemove) override
 	{
-		if (!m_observersLock)
-		{
-			std::multimap<int, ObserverType*, std::greater<int>> observersCopy;
+		std::multimap<int, ObserverType*, std::greater<int>> updatedObservers;
 
-			for (const auto& observer : m_observers)
+		for (const auto& observer : m_observers)
+		{
+			if ((observer.second) != &observerToRemove)
 			{
-				if ((observer.second) != &observerToRemove)
-				{
-					observersCopy.insert(observer);
-				}
+				updatedObservers.insert(observer);
 			}
+		}
 
-			std::swap(observersCopy, m_observers);
-		}
-		else
-		{
-			m_observersLock = false;
-			throw std::logic_error("Cannnot delete observer during notifying process");
-		}
+		std::swap(updatedObservers, m_observers);
 	}
 
 protected:
