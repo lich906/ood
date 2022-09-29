@@ -53,6 +53,12 @@
     <ClInclude Include="include\DisplayPro.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\StatsDisplayPro.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuoDisplayPro.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
