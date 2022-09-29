@@ -47,6 +47,7 @@ protected:
 		info.temperature = GetTemperature();
 		info.humidity = GetHumidity();
 		info.pressure = GetPressure();
+		info.sourcePtr = this;
 		return info;
 	}
 
