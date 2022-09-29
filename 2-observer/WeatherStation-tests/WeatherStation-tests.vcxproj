@@ -164,8 +164,6 @@
     <ClInclude Include="..\WeatherStation\include\NumericStatsData.h" />
     <ClInclude Include="..\WeatherStation\include\WeatherData.hpp" />
     <ClInclude Include="..\WeatherStation\include\WeatherInfo.h" />
-    <ClInclude Include="..\WeatherStation\Observer.h" />
-    <ClInclude Include="..\WeatherStation\WeatherData.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
