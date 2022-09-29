@@ -155,6 +155,15 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\WeatherStation\include\AbstractDuoDisplay.hpp" />
+    <ClInclude Include="..\WeatherStation\include\CObservable.hpp" />
+    <ClInclude Include="..\WeatherStation\include\DuoDisplay.hpp" />
+    <ClInclude Include="..\WeatherStation\include\DuoStatsDisplay.hpp" />
+    <ClInclude Include="..\WeatherStation\include\IObservable.h" />
+    <ClInclude Include="..\WeatherStation\include\IObserver.h" />
+    <ClInclude Include="..\WeatherStation\include\NumericStatsData.h" />
+    <ClInclude Include="..\WeatherStation\include\WeatherData.hpp" />
+    <ClInclude Include="..\WeatherStation\include\WeatherInfo.h" />
     <ClInclude Include="..\WeatherStation\Observer.h" />
     <ClInclude Include="..\WeatherStation\WeatherData.h" />
   </ItemGroup>

@@ -1,5 +1,5 @@
 #include "..\..\catch2\catch.hpp"
-#include "..\WeatherStation\WeatherData.h"
+#include "..\WeatherStation\include\WeatherData.hpp"
 #include <sstream>
 
 class MockDisplay : public IObserver<WeatherInfo>

@@ -1,5 +1,6 @@
 #include "..\..\catch2\catch.hpp"
-#include "..\WeatherStation\WeatherData.h"
+#include "..\WeatherStation\include\AbstractDuoDisplay.hpp"
+#include "..\WeatherStation\include\WeatherData.hpp"
 #include <sstream>
 
 class MockDuoDisplay : public AbstractDuoDisplay<WeatherInfo>
