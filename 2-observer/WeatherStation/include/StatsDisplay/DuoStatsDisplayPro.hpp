@@ -1,24 +1,45 @@
 #pragma once
 #include <iostream>
 
-#include "WeatherInfoPro.h"
-#include "IObserver.h"
+#include "AbstractDuoDisplay.hpp"
+#include "IObservable.h"
 #include "NumericStatsData.h"
+#include "WindDirectionUtils.h"
 
-class StatsDisplayPro : public IObserver<WeatherInfoPro>
+class DuoStatsDisplayPro : public AbstractDuoDisplayPro<WeatherInfo, WeatherInfoPro>
 {
+public:
+	DuoStatsDisplayPro() {}
+
+	DuoStatsDisplayPro(IObservable<WeatherInfo>* insideData, IObservable<WeatherInfoPro>* outsideData)
+		: AbstractDuoDisplayPro(insideData, outsideData)
+	{
+	}
+
 private:
-	/* Метод Update сделан приватным, чтобы ограничить возможность его вызова напрямую
-	Классу CObservable он будет доступен все равно, т.к. в интерфейсе IObserver он
-	остается публичным
+	/*
+	* Перегрузка абстрактного метода из AbstractDuoDisplayPro
 	*/
-	void Update(const WeatherInfoPro& data) override
+	void DisplayInfoInside(const WeatherInfo& data) override
+	{
+		UpdateNumericStatsData(data.temperature, m_temperatureStats);
+		UpdateNumericStatsData(data.humidity, m_humidityStats);
+		UpdateNumericStatsData(data.pressure, m_pressureStats);
+
+		++m_count;
+
+		DisplayNumericStatsData(m_temperatureStats, "Temperature");
+		DisplayNumericStatsData(m_humidityStats, "Humidity");
+		DisplayNumericStatsData(m_pressureStats, "Pressure");
+	}
+
+	void DisplayInfoOutside(const WeatherInfoPro& data) override
 	{
 		UpdateNumericStatsData(data.temperature, m_temperatureStats);
 		UpdateNumericStatsData(data.humidity, m_humidityStats);
 		UpdateNumericStatsData(data.pressure, m_pressureStats);
 		UpdateNumericStatsData(data.windSpeed, m_windSpeedStats);
-		UpdateAverageWindDirection(data.windDirection);
+		m_avgWindDirection = WindDirectionUtils::UpdateAverageWindDirection(m_avgWindDirection, data.windDirection);
 
 		++m_count;
 
@@ -29,15 +50,13 @@ private:
 		DisplayAverageWindDirection();
 	}
 
-	void UpdateNumericStatsData(double current, NumericStatsData& statsData) const
+	void UpdateNumericStatsData(double current, NumericStatsData& statsData)
 	{
-		// std::min
 		if (statsData.minimum > current)
 		{
 			statsData.minimum = current;
 		}
 
-		//std::max
 		if (statsData.maximum < current)
 		{
 			statsData.maximum = current;
@@ -46,7 +65,7 @@ private:
 		statsData.accumulatedValue += current;
 	}
 
-	void DisplayNumericStatsData(const NumericStatsData& statsData, const char* text) const
+	void DisplayNumericStatsData(const NumericStatsData& statsData, const char* text)
 	{
 		std::cout << "Max " << text << " " << statsData.maximum << std::endl;
 		std::cout << "Min " << text << " " << statsData.minimum << std::endl;

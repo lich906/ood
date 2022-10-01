@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "CObservable.hpp"
-#include "WeatherInfo.h"
+#include "WeatherInfo\WeatherInfo.h"
 
 class WeatherData : public CObservable<WeatherInfo>
 {

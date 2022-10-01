@@ -18,24 +18,27 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\WindDirectionUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\WeatherData.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\WeatherInfo.h">
+    <ClInclude Include="include\WeatherInfo\WeatherInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\AbstractDuoDisplay.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\DuoDisplay.hpp">
+    <ClInclude Include="include\Display\DuoDisplay.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\DuoStatsDisplay.hpp">
+    <ClInclude Include="include\StatsDisplay\DuoStatsDisplay.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\NumericStatsData.h">
+    <ClInclude Include="include\StatsDisplay\NumericStatsData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\IObserver.h">
@@ -47,16 +50,28 @@
     <ClInclude Include="include\CObservable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\WeatherInfoPro.h">
+    <ClInclude Include="include\WeatherInfo\WeatherInfoPro.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\DisplayPro.h">
+    <ClInclude Include="include\Display\DisplayPro.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\StatsDisplayPro.hpp">
+    <ClInclude Include="include\StatsDisplay\StatsDisplayPro.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\DuoDisplayPro.hpp">
+    <ClInclude Include="include\Display\DuoDisplayPro.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Display\Display.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\WindDirectionUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StatsDisplay\StatsDisplay.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StatsDisplay\DuoStatsDisplayPro.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

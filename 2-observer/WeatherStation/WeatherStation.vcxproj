@@ -90,6 +90,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>.\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,6 +106,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>.\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,6 +124,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>.\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,6 +144,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>.\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,21 +155,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\WindDirectionUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AbstractDuoDisplay.hpp" />
-    <ClInclude Include="include\DisplayPro.h" />
-    <ClInclude Include="include\DuoDisplay.hpp" />
-    <ClInclude Include="include\DuoDisplayPro.hpp" />
-    <ClInclude Include="include\DuoStatsDisplay.hpp" />
+    <ClInclude Include="include\Display\Display.hpp" />
+    <ClInclude Include="include\Display\DisplayPro.hpp" />
+    <ClInclude Include="include\Display\DuoDisplay.hpp" />
+    <ClInclude Include="include\Display\DuoDisplayPro.hpp" />
+    <ClInclude Include="include\StatsDisplay\DuoStatsDisplay.hpp" />
     <ClInclude Include="include\IObservable.h" />
     <ClInclude Include="include\IObserver.h" />
-    <ClInclude Include="include\NumericStatsData.h" />
+    <ClInclude Include="include\StatsDisplay\DuoStatsDisplayPro.hpp" />
+    <ClInclude Include="include\StatsDisplay\NumericStatsData.h" />
     <ClInclude Include="include\CObservable.hpp" />
-    <ClInclude Include="include\StatsDisplayPro.hpp" />
+    <ClInclude Include="include\StatsDisplay\StatsDisplay.hpp" />
+    <ClInclude Include="include\StatsDisplay\StatsDisplayPro.hpp" />
     <ClInclude Include="include\WeatherData.hpp" />
-    <ClInclude Include="include\WeatherInfo.h" />
-    <ClInclude Include="include\WeatherInfoPro.h" />
+    <ClInclude Include="include\WeatherInfo\WeatherInfo.h" />
+    <ClInclude Include="include\WeatherInfo\WeatherInfoPro.h" />
+    <ClInclude Include="include\WindDirectionUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

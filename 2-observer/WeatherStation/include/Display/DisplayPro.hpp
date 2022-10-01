@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
 
-#include "WeatherInfoPro.h"
+#include "WeatherInfo\WeatherInfoPro.h"
 #include "IObserver.h"
 
-class Display : public IObserver<WeatherInfoPro>
+class DisplayPro : public IObserver<WeatherInfoPro>
 {
 private:
 	/* Метод Update сделан приватным, чтобы ограничить возможность его вызова напрямую
