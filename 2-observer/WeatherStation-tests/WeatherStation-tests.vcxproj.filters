@@ -35,25 +35,49 @@
     <ClInclude Include="..\WeatherStation\include\CObservable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\WeatherStation\include\DuoDisplay.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\WeatherStation\include\DuoStatsDisplay.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\WeatherStation\include\IObservable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\WeatherStation\include\IObserver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\WeatherStation\include\NumericStatsData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\WeatherStation\include\WeatherData.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\WeatherStation\include\WeatherInfo.h">
+    <ClInclude Include="..\WeatherStation\include\Display\Display.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WeatherStation\include\Display\DisplayPro.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WeatherStation\include\Display\DuoDisplay.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WeatherStation\include\Display\DuoDisplayPro.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WeatherStation\include\StatsDisplay\DuoStatsDisplay.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WeatherStation\include\StatsDisplay\DuoStatsDisplayPro.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WeatherStation\include\StatsDisplay\NumericStatsData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WeatherStation\include\StatsDisplay\StatsDisplay.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WeatherStation\include\StatsDisplay\StatsDisplayPro.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WeatherStation\include\WeatherInfo\WeatherInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WeatherStation\include\WeatherInfo\WeatherInfoPro.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WeatherStation\include\WindDirectionUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

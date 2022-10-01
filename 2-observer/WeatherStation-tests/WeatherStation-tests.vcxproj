@@ -88,6 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,6 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -116,6 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,6 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,13 +161,21 @@
   <ItemGroup>
     <ClInclude Include="..\WeatherStation\include\AbstractDuoDisplay.hpp" />
     <ClInclude Include="..\WeatherStation\include\CObservable.hpp" />
-    <ClInclude Include="..\WeatherStation\include\DuoDisplay.hpp" />
-    <ClInclude Include="..\WeatherStation\include\DuoStatsDisplay.hpp" />
+    <ClInclude Include="..\WeatherStation\include\Display\Display.hpp" />
+    <ClInclude Include="..\WeatherStation\include\Display\DisplayPro.hpp" />
+    <ClInclude Include="..\WeatherStation\include\Display\DuoDisplay.hpp" />
+    <ClInclude Include="..\WeatherStation\include\Display\DuoDisplayPro.hpp" />
     <ClInclude Include="..\WeatherStation\include\IObservable.h" />
     <ClInclude Include="..\WeatherStation\include\IObserver.h" />
-    <ClInclude Include="..\WeatherStation\include\NumericStatsData.h" />
+    <ClInclude Include="..\WeatherStation\include\StatsDisplay\DuoStatsDisplay.hpp" />
+    <ClInclude Include="..\WeatherStation\include\StatsDisplay\DuoStatsDisplayPro.hpp" />
+    <ClInclude Include="..\WeatherStation\include\StatsDisplay\NumericStatsData.h" />
+    <ClInclude Include="..\WeatherStation\include\StatsDisplay\StatsDisplay.hpp" />
+    <ClInclude Include="..\WeatherStation\include\StatsDisplay\StatsDisplayPro.hpp" />
     <ClInclude Include="..\WeatherStation\include\WeatherData.hpp" />
-    <ClInclude Include="..\WeatherStation\include\WeatherInfo.h" />
+    <ClInclude Include="..\WeatherStation\include\WeatherInfo\WeatherInfo.h" />
+    <ClInclude Include="..\WeatherStation\include\WeatherInfo\WeatherInfoPro.h" />
+    <ClInclude Include="..\WeatherStation\include\WindDirectionUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
