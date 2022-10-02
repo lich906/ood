@@ -27,7 +27,9 @@ private:
 		DisplayNumericStatsData(m_humidityStats, "Humidity");
 		DisplayNumericStatsData(m_pressureStats, "Pressure");
 		DisplayNumericStatsData(m_windSpeedStats, "Wind Speed");
-		WindDirectionUtils::DisplayAverageWindDirection(std::cout, m_avgWindDirection);
+		std::cout << "Avg Wind direction ";
+		WindDirectionUtils::DisplayWindDirection(std::cout, m_avgWindDirection);
+		std::cout << std::endl;
 	}
 
 	void UpdateNumericStatsData(double current, NumericStatsData& statsData) const

@@ -37,15 +37,19 @@ std::optional<double> WindDirectionUtils::UpdateAverageWindDirection(const std::
 			return current;
 		}
 	}
+	else
+	{
+		return current;
+	}
 }
-void WindDirectionUtils::DisplayAverageWindDirection(std::ostream& output, const std::optional<double>& avgWindDirection)
+void WindDirectionUtils::DisplayWindDirection(std::ostream& output, const std::optional<double>& avgWindDirection)
 {
 	if (avgWindDirection.has_value())
 	{
-		output << "Avg wind direction " << *avgWindDirection << std::endl;
+		output << *avgWindDirection;
 	}
 	else
 	{
-		output << "Avg wind direction -- calm" << std::endl;
+		output << "calm";
 	}
 }

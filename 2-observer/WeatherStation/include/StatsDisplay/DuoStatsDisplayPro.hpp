@@ -47,7 +47,9 @@ private:
 		DisplayNumericStatsData(m_humidityStats, "Humidity");
 		DisplayNumericStatsData(m_pressureStats, "Pressure");
 		DisplayNumericStatsData(m_windSpeedStats, "Wind Speed");
-		DisplayAverageWindDirection();
+		std::cout << "Avg Wind direction ";
+		WindDirectionUtils::DisplayWindDirection(std::cout, m_avgWindDirection);
+		std::cout << std::endl;
 	}
 
 	void UpdateNumericStatsData(double current, NumericStatsData& statsData)
@@ -71,57 +73,6 @@ private:
 		std::cout << "Min " << text << " " << statsData.minimum << std::endl;
 		std::cout << "Average " << text << " " << (statsData.accumulatedValue / m_count) << std::endl;
 		std::cout << "----------------" << std::endl;
-	}
-
-	void UpdateAverageWindDirection(const std::optional<double>& current)
-	{
-		if (current.has_value())
-		{
-			if (m_avgWindDirection.has_value())
-			{
-				double mid;
-				if ((mid = abs(*current - *m_avgWindDirection)) > 180)
-				{
-					double average = (*current + *m_avgWindDirection) / 2;
-					if (average > 180)
-					{
-						m_avgWindDirection = average - 180;
-					}
-					else if (average < 180)
-					{
-						m_avgWindDirection = average + 180;
-					}
-					else
-					{
-						m_avgWindDirection = std::nullopt;
-					}
-				}
-				else if (mid < 180)
-				{
-					m_avgWindDirection = (*current + *m_avgWindDirection) / 2;
-				}
-				else
-				{
-					m_avgWindDirection = std::nullopt;
-				}
-			}
-			else
-			{
-				m_avgWindDirection = current;
-			}
-		}
-	}
-
-	void DisplayAverageWindDirection()
-	{
-		if (m_avgWindDirection.has_value())
-		{
-			std::cout << "Avg wind direction " << *m_avgWindDirection << std::endl;
-		}
-		else
-		{
-			std::cout << "Avg wind direction -- calm" << std::endl;
-		}
 	}
 
 	NumericStatsData m_temperatureStats;

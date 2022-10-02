@@ -86,8 +86,7 @@ private:
 		DisplayInfoOutside(data);
 	}
 
-	template <typename T>
-	void DisplaySourceLocation(const IObservable<T>* sourcePtr)
+	void DisplaySourceLocation(const void* sourcePtr)
 	{
 		if (sourcePtr == m_insideSourcePtr)
 			std::cout << "Info inside:" << std::endl;
