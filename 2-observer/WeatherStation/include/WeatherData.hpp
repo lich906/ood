@@ -6,8 +6,12 @@
 
 #include "CObservable.hpp"
 #include "WeatherInfo\WeatherInfoPro.h"
+#include "DataType.h"
 
-class WeatherData : public CObservable<WeatherInfoPro>
+class WeatherData : 
+	public CObservable<DataType::AllPro>, 
+	public CObservable<DataType::Temperature>, 
+	public CObservable<DataType::Pressure>
 {
 public:
 	// Температура в градусах Цельсия
@@ -38,14 +42,35 @@ public:
 
 	void MeasurementsChanged()
 	{
-		NotifyObservers();
+		CObservable<DataType::AllPro>::NotifyObservers();
+	}
+
+	void TemperatureChanged()
+	{
+		CObservable<DataType::Temperature>::NotifyObservers();
+	}
+
+	void PressureChanged()
+	{
+		CObservable<DataType::Pressure>::NotifyObservers();
 	}
 
 	void SetMeasurements(double temp, double humidity, double pressure, double windSpeed, const std::optional<double>& windDirection)
 	{
 		m_humidity = humidity;
-		m_temperature = temp;
-		m_pressure = pressure;
+
+		if (temp != m_temperature)
+		{
+			m_temperature = temp;
+			TemperatureChanged();
+		}
+
+		if (pressure != m_pressure)
+		{
+			m_pressure = pressure;
+			TemperatureChanged();
+		}
+
 		m_windSpeed = windSpeed;
 		m_windDirection = windDirection;
 
@@ -53,7 +78,7 @@ public:
 	}
 
 protected:
-	WeatherInfoPro GetChangedData() const override
+	DataType::AllPro CObservable<DataType::AllPro>::GetChangedData() const override
 	{
 		WeatherInfoPro info;
 		info.temperature = GetTemperature();
@@ -63,6 +88,16 @@ protected:
 		info.windDirection = GetWindDirection();
 		info.sourcePtr = this;
 		return info;
+	}
+
+	DataType::Temperature CObservable<DataType::Temperature>::GetChangedData() const override
+	{
+		return GetTemperature();
+	}
+
+	DataType::Pressure CObservable<DataType::Pressure>::GetChangedData() const override
+	{
+		return GetPressure();
 	}
 
 private:

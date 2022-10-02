@@ -163,6 +163,8 @@
     <ClInclude Include="include\Display\DisplayPro.hpp" />
     <ClInclude Include="include\Display\DuoDisplay.hpp" />
     <ClInclude Include="include\Display\DuoDisplayPro.hpp" />
+    <ClInclude Include="include\DataType.h" />
+    <ClInclude Include="include\Display\SimpleDisplay.hpp" />
     <ClInclude Include="include\StatsDisplay\DuoStatsDisplay.hpp" />
     <ClInclude Include="include\IObservable.h" />
     <ClInclude Include="include\IObserver.h" />
