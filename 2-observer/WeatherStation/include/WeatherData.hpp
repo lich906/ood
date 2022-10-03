@@ -68,7 +68,7 @@ public:
 		if (pressure != m_pressure)
 		{
 			m_pressure = pressure;
-			TemperatureChanged();
+			PressureChanged();
 		}
 
 		m_windSpeed = windSpeed;
@@ -78,7 +78,7 @@ public:
 	}
 
 protected:
-	DataType::AllPro CObservable<DataType::AllPro>::GetChangedData() const override
+	DataType::AllPro CObservable<DataType::AllPro>::GetChangedData(const DataType::AllPro*) const override
 	{
 		WeatherInfoPro info;
 		info.temperature = GetTemperature();
@@ -90,12 +90,12 @@ protected:
 		return info;
 	}
 
-	DataType::Temperature CObservable<DataType::Temperature>::GetChangedData() const override
+	DataType::Temperature CObservable<DataType::Temperature>::GetChangedData(const DataType::Temperature*) const override
 	{
 		return GetTemperature();
 	}
 
-	DataType::Pressure CObservable<DataType::Pressure>::GetChangedData() const override
+	DataType::Pressure CObservable<DataType::Pressure>::GetChangedData(const DataType::Pressure*) const override
 	{
 		return GetPressure();
 	}

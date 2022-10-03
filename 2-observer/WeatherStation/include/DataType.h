@@ -9,6 +9,11 @@ template <typename T, typename Tag>
 class TypeWrapper
 {
 public:
+	TypeWrapper()
+		: m_val(T())
+	{
+	}
+
 	TypeWrapper(const T& val)
 		: m_val(val)
 	{

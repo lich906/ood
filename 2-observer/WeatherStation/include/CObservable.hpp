@@ -9,15 +9,22 @@ class CObservable : public IObservable<T>
 public:
 	typedef IObserver<T> ObserverType;
 
-	void RegisterObserver(ObserverType& observer, const int priority = 0) override
+	void RegisterObserver(ObserverType& observer, const int priority = 0, const bool instantNotify = false) override
 	{
 		RemoveObserver(observer);
 		m_observers.insert(std::pair<int, ObserverType*>(priority, &observer));
+
+		if (instantNotify)
+		{
+			// сразу уведомляем нового подписчика, если установлен флаг instantNotify
+			T data = GetChangedData(&T());
+			observer.Update(data);
+		}
 	}
 
 	void NotifyObservers() override
 	{
-		T data = GetChangedData();
+		T data = GetChangedData(&T());
 
 		auto observersCopy = m_observers;
 		for (auto& observer : observersCopy)
@@ -44,7 +51,7 @@ public:
 protected:
 	// Классы-наследники должны перегрузить данный метод,
 	// в котором возвращать информацию об изменениях в объекте
-	virtual T GetChangedData() const = 0;
+	virtual T GetChangedData(const T*) const = 0;
 
 private:
 	bool m_observersLock = false;

@@ -12,7 +12,7 @@ int main()
 	DuoDisplayPro display;
 	wd.CObservable<DataType::AllPro>::RegisterObserver(display);
 	wd.CObservable<DataType::Temperature>::RegisterObserver(simpleDisplay);
-	wd.CObservable<DataType::Pressure>::RegisterObserver(simpleDisplay);
+	wd.CObservable<DataType::Pressure>::RegisterObserver(simpleDisplay, 0, true);
 
 	DuoStatsDisplayPro statsDisplay;
 	wd.CObservable<DataType::AllPro>::RegisterObserver(statsDisplay);
