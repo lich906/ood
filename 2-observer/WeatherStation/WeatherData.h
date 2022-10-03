@@ -105,6 +105,7 @@ private:
 
 	void UpdateAverageWindDirection(const std::optional<double>& current)
 	{
+		// переделать с использованием arctan
 		if (current.has_value())
 		{
 			if (m_avgWindDirection.has_value())
