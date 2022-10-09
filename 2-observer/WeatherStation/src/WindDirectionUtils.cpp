@@ -2,40 +2,12 @@
 
 std::optional<double> WindDirectionUtils::UpdateAverageWindDirection(const std::optional<double>& oldAverage, const std::optional<double>& current)
 {
-	if (current.has_value())
+	if (current.has_value() && oldAverage.has_value())
 	{
-		if (oldAverage.has_value())
-		{
-			double mid;
-			if ((mid = abs(*current - *oldAverage)) > 180)
-			{
-				double average = (*current + *oldAverage) / 2;
-				if (average > 180)
-				{
-					return average - 180;
-				}
-				else if (average < 180)
-				{
-					return average + 180;
-				}
-				else
-				{
-					return std::nullopt;
-				}
-			}
-			else if (mid < 180)
-			{
-				return (*current + *oldAverage) / 2;
-			}
-			else
-			{
-				return std::nullopt;
-			}
-		}
-		else
-		{
-			return current;
-		}
+		double sinSum = std::sin(DegToRad(*oldAverage)) + std::sin(DegToRad(*current));
+		double cosSum = std::cos(DegToRad(*oldAverage)) + std::cos(DegToRad(*current));
+		double updatedAverage = RadToDeg(std::atan2(sinSum, cosSum)) + 360.0;
+		return std::fmod(updatedAverage, 360);
 	}
 	else
 	{
@@ -52,4 +24,14 @@ void WindDirectionUtils::DisplayWindDirection(std::ostream& output, const std::o
 	{
 		output << "calm";
 	}
+}
+
+double WindDirectionUtils::DegToRad(double deg)
+{
+	return M_PI * deg / 180.0;
+}
+
+double WindDirectionUtils::RadToDeg(double rad)
+{
+	return 180.0 * rad / M_PI;
 }
