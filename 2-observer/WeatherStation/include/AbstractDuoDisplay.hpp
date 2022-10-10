@@ -4,6 +4,7 @@
 #include "IObservable.h"
 #include "WeatherInfo\WeatherInfoPro.h"
 
+// шаблонность классов избыточна
 template <class T>
 class AbstractDuoDisplay : public IObserver<T>
 {
@@ -44,7 +45,7 @@ private:
 	const IObservable<T>* m_outsideSourcePtr = nullptr;
 };
 
-
+// шаблонность избыточна
 template <class TInside, class TOutside>
 class AbstractDuoDisplayPro : public IObserver<TInside>, public IObserver<TOutside>
 {

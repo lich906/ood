@@ -8,6 +8,7 @@
 #include "WeatherInfo\WeatherInfoPro.h"
 #include "DataType.h"
 
+// избавиться от множественного наследования
 class WeatherData : 
 	public CObservable<DataType::AllPro>, 
 	public CObservable<DataType::Temperature>, 
