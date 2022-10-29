@@ -1,7 +1,10 @@
 ﻿#pragma once
 
+#include <stdexcept>
+
 #include "IBeverage.h"
 #include "PortionCount.h"
+#include "PortionSize.h"
 
 // Базовая реализация напитка, предоставляющая его описание
 class CBeverage : public IBeverage
@@ -11,7 +14,8 @@ public:
 		:m_description(description)
 	{}
 
-	std::string GetDescription()const override final
+	// убран спецификатор final
+	std::string GetDescription() const override
 	{
 		return m_description;
 	}
@@ -37,14 +41,26 @@ public:
 class CCappuccino : public CCoffee
 {
 public:
-	CCappuccino() 
-		:CCoffee("Cappuccino") 
+	CCappuccino(PortionCount portionCount)
+		: m_portionCount(portionCount)
+		, CCoffee("Cappuccino")
 	{}
 
-	double GetCost() const override 
+	double GetCost() const override
 	{
-		return 80; 
+		switch (m_portionCount)
+		{
+		case PortionCount::Single:
+			return 80;
+		case PortionCount::Double:
+			return 120;
+		default:
+			break;
+		}
 	}
+
+private:
+	PortionCount m_portionCount;
 };
 
 // Латте
@@ -65,7 +81,7 @@ public:
 		case PortionCount::Double:
 			return 130;
 		default:
-			break;
+			throw std::invalid_argument("Unkown portion count");
 		}
 	}
 
@@ -77,26 +93,49 @@ private:
 class CTea : public CBeverage
 {
 public:
-	CTea() 
-		:CBeverage("Tea") 
+	CTea(const std::string& teaSort)
+		: m_teaSort(teaSort)
+		, CBeverage("Tea")
 	{}
 
-	double GetCost() const override 
+	double GetCost() const override
 	{
-		return 30; 
+		return 30;
 	}
+
+	std::string GetDescription() const override
+	{
+		return m_teaSort + " " + CBeverage::GetDescription();
+	}
+
+private:
+	std::string m_teaSort;
 };
 
 // Молочный коктейль
 class CMilkshake : public CBeverage
 {
 public:
-	CMilkshake() 
-		:CBeverage("Milkshake") 
+	CMilkshake(PortionSize portionSize)
+		: CBeverage("Milkshake")
+		, m_portionSize(portionSize)
 	{}
 
 	double GetCost() const override 
-	{ 
-		return 80; 
+	{
+		switch (m_portionSize)
+		{
+		case PortionSize::Small:
+			return 50;
+		case PortionSize::Medium:
+			return 60;
+		case PortionSize::Large:
+			return 80;
+		default:
+			throw std::invalid_argument("Unknown portion size");
+		}
 	}
+
+private:
+	PortionSize m_portionSize;
 };

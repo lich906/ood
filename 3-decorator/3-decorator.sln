@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.32510.428
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "extend-beverages", "extend-beverages\extend-beverages.vcxproj", "{E67A7AB7-DFC5-4454-B37C-B398C4E0EE9F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "extend-condiments", "extend-condiments\extend-condiments.vcxproj", "{BC866A68-BB11-44E1-B07C-3FE7897AB7BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{E67A7AB7-DFC5-4454-B37C-B398C4E0EE9F}.Release|x64.Build.0 = Release|x64
 		{E67A7AB7-DFC5-4454-B37C-B398C4E0EE9F}.Release|x86.ActiveCfg = Release|Win32
 		{E67A7AB7-DFC5-4454-B37C-B398C4E0EE9F}.Release|x86.Build.0 = Release|Win32
+		{BC866A68-BB11-44E1-B07C-3FE7897AB7BC}.Debug|x64.ActiveCfg = Debug|x64
+		{BC866A68-BB11-44E1-B07C-3FE7897AB7BC}.Debug|x64.Build.0 = Debug|x64
+		{BC866A68-BB11-44E1-B07C-3FE7897AB7BC}.Debug|x86.ActiveCfg = Debug|Win32
+		{BC866A68-BB11-44E1-B07C-3FE7897AB7BC}.Debug|x86.Build.0 = Debug|Win32
+		{BC866A68-BB11-44E1-B07C-3FE7897AB7BC}.Release|x64.ActiveCfg = Release|x64
+		{BC866A68-BB11-44E1-B07C-3FE7897AB7BC}.Release|x64.Build.0 = Release|x64
+		{BC866A68-BB11-44E1-B07C-3FE7897AB7BC}.Release|x86.ActiveCfg = Release|Win32
+		{BC866A68-BB11-44E1-B07C-3FE7897AB7BC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

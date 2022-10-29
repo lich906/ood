@@ -23,6 +23,7 @@
     <ClInclude Include="Condiments.h" />
     <ClInclude Include="IBeverage.h" />
     <ClInclude Include="PortionCount.h" />
+    <ClInclude Include="PortionSize.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -30,8 +31,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{e67a7ab7-dfc5-4454-b37c-b398c4e0ee9f}</ProjectGuid>
-    <RootNamespace>extendbeverages</RootNamespace>
+    <ProjectGuid>{bc866a68-bb11-44e1-b07c-3fe7897ab7bc}</ProjectGuid>
+    <RootNamespace>extendcondiments</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
