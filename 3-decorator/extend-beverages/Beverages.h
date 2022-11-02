@@ -41,6 +41,7 @@ public:
 class CCappuccino : public CCoffee
 {
 public:
+	// PortionCount
 	CCappuccino(PortionCount portionCount)
 		: m_portionCount(portionCount)
 		, CCoffee("Cappuccino")
@@ -67,6 +68,7 @@ private:
 class CLatte : public CCoffee
 {
 public:
+	// PortionSize
 	CLatte(PortionCount portionCount)
 		: m_portionCount(portionCount)
 		, CCoffee("Latte")
