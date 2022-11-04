@@ -36,7 +36,7 @@ std::streamsize DecompressInputDataStreamDecorator::ReadBlock(void* dstBuffer, s
 		throw std::invalid_argument("Destionation buffer pointer is nullptr");
 	}
 
-	char* dst = reinterpret_cast<char*>(dstBuffer);
+	uint8_t* dst = reinterpret_cast<uint8_t*>(dstBuffer);
 
 	std::streamsize count = 0;
 	for (; count < size; ++count)

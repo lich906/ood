@@ -107,6 +107,8 @@ TEST_CASE("Reading block of bytes from compressed stream")
 		REQUIRE(data[2] == 1);
 
 		REQUIRE(!decompressStream->IsEOF());
+
+		delete[] data;
 	}
 
 	SECTION("Reading accurately that much bytes as stream contains")
@@ -120,11 +122,16 @@ TEST_CASE("Reading block of bytes from compressed stream")
 		REQUIRE(data[3] == 1);
 
 		REQUIRE(decompressStream->IsEOF());
+
+		delete[] data;
 	}
 
 	SECTION("Reading more bytes than stream has, should cause exception")
 	{
 		char* data = new char[5]();
+
 		REQUIRE_THROWS_AS(decompressStream->ReadBlock(data, 5), std::ios::failure);
+
+		delete[] data;
 	}
 }

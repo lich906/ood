@@ -141,17 +141,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\stream-decorator\CryptTable.cpp" />
     <ClCompile Include="..\stream-decorator\DecompressInputDataStreamDecorator.cpp" />
+    <ClCompile Include="..\stream-decorator\DecryptInputDataStreamDecorator.cpp" />
+    <ClCompile Include="..\stream-decorator\EncryptOutputDataStreamDecorator.cpp" />
+    <ClCompile Include="..\stream-decorator\FileInputDataStream.cpp" />
+    <ClCompile Include="..\stream-decorator\FileOutputDataStream.cpp" />
     <ClCompile Include="..\stream-decorator\InputDataStreamDecorator.cpp" />
     <ClCompile Include="..\stream-decorator\MemoryInputDataStream.cpp" />
+    <ClCompile Include="..\stream-decorator\OutputDataStreamDecorator.cpp" />
     <ClCompile Include="catch_main.cpp" />
     <ClCompile Include="DecompressMemoryInputDataStream.tests.cpp" />
+    <ClCompile Include="EncryptionInputOutputDataStreams.tests.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\stream-decorator\CryptTable.h" />
     <ClInclude Include="..\stream-decorator\DecompressInputDataStreamDecorator.h" />
+    <ClInclude Include="..\stream-decorator\DecryptInputDataStreamDecorator.h" />
+    <ClInclude Include="..\stream-decorator\EncryptOutputDataStreamDecorator.h" />
+    <ClInclude Include="..\stream-decorator\FileInputDataStream.h" />
+    <ClInclude Include="..\stream-decorator\FileOutputDataStream.h" />
     <ClInclude Include="..\stream-decorator\IInputDataStream.h" />
     <ClInclude Include="..\stream-decorator\InputDataStreamDecorator.h" />
+    <ClInclude Include="..\stream-decorator\IOutputDataStream.h" />
     <ClInclude Include="..\stream-decorator\MemoryInputDataStream.h" />
+    <ClInclude Include="..\stream-decorator\OutputDataStreamDecorator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,7 +7,7 @@ FileOutputDataStream::FileOutputDataStream(const std::string& fileName)
 
 void FileOutputDataStream::WriteByte(uint8_t data)
 {
-	m_stream.write(new char(data), 1);
+	m_stream.put(data);
 }
 
 void FileOutputDataStream::WriteBlock(const void* srcData, std::streamsize size)

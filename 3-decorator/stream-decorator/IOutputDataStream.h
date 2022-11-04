@@ -1,7 +1,8 @@
 #ifndef I_OUTPUT_DATA_STREAM_H
 #define I_OUTPUT_DATA_STREAM_H
 
-#include "common.h"
+#include <ios>
+#include <memory>
 
 class IOutputDataStream
 {
@@ -18,5 +19,6 @@ public:
 	virtual ~IOutputDataStream() = default;
 };
 
+typedef std::unique_ptr<IOutputDataStream> OutputDataStreamPtr;
 
 #endif // !I_OUTPUT_DATA_STREAM_H

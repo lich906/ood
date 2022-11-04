@@ -8,8 +8,6 @@
 class FileInputDataStream : public IInputDataStream
 {
 public:
-	FileInputDataStream() = default;
-
 	FileInputDataStream(const std::string& fileName);
 
 	bool IsEOF() const override;

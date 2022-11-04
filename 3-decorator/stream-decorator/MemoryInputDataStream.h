@@ -19,7 +19,7 @@ public:
 
 private:
 	std::vector<uint8_t> m_data;
-	size_t m_cursorPos;
+	size_t m_cursorPos = 0;
 };
 
 #endif // !MEMORY_INPUT_DATA_STREAM_H

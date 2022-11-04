@@ -31,6 +31,12 @@
     <Filter Include="Source Files\Input\Decorator">
       <UniqueIdentifier>{649742fc-608c-4d69-9320-10071efe435a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Output\Decorator">
+      <UniqueIdentifier>{89039bcb-c332-4842-ba4f-a539e2ccf91e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Output\Decorator">
+      <UniqueIdentifier>{362ef6ba-db94-470a-bb31-1712bc16ffb8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -53,6 +59,18 @@
     </ClCompile>
     <ClCompile Include="InputDataStreamDecorator.cpp">
       <Filter>Source Files\Input\Decorator</Filter>
+    </ClCompile>
+    <ClCompile Include="CryptTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DecryptInputDataStreamDecorator.cpp">
+      <Filter>Source Files\Input\Decorator</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputDataStreamDecorator.cpp">
+      <Filter>Source Files\Output\Decorator</Filter>
+    </ClCompile>
+    <ClCompile Include="EncryptOutputDataStreamDecorator.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +97,18 @@
     </ClInclude>
     <ClInclude Include="DecompressInputDataStreamDecorator.h">
       <Filter>Header Files\Input\Decorator</Filter>
+    </ClInclude>
+    <ClInclude Include="CryptTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DecryptInputDataStreamDecorator.h">
+      <Filter>Header Files\Input\Decorator</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputDataStreamDecorator.h">
+      <Filter>Header Files\Output\Decorator</Filter>
+    </ClInclude>
+    <ClInclude Include="EncryptOutputDataStreamDecorator.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -140,16 +140,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CryptTable.cpp" />
     <ClCompile Include="DecompressInputDataStreamDecorator.cpp" />
+    <ClCompile Include="DecryptInputDataStreamDecorator.cpp" />
+    <ClCompile Include="EncryptOutputDataStreamDecorator.cpp" />
     <ClCompile Include="FileInputDataStream.cpp" />
     <ClCompile Include="FileOutputDataStream.cpp" />
     <ClCompile Include="InputDataStreamDecorator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MemoryInputDataStream.cpp" />
     <ClCompile Include="MemoryOutputDataStream.cpp" />
+    <ClCompile Include="OutputDataStreamDecorator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CryptTable.h" />
     <ClInclude Include="DecompressInputDataStreamDecorator.h" />
+    <ClInclude Include="DecryptInputDataStreamDecorator.h" />
+    <ClInclude Include="EncryptOutputDataStreamDecorator.h" />
     <ClInclude Include="FileInputDataStream.h" />
     <ClInclude Include="FileOutputDataStream.h" />
     <ClInclude Include="IInputDataStream.h" />
@@ -157,6 +164,7 @@
     <ClInclude Include="IOutputDataStream.h" />
     <ClInclude Include="MemoryInputDataStream.h" />
     <ClInclude Include="MemoryOutputDataStream.h" />
+    <ClInclude Include="OutputDataStreamDecorator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -8,8 +8,6 @@
 class FileOutputDataStream : public IOutputDataStream
 {
 public:
-	FileOutputDataStream() = default;
-
 	FileOutputDataStream(const std::string& fileName);
 
 	void WriteByte(uint8_t data) override;
