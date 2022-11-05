@@ -46,8 +46,13 @@ CompressOutputDataStreamDecorator::~CompressOutputDataStreamDecorator()
 
 void CompressOutputDataStreamDecorator::WriteCurrentSequence()
 {
-	OutputDataStreamDecorator::WriteByte(m_currSequenceData.lengthByte);
-	OutputDataStreamDecorator::WriteByte(m_currSequenceData.symbolCode);
+	if (m_currSequenceData.lengthByte)
+	{
+		OutputDataStreamDecorator::WriteByte(m_currSequenceData.lengthByte);
+		OutputDataStreamDecorator::WriteByte(m_currSequenceData.symbolCode);
+	}
+
+	m_currSequenceData.lengthByte = 0;
 }
 
 void CompressOutputDataStreamDecorator::BeginNewSequence(uint8_t symbolCode)

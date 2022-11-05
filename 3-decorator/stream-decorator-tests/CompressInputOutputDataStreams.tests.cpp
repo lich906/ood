@@ -5,11 +5,11 @@
 #include "CompressOutputDataStreamDecorator.h"
 #include "DecompressInputDataStreamDecorator.h"
 
-TEST_CASE("Compressing and decompressing data through file streams")
+TEST_CASE("Compressing and decompressing data through file stream")
 {
 	// sequence 'aaaaaabbbbbbb' compresses into '6a7b'
 	auto data = "aaaaaabbbbbbb";
-	size_t size = strlen(data);
+	size_t size = strlen(data) + 1;
 
 	// Writing compressed data to file
 	{
@@ -23,7 +23,7 @@ TEST_CASE("Compressing and decompressing data through file streams")
 	{
 		InputDataStreamPtr inputStream = std::make_unique<FileInputDataStream>("compressed.txt");
 		InputDataStreamPtr decompressInputStream = std::make_unique<DecompressInputDataStreamDecorator>(std::move(inputStream));
-		char* decompressedData = new char[size + 1]();
+		char* decompressedData = new char[size]();
 
 		decompressInputStream->ReadBlock(decompressedData, size);
 

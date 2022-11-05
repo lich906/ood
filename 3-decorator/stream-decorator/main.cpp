@@ -84,10 +84,14 @@ try
 
 	auto startTime = std::chrono::steady_clock::now();
 
-	while (!inputFile->IsEOF())
+	uint8_t* block = new uint8_t[Constants::BUFF_SIZE]();
+	std::streamsize readSize = 1;
+	while (!inputFile->IsEOF() && readSize)
 	{
-		outputFile->WriteByte(inputFile->ReadByte());
+		readSize = inputFile->ReadBlock(block, Constants::BUFF_SIZE);
+		outputFile->WriteBlock(block, readSize);
 	}
+	delete[] block;
 
 	std::chrono::duration<double> elapsedTime = std::chrono::steady_clock::now() - startTime;
 	std::cout << "Done in " << elapsedTime.count() << " s." << std::endl;

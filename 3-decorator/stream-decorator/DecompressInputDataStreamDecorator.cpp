@@ -37,7 +37,7 @@ std::streamsize DecompressInputDataStreamDecorator::ReadBlock(void* dstBuffer, s
 	uint8_t* dst = reinterpret_cast<uint8_t*>(dstBuffer);
 
 	std::streamsize count = 0;
-	for (; count < size; ++count)
+	for (; count < size && !IsEOF(); ++count)
 	{
 		*dst++ = ReadByte();
 	}

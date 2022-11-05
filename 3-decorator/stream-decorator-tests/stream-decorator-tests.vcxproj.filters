@@ -57,6 +57,12 @@
     <ClCompile Include="..\stream-decorator\CompressOutputDataStreamDecorator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MemoryOutputStream.tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\stream-decorator\MemoryOutputDataStream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\stream-decorator\DecompressInputDataStreamDecorator.h">
@@ -93,6 +99,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\stream-decorator\CompressOutputDataStreamDecorator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\stream-decorator\MemoryOutputDataStream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

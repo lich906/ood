@@ -9,6 +9,7 @@
 
 namespace Constants
 {
+constexpr size_t BUFF_SIZE = 10000;
 constexpr std::string_view ENCRYPT_OPTION = "--encrypt";
 constexpr std::string_view DECRYPT_OPTION = "--decrypt";
 constexpr std::string_view DECOMPRESS_OPTION = "--decompress";

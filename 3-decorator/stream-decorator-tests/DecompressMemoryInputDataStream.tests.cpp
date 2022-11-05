@@ -81,12 +81,13 @@ TEST_CASE("Reading stream with invalid compressed data (length byte equals zero)
 	REQUIRE_THROWS_AS(decompressStream->ReadByte(), std::ios::failure);
 }
 
-TEST_CASE("Reading block of bytes from empty stream should cause exception")
+TEST_CASE("Reading block of bytes from empty stream should read 0 bytes")
 {
 	InputDataStreamPtr emptyStream = std::make_unique<MemoryInputDataStream>();
 	InputDataStreamPtr decompressStream = std::make_unique<DecompressInputDataStreamDecorator>(std::move(emptyStream));
 
-	REQUIRE_THROWS_AS(decompressStream->ReadBlock(new char(0), 1), std::ios::failure);
+	REQUIRE(decompressStream->IsEOF());
+	REQUIRE(decompressStream->ReadBlock(new char(0), 1) == 0);
 }
 
 TEST_CASE("Reading block of bytes from compressed stream")
@@ -126,11 +127,11 @@ TEST_CASE("Reading block of bytes from compressed stream")
 		delete[] data;
 	}
 
-	SECTION("Reading more bytes than stream has, should cause exception")
+	SECTION("Reading more bytes than stream has, should read only 4")
 	{
 		char* data = new char[5]();
 
-		REQUIRE_THROWS_AS(decompressStream->ReadBlock(data, 5), std::ios::failure);
+		REQUIRE(decompressStream->ReadBlock(data, 5) == 4);
 
 		delete[] data;
 	}

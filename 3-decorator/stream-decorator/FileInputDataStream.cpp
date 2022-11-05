@@ -23,12 +23,7 @@ bool FileInputDataStream::IsEOF() const
 
 uint8_t FileInputDataStream::ReadByte()
 {
-	if (IsEOF())
-	{
-		throw std::ios::failure("Unable to read byte: Stream is empty");
-	}
-
-	if (m_stream.fail())
+	if (!m_stream)
 	{
 		throw std::ios::failure("Unable to read byte: Stream is in failure state");
 	}
@@ -43,8 +38,7 @@ std::streamsize FileInputDataStream::ReadBlock(void* dstBuffer, std::streamsize 
 		throw std::invalid_argument("Destionation buffer pointer is nullptr");
 	}
 
-	m_stream.read(reinterpret_cast<char*>(dstBuffer), size);
-	return m_stream.gcount();
+	return m_stream.read(reinterpret_cast<char*>(dstBuffer), size).gcount();
 }
 
 void FileInputDataStream::DetermineFileSize()

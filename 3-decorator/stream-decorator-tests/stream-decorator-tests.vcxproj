@@ -150,6 +150,7 @@
     <ClCompile Include="..\stream-decorator\FileOutputDataStream.cpp" />
     <ClCompile Include="..\stream-decorator\InputDataStreamDecorator.cpp" />
     <ClCompile Include="..\stream-decorator\MemoryInputDataStream.cpp" />
+    <ClCompile Include="..\stream-decorator\MemoryOutputDataStream.cpp" />
     <ClCompile Include="..\stream-decorator\OutputDataStreamDecorator.cpp" />
     <ClCompile Include="catch_main.cpp" />
     <ClCompile Include="CompressInputOutputDataStreams.tests.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="EncryptionInputOutputDataStreams.tests.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="MemoryOutputStream.tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\stream-decorator\CompressOutputDataStreamDecorator.h" />
@@ -170,6 +172,7 @@
     <ClInclude Include="..\stream-decorator\InputDataStreamDecorator.h" />
     <ClInclude Include="..\stream-decorator\IOutputDataStream.h" />
     <ClInclude Include="..\stream-decorator\MemoryInputDataStream.h" />
+    <ClInclude Include="..\stream-decorator\MemoryOutputDataStream.h" />
     <ClInclude Include="..\stream-decorator\OutputDataStreamDecorator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
