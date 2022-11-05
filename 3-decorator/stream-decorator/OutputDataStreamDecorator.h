@@ -8,9 +8,9 @@ class OutputDataStreamDecorator : public IOutputDataStream
 protected:
 	OutputDataStreamDecorator(OutputDataStreamPtr&& decoratedComponent);
 
-	void WriteByte(uint8_t data);
+	void WriteByte(uint8_t data) override;
 
-	void WriteBlock(const void* srcData, std::streamsize size);
+	void WriteBlock(const void* srcData, std::streamsize size) override;
 
 private:
 	OutputDataStreamPtr m_wrappedComponent;

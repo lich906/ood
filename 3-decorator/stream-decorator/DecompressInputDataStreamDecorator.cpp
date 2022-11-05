@@ -14,9 +14,7 @@ uint8_t DecompressInputDataStreamDecorator::ReadByte()
 {
 	if (!m_currSequenceData.lengthByte)
 	{
-		m_currSequenceData.lengthByte = InputDataStreamDecorator::ReadByte();
-
-		if (!m_currSequenceData.lengthByte)
+		if (!(m_currSequenceData.lengthByte = InputDataStreamDecorator::ReadByte()))
 		{
 			throw std::ios::failure("Error was occured during decompression: Length byte cannot be zero");
 		}
@@ -40,7 +38,9 @@ std::streamsize DecompressInputDataStreamDecorator::ReadBlock(void* dstBuffer, s
 
 	std::streamsize count = 0;
 	for (; count < size; ++count)
+	{
 		*dst++ = ReadByte();
+	}
 
 	return count;
 }

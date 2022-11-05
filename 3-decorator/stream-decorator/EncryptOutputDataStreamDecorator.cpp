@@ -13,12 +13,17 @@ void EncryptOutputDataStreamDecorator::WriteByte(uint8_t data)
 
 void EncryptOutputDataStreamDecorator::WriteBlock(const void* srcData, std::streamsize size)
 {
+	if (srcData == nullptr)
+	{
+		throw std::invalid_argument("Pointer to source data buffer is nullptr");
+	}
+
 	auto encryptedBlock = GetEncryptedBlock(srcData, size);
 	OutputDataStreamDecorator::WriteBlock(encryptedBlock, size);
 	delete[] encryptedBlock;
 }
 
-const uint8_t* EncryptOutputDataStreamDecorator::GetEncryptedBlock(const void* srcData, std::streamsize size)
+const uint8_t* EncryptOutputDataStreamDecorator::GetEncryptedBlock(const void* srcData, std::streamsize size) const
 {
 	auto encrypted = new uint8_t[size]();
 	const uint8_t* srcByteData = reinterpret_cast<const uint8_t*>(srcData);

@@ -1,5 +1,7 @@
 #include <catch.hpp>
 
+#include <iostream>
+
 #include "EncryptOutputDataStreamDecorator.h"
 #include "DecryptInputDataStreamDecorator.h"
 #include "FileInputDataStream.h"

@@ -3,6 +3,10 @@
 FileOutputDataStream::FileOutputDataStream(const std::string& fileName)
 	: m_stream(fileName, std::ios::binary)
 {
+	if (!m_stream.is_open())
+	{
+		throw std::runtime_error("Failed to open file '" + fileName + "'.");
+	}
 }
 
 void FileOutputDataStream::WriteByte(uint8_t data)

@@ -70,6 +70,12 @@
       <Filter>Source Files\Output\Decorator</Filter>
     </ClCompile>
     <ClCompile Include="EncryptOutputDataStreamDecorator.cpp">
+      <Filter>Source Files\Output\Decorator</Filter>
+    </ClCompile>
+    <ClCompile Include="CompressOutputDataStreamDecorator.cpp">
+      <Filter>Source Files\Output\Decorator</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgramArguments.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -108,7 +114,16 @@
       <Filter>Header Files\Output\Decorator</Filter>
     </ClInclude>
     <ClInclude Include="EncryptOutputDataStreamDecorator.h">
+      <Filter>Header Files\Output\Decorator</Filter>
+    </ClInclude>
+    <ClInclude Include="CompressOutputDataStreamDecorator.h">
+      <Filter>Header Files\Output\Decorator</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgramArguments.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="compress_test.txt" />
   </ItemGroup>
 </Project>

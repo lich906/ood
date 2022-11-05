@@ -9,12 +9,12 @@ class EncryptOutputDataStreamDecorator : public OutputDataStreamDecorator
 public:
 	EncryptOutputDataStreamDecorator(OutputDataStreamPtr&& decoratedComponent, size_t key);
 
-	void WriteByte(uint8_t data);
+	void WriteByte(uint8_t data) override;
 
-	void WriteBlock(const void* srcData, std::streamsize size);
+	void WriteBlock(const void* srcData, std::streamsize size) override;
 
 private:
-	const uint8_t* GetEncryptedBlock(const void* srcData, std::streamsize size);
+	const uint8_t* GetEncryptedBlock(const void* srcData, std::streamsize size) const;
 
 	CryptTable m_encryptTable;
 };

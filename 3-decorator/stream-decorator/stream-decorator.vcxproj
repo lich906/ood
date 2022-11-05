@@ -131,6 +131,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CompressOutputDataStreamDecorator.cpp" />
     <ClCompile Include="CryptTable.cpp" />
     <ClCompile Include="DecompressInputDataStreamDecorator.cpp" />
     <ClCompile Include="DecryptInputDataStreamDecorator.cpp" />
@@ -151,8 +153,10 @@
     <ClCompile Include="MemoryInputDataStream.cpp" />
     <ClCompile Include="MemoryOutputDataStream.cpp" />
     <ClCompile Include="OutputDataStreamDecorator.cpp" />
+    <ClCompile Include="ProgramArguments.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CompressOutputDataStreamDecorator.h" />
     <ClInclude Include="CryptTable.h" />
     <ClInclude Include="DecompressInputDataStreamDecorator.h" />
     <ClInclude Include="DecryptInputDataStreamDecorator.h" />
@@ -165,6 +169,10 @@
     <ClInclude Include="MemoryInputDataStream.h" />
     <ClInclude Include="MemoryOutputDataStream.h" />
     <ClInclude Include="OutputDataStreamDecorator.h" />
+    <ClInclude Include="ProgramArguments.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="compress_test.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

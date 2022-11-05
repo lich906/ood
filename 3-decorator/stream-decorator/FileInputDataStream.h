@@ -17,7 +17,10 @@ public:
 	std::streamsize ReadBlock(void* dstBuffer, std::streamsize size) override;
 
 private:
-	std::ifstream m_stream;
+	void DetermineFileSize();
+
+	mutable std::ifstream m_stream;
+	std::streampos m_fileSize;
 };
 
 #endif // !FILE_INPUT_STREAM_H
