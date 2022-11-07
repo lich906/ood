@@ -39,6 +39,7 @@ void CompressOutputDataStreamDecorator::WriteBlock(const void* srcData, std::str
 	WriteCurrentSequence();
 }
 
+// сделать метод Close()
 CompressOutputDataStreamDecorator::~CompressOutputDataStreamDecorator()
 {
 	WriteCurrentSequence();

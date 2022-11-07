@@ -5,7 +5,7 @@
 
 class OutputDataStreamDecorator : public IOutputDataStream
 {
-protected:
+public:
 	OutputDataStreamDecorator(OutputDataStreamPtr&& decoratedComponent);
 
 	void WriteByte(uint8_t data) override;

@@ -5,7 +5,7 @@
 
 class InputDataStreamDecorator : public IInputDataStream
 {
-protected:
+public:
 	InputDataStreamDecorator(InputDataStreamPtr&& decoratedComponent);
 
 	bool IsEOF() const override;

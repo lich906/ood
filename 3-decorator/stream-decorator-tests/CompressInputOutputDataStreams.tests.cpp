@@ -32,3 +32,31 @@ TEST_CASE("Compressing and decompressing data through file stream")
 		delete[] decompressedData;
 	}
 }
+
+TEST_CASE("Compressing 255 same bytes")
+{
+	// использовать конструктор std::string принимающий размер
+	auto data = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+	size_t size = strlen(data) + 1;
+
+	// Writing compressed data to file
+	{
+		OutputDataStreamPtr outputStream = std::make_unique<FileOutputDataStream>("compressed256.txt");
+		OutputDataStreamPtr compressOutputStream = std::make_unique<CompressOutputDataStreamDecorator>(std::move(outputStream));
+
+		compressOutputStream->WriteBlock(data, size);
+	}
+
+	// Decompressing data
+	{
+		InputDataStreamPtr inputStream = std::make_unique<FileInputDataStream>("compressed256.txt");
+		InputDataStreamPtr decompressInputStream = std::make_unique<DecompressInputDataStreamDecorator>(std::move(inputStream));
+		char* decompressedData = new char[size](); //не использовать сырые указатели
+
+		decompressInputStream->ReadBlock(decompressedData, size);
+
+		REQUIRE(strcmp(decompressedData, data) == 0);
+
+		delete[] decompressedData;
+	}
+}
