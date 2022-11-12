@@ -2,6 +2,8 @@
 #define COLOR_H
 
 #include <iostream>
+#include <string_view>
+#include <string>
 
 enum class Color
 {

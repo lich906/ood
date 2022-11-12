@@ -8,7 +8,7 @@ class Ellipse : public IShape
 public:
 	Ellipse(Point center, size_t horizontalRadius, size_t verticalRadius, Color color);
 
-	void Draw(CanvasPtr& canvas) const;
+	void Draw(ICanvas* canvas) const;
 
 	Color GetColor() const;
 

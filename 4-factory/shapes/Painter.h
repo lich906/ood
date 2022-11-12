@@ -6,7 +6,7 @@
 class Painter : public IPainter
 {
 public:
-	void DrawPicture(const PictureDraft& draft, CanvasPtr& canvas) const override;
+	void DrawPicture(const PictureDraft& draft, ICanvas* canvas) const override;
 };
 
 #endif // !PAINTER_H

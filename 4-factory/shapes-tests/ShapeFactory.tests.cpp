@@ -12,13 +12,13 @@ TEST_CASE("Passing valid shape description in method CreateShape")
 	ShapeFactory factory;
 	PictureDraft draft;
 	Painter painter;
-	CanvasPtr canvas = std::make_unique<StreamCanvas>(oss);
+	auto canvas = std::make_unique<StreamCanvas>(oss);
 
 	SECTION("Passing valid rectangle shape description, drawing shape to ensure valid data")
 	{
 		draft.AddShape(factory.CreateShape("rectangle yellow 20 20 40 40"));
 
-		painter.DrawPicture(draft, canvas);
+		painter.DrawPicture(draft, canvas.get());
 
 		REQUIRE(oss.str() == "color was set to yellow\n"
 							 "drawing line from 20,20 to 40,20 with color yellow\n"
@@ -31,7 +31,7 @@ TEST_CASE("Passing valid shape description in method CreateShape")
 	{
 		draft.AddShape(factory.CreateShape("triangle green 10 10 20 10 15 20"));
 
-		painter.DrawPicture(draft, canvas);
+		painter.DrawPicture(draft, canvas.get());
 
 		REQUIRE(oss.str() == "color was set to green\n"
 							 "drawing line from 10,10 to 20,10 with color green\n"
@@ -43,7 +43,7 @@ TEST_CASE("Passing valid shape description in method CreateShape")
 	{
 		draft.AddShape(factory.CreateShape("ellipse red 50 50 20 30"));
 
-		painter.DrawPicture(draft, canvas);
+		painter.DrawPicture(draft, canvas.get());
 
 		REQUIRE(oss.str() == "color was set to red\n"
 							 "drawing ellipse with center in 50,50 width 20 height 30 with color red\n");
@@ -53,7 +53,7 @@ TEST_CASE("Passing valid shape description in method CreateShape")
 	{
 		draft.AddShape(factory.CreateShape("polygon black 5 50 50 30"));
 
-		painter.DrawPicture(draft, canvas);
+		painter.DrawPicture(draft, canvas.get());
 
 		REQUIRE(oss.str() == "color was set to black\n"
 							 "drawing line from 80,50 to 59,79 with color black\n"

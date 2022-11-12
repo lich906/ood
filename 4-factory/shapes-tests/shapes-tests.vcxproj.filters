@@ -57,6 +57,7 @@
     <ClCompile Include="StreamCanvas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Designer.tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shapes\Color.h">
@@ -107,8 +108,5 @@
     <ClInclude Include="StreamCanvas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Designer.tests.cpp" />
   </ItemGroup>
 </Project>

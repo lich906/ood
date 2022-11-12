@@ -8,7 +8,7 @@ Ellipse::Ellipse(Point center, size_t horizontalRadius, size_t verticalRadius, C
 {
 }
 
-void Ellipse::Draw(CanvasPtr& canvas) const
+void Ellipse::Draw(ICanvas* canvas) const
 {
 	canvas->SetColor(m_color);
 	canvas->DrawEllipse(m_center, m_horRadius, m_vertRadius);

@@ -12,7 +12,7 @@ class RegularPolygon : public IShape
 public:
 	RegularPolygon(size_t vertexCount, Point center, int radius, Color color);
 
-	void Draw(CanvasPtr& canvas) const override;
+	void Draw(ICanvas* canvas) const override;
 
 	Color GetColor() const override;
 

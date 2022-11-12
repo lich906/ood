@@ -12,7 +12,7 @@ RegularPolygon::RegularPolygon(size_t vertexCount, Point center, int radius, Col
 	}
 }
 
-void RegularPolygon::Draw(CanvasPtr& canvas) const
+void RegularPolygon::Draw(ICanvas* canvas) const
 {
 	canvas->SetColor(m_color);
 

@@ -10,7 +10,7 @@ class Triangle : public IShape
 public:
 	Triangle(Point v1, Point v2, Point v3, Color color);
 
-	void Draw(CanvasPtr& canvas) const override;
+	void Draw(ICanvas* canvas) const override;
 
 	Color GetColor() const override;
 

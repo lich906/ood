@@ -7,7 +7,7 @@ Rectangle::Rectangle(Point leftTop, Point rightBottom, Color color)
 {
 }
 
-void Rectangle::Draw(CanvasPtr& canvas) const
+void Rectangle::Draw(ICanvas* canvas) const
 {
 	canvas->SetColor(m_color);
 

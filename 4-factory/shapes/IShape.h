@@ -9,7 +9,7 @@ class IShape
 public:
 	virtual ~IShape() = default;
 
-	virtual void Draw(CanvasPtr& canvas) const = 0;
+	virtual void Draw(ICanvas* canvas) const = 0;
 	virtual Color GetColor() const = 0;
 };
 

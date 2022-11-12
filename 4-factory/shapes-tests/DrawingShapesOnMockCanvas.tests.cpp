@@ -14,7 +14,7 @@
 TEST_CASE("Drawing from existed picture draft on mock canvas")
 {
 	std::ostringstream oss;
-	CanvasPtr canvas = std::make_unique<StreamCanvas>(oss);
+	auto canvas = std::make_unique<StreamCanvas>(oss);
 	Painter painter;
 	PictureDraft draft;
 
@@ -23,7 +23,7 @@ TEST_CASE("Drawing from existed picture draft on mock canvas")
 		ShapePtr rectangle = std::make_unique<Rectangle>(Point{ 10, 10 }, Point{ 20, 40 }, Color::Pink);
 
 		draft.AddShape(std::move(rectangle));
-		painter.DrawPicture(draft, canvas);
+		painter.DrawPicture(draft, canvas.get());
 
 		REQUIRE(oss.str() == "color was set to pink\n"
 							 "drawing line from 10,10 to 20,10 with color pink\n"
@@ -37,7 +37,7 @@ TEST_CASE("Drawing from existed picture draft on mock canvas")
 		ShapePtr triangle = std::make_unique<Triangle>(Point{ 10, 10 }, Point{ 20, 10 }, Point{ 15, 20 }, Color::Green);
 
 		draft.AddShape(std::move(triangle));
-		painter.DrawPicture(draft, canvas);
+		painter.DrawPicture(draft, canvas.get());
 
 		REQUIRE(oss.str() == "color was set to green\n"
 							 "drawing line from 10,10 to 20,10 with color green\n"
@@ -50,7 +50,7 @@ TEST_CASE("Drawing from existed picture draft on mock canvas")
 		ShapePtr ellipse = std::make_unique<Ellipse>(Point{ 50, 50 }, 20, 30, Color::Red);
 
 		draft.AddShape(std::move(ellipse));
-		painter.DrawPicture(draft, canvas);
+		painter.DrawPicture(draft, canvas.get());
 
 		REQUIRE(oss.str() == "color was set to red\n"
 							 "drawing ellipse with center in 50,50 width 20 height 30 with color red\n");
@@ -61,7 +61,7 @@ TEST_CASE("Drawing from existed picture draft on mock canvas")
 		ShapePtr pentagon = std::make_unique<RegularPolygon>(5, Point{ 50, 50 }, 30, Color::Black);
 
 		draft.AddShape(std::move(pentagon));
-		painter.DrawPicture(draft, canvas);
+		painter.DrawPicture(draft, canvas.get());
 
 		REQUIRE(oss.str() == "color was set to black\n"
 							 "drawing line from 80,50 to 59,79 with color black\n"
@@ -83,7 +83,7 @@ TEST_CASE("Drawing from existed picture draft on mock canvas")
 			.AddShape(std::move(ellipse))
 			.AddShape(std::move(pentagon));
 
-		painter.DrawPicture(draft, canvas);
+		painter.DrawPicture(draft, canvas.get());
 
 		REQUIRE(oss.str() == "color was set to pink\n"
 							 "drawing line from 10,10 to 20,10 with color pink\n"

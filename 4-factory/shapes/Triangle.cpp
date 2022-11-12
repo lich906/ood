@@ -6,7 +6,7 @@ Triangle::Triangle(Point v1, Point v2, Point v3, Color color)
 {
 }
 
-void Triangle::Draw(CanvasPtr& canvas) const
+void Triangle::Draw(ICanvas* canvas) const
 {
 	canvas->SetColor(m_color);
 	canvas->DrawLine(m_vertexes[0], m_vertexes[1]);
