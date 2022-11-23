@@ -5,7 +5,7 @@
 class InsertParagraphCommand : public Command
 {
 public:
-	InsertParagraphCommand(const std::shared_ptr<IDocumentEditContext>& document, const std::shared_ptr<IParagraph>& paragraph,
+	InsertParagraphCommand(IDocumentEditContext* document, const std::shared_ptr<IParagraph>& paragraph,
 		std::optional<size_t> position = std::nullopt);
 
 	void ExecuteImpl() override;

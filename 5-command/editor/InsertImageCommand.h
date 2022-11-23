@@ -5,7 +5,7 @@
 class InsertImageCommand : public Command
 {
 public:
-	InsertImageCommand(const std::shared_ptr<IDocumentEditContext>& document, const std::shared_ptr<IImage>& image,
+	InsertImageCommand(IDocumentEditContext* document, const std::shared_ptr<IImage>& image,
 		std::optional<size_t> position = std::nullopt);
 
 	void ExecuteImpl() override;

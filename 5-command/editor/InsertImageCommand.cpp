@@ -1,6 +1,6 @@
 #include "InsertImageCommand.h"
 
-InsertImageCommand::InsertImageCommand(const std::shared_ptr<IDocumentEditContext>& document, const std::shared_ptr<IImage>& image, std::optional<size_t> position)
+InsertImageCommand::InsertImageCommand(IDocumentEditContext* document, const std::shared_ptr<IImage>& image, std::optional<size_t> position)
 	: Command(document)
 	, m_image(image)
 	, m_index(position)

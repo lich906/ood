@@ -22,5 +22,5 @@ public:
 
 private:
 	std::vector<std::unique_ptr<Command>> m_commands;
-	size_t m_lastExecutedCommandIndex = 0;
+	int8_t m_lastExecutedCommandIndex = -1;
 };

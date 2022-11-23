@@ -1,7 +1,15 @@
 #include "CommandLineEditor.h"
 
-CommandLineEditor::CommandLineEditor(std::unique_ptr<IDocument>&& document)
+static inline void ltrim(std::string& s)
+{
+	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+		return !std::isspace(ch);
+	}));
+}
+
+CommandLineEditor::CommandLineEditor(std::unique_ptr<IDocument>&& document, std::istream& input)
 	: m_document(std::move(document))
+	, m_input(input)
 {
 }
 
@@ -14,10 +22,11 @@ void CommandLineEditor::InsertParagraph()
 {
 	auto position = ParsePosition();
 
-	std::string text;
-	std::getline(std::cin, text);
+	std::string txt;
+	std::getline(m_input, txt);
+	ltrim(txt);
 
-	m_document->InsertParagraph(text, position);
+	m_document->InsertParagraph(txt, position);
 }
 
 void CommandLineEditor::InsertImage()
@@ -26,7 +35,7 @@ void CommandLineEditor::InsertImage()
 	
 	std::filesystem::path path;
 	int width, height;
-	std::cin >> width >> height >> path;
+	m_input >> width >> height >> path;
 
 	m_document->InsertImage(path, width, height, position);
 }
@@ -34,7 +43,8 @@ void CommandLineEditor::InsertImage()
 void CommandLineEditor::SetTitle()
 {
 	std::string title;
-	std::getline(std::cin, title);
+	std::getline(m_input, title);
+	ltrim(title);
 
 	m_document->SetTitle(title);
 }
@@ -62,45 +72,28 @@ void CommandLineEditor::List()
 void CommandLineEditor::ReplaceText()
 {
 	size_t index;
-	std::cin >> index;
-	std::string text;
-	std::getline(std::cin, text);
+	m_input >> index;
+	std::string txt;
+	std::getline(m_input, txt);
+	ltrim(txt);
 
-	auto paragraph = m_document->GetItem(index).GetParagraph();
-
-	if (paragraph == nullptr)
-	{
-		throw CommandExecutionException("Unable to replace paragraph text: item at position isn't a paragraph");
-	}
-	else
-	{
-		paragraph->SetText(text);
-	}
+	m_document->ReplaceParagraphText(index, txt);
 }
 
 void CommandLineEditor::ResizeImage()
 {
 	size_t index;
-	std::cin >> index;
-	int width, height;
-	std::cin >> width >> height;
+	m_input >> index;
+	int w, h;
+	m_input >> w >> h;
 
-	auto image = m_document->GetItem(index).GetImage();
-
-	if (image == nullptr)
-	{
-		throw CommandExecutionException("Unable to resize image: item at position isn't an image");
-	}
-	else
-	{
-		image->Resize(width, height);
-	}
+	m_document->ResizeImage(index, w, h);
 }
 
 void CommandLineEditor::DeleteItem()
 {
 	size_t index;
-	std::cin >> index;
+	m_input >> index;
 
 	m_document->DeleteItem(index);
 }
@@ -118,20 +111,20 @@ void CommandLineEditor::Redo()
 void CommandLineEditor::Save()
 {
 	std::filesystem::path path;
-	std::cin >> path;
+	m_input >> path;
 
 	m_document->Save(path);
 }
 
 std::optional<size_t> CommandLineEditor::ParsePosition()
 {
-	std::string positionStr;
-	std::cin >> positionStr;
+	std::string posStr;
+	m_input >> posStr;
 
-	if (positionStr == POSITION_END)
+	if (posStr == POSITION_END)
 	{
 		return std::nullopt;
 	}
 
-	return std::stoul(positionStr);
+	return std::stoul(posStr);
 }

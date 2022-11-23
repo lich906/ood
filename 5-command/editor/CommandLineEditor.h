@@ -3,7 +3,6 @@
 #include <iostream>
 
 #include "IDocument.h"
-#include "ICommandFactory.h"
 #include "CommandExecutionException.h"
 
 constexpr auto POSITION_END = "end";
@@ -11,7 +10,7 @@ constexpr auto POSITION_END = "end";
 class CommandLineEditor
 {
 public:
-	explicit CommandLineEditor(std::unique_ptr<IDocument>&& document);
+	CommandLineEditor(std::unique_ptr<IDocument>&& document, std::istream& input = std::cin);
 
 	void OpenDocument(std::unique_ptr<IDocument>&& document);
 
@@ -36,7 +35,8 @@ public:
 	void Save();
 
 private:
-	std::unique_ptr<IDocument> m_document;
-
 	std::optional<size_t> ParsePosition();
+
+	std::istream& m_input;
+	std::unique_ptr<IDocument> m_document;
 };

@@ -1,6 +1,6 @@
 #include "DeleteItemCommand.h"
 
-DeleteItemCommand::DeleteItemCommand(const std::shared_ptr<IDocumentEditContext>& document, size_t index, DocumentItem deletedItem)
+DeleteItemCommand::DeleteItemCommand(IDocumentEditContext* document, size_t index, DocumentItem deletedItem)
 	: Command(document)
 	, m_index(index)
 	, m_deletedItem(deletedItem)

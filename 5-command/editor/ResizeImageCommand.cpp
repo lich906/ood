@@ -1,6 +1,6 @@
 #include "ResizeImageCommand.h"
 
-ResizeImageCommand::ResizeImageCommand(const std::shared_ptr<IDocumentEditContext>& document, size_t index,
+ResizeImageCommand::ResizeImageCommand(IDocumentEditContext* document, size_t index,
 	int width, int height, int oldWidth, int oldHeight)
 	: Command(document)
 	, m_index(index)

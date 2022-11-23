@@ -25,12 +25,12 @@ public:
 	virtual ~Command() = default;
 
 protected:
-	explicit Command(const std::shared_ptr<IDocumentEditContext>& documentEditContext);
+	explicit Command(IDocumentEditContext* documentEditContext);
 
 	/*
 	”казатель на получател€ команды
 	*/
-	std::shared_ptr<IDocumentEditContext> m_documentEditContext;
+	IDocumentEditContext* const m_documentEditContext;
 
 	virtual void ExecuteImpl() = 0;
 	virtual void UnexecuteImpl() = 0;

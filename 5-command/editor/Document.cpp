@@ -8,7 +8,7 @@ Document::Document(const std::shared_ptr<IDocumentSaveStrategy>& saveStrategy)
 std::shared_ptr<IParagraph> Document::InsertParagraph(const std::string& text, std::optional<size_t> position)
 {
 	std::shared_ptr<IParagraph> paragraph = std::make_shared<Paragraph>(text);
-	std::unique_ptr<Command> command = std::make_unique<InsertParagraphCommand>(shared_from_this(), paragraph, position);
+	std::unique_ptr<Command> command = std::make_unique<InsertParagraphCommand>(static_cast<IDocumentEditContext*>(this), paragraph, position);
 	command->Execute();
 	m_commandHistory.AddCommand(std::move(command));
 
@@ -18,7 +18,7 @@ std::shared_ptr<IParagraph> Document::InsertParagraph(const std::string& text, s
 std::shared_ptr<IImage> Document::InsertImage(const std::filesystem::path& path, int width, int height, std::optional<size_t> position)
 {
 	std::shared_ptr<IImage> image = std::make_shared<Image>(path, width, height);
-	std::unique_ptr<Command> command = std::make_unique<InsertParagraphCommand>(shared_from_this(), image, position);
+	std::unique_ptr<Command> command = std::make_unique<InsertImageCommand>(static_cast<IDocumentEditContext*>(this), image, position);
 	command->Execute();
 	m_commandHistory.AddCommand(std::move(command));
 
@@ -29,7 +29,7 @@ void Document::ReplaceParagraphText(size_t index, const std::string& text)
 {
 	if (auto paragraph = GetItem(index).GetParagraph())
 	{
-		std::unique_ptr<Command> command = std::make_unique<ReplaceTextCommand>(shared_from_this(), index,
+		std::unique_ptr<Command> command = std::make_unique<ReplaceTextCommand>(static_cast<IDocumentEditContext*>(this), index,
 			text, paragraph->GetText());
 		command->Execute();
 		m_commandHistory.AddCommand(std::move(command));
@@ -44,7 +44,7 @@ void Document::ResizeImage(size_t index, int width, int height)
 {
 	if (auto image = GetItem(index).GetImage())
 	{
-		std::unique_ptr<Command> command = std::make_unique<ResizeImageCommand>(shared_from_this(),
+		std::unique_ptr<Command> command = std::make_unique<ResizeImageCommand>(static_cast<IDocumentEditContext*>(this),
 			index, width, height, image->GetWidth(), image->GetWidth());
 		command->Execute();
 		m_commandHistory.AddCommand(std::move(command));
@@ -57,7 +57,7 @@ void Document::ResizeImage(size_t index, int width, int height)
 
 void Document::DeleteItem(size_t index)
 {
-	std::unique_ptr<Command> command = std::make_unique<DeleteItemCommand>(shared_from_this(), index, m_items[index]);
+	std::unique_ptr<Command> command = std::make_unique<DeleteItemCommand>(static_cast<IDocumentEditContext*>(this), index, m_items[index]);
 	command->Execute();
 	m_commandHistory.AddCommand(std::move(command));
 }
@@ -69,7 +69,7 @@ std::string Document::GetTitle() const
 
 void Document::SetTitle(const std::string& title)
 {
-	std::unique_ptr<Command> command = std::make_unique<SetTitleCommand>(shared_from_this(), title, m_title);
+	std::unique_ptr<Command> command = std::make_unique<SetTitleCommand>(static_cast<IDocumentEditContext*>(this), title, m_title);
 	command->Execute();
 	m_commandHistory.AddCommand(std::move(command));
 }
@@ -96,7 +96,7 @@ void Document::Redo()
 
 void Document::Save(const std::filesystem::path& path) const
 {
-	m_documentSaveStrategy->Save(path, shared_from_this());
+	m_documentSaveStrategy->Save(path, this);
 }
 
 std::shared_ptr<IParagraph> Document::InsertParagraphEdit(const std::shared_ptr<IParagraph>& paragraph, std::optional<size_t> position)
@@ -177,10 +177,20 @@ size_t Document::GetItemsCount() const
 
 ConstDocumentItem Document::GetItem(size_t index) const
 {
+	if (index >= m_items.size())
+	{
+		throw std::out_of_range("Unable to get item: index is out of range");
+	}
+
 	return m_items[index];
 }
 
 DocumentItem Document::GetItem(size_t index)
 {
+	if (index >= m_items.size())
+	{
+		throw std::out_of_range("Unable to get item: index is out of range");
+	}
+
 	return m_items[index];
 }

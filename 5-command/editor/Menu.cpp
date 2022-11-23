@@ -1,8 +1,13 @@
 #include "Menu.h"
 
-void Menu::AddItem(MenuItem&& item)
+Menu::Menu(std::istream& input)
+	: m_input(input)
 {
-	m_items.insert({ item.shortcut, std::move(item) });
+}
+
+void Menu::AddItem(const MenuItem& item)
+{
+	m_items.insert({ item.shortcut, item });
 }
 
 void Menu::ShowHelpMessage()
@@ -22,9 +27,8 @@ void Menu::ShowHelpMessage()
 
 void Menu::Run()
 {
-	for (std::string commandShortcut; std::getline(std::cin, commandShortcut, ' ');)
+	for (std::string commandShortcut; m_input >> commandShortcut;)
 	{
-		std::cout << "> ";
 		auto item = m_items.find(commandShortcut);
 
 		if (item != m_items.end())
@@ -33,7 +37,7 @@ void Menu::Run()
 		}
 		else
 		{
-			std::cout << "Unknown command '" << item->first << '\'' << std::endl;
+			std::cout << "Unknown command '" << commandShortcut << '\'' << std::endl;
 		}
 	}
 }

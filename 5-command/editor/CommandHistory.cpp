@@ -47,10 +47,10 @@ void CommandHistory::Undo()
 
 bool CommandHistory::CanUndo() const
 {
-	return m_lastExecutedCommandIndex != 0;
+	return m_lastExecutedCommandIndex >= 0;
 }
 
 bool CommandHistory::CanRedo() const
 {
-	return !m_commands.empty() && m_lastExecutedCommandIndex < (m_commands.size() - 1);
+	return m_lastExecutedCommandIndex < static_cast<int8_t>(m_commands.size() - 1);
 }

@@ -26,7 +26,7 @@ void Command::Unexecute()
 	}
 }
 
-Command::Command(const std::shared_ptr<IDocumentEditContext>& documentEditContext)
+Command::Command(IDocumentEditContext* documentEditContext)
+	: m_documentEditContext(documentEditContext)
 {
-	m_documentEditContext = documentEditContext;
 }

@@ -14,7 +14,7 @@
 #include "ReplaceTextCommand.h"
 #include "ResizeImageCommand.h"
 
-class Document : public IDocument, public std::enable_shared_from_this<Document>, private IDocumentEditContext
+class Document : public IDocument, private IDocumentEditContext
 {
 public:
 	explicit Document(const std::shared_ptr<IDocumentSaveStrategy>& saveStrategy);

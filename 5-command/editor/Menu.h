@@ -8,7 +8,9 @@
 class Menu
 {
 public:
-	void AddItem(MenuItem&& item);
+	explicit Menu(std::istream& input = std::cin);
+
+	void AddItem(const MenuItem& item);
 
 	void ShowHelpMessage();
 
@@ -16,4 +18,5 @@ public:
 	
 private:
 	std::unordered_map<std::string, MenuItem> m_items;
+	std::istream& m_input;
 };

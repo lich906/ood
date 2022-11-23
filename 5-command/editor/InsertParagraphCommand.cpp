@@ -1,6 +1,6 @@
 #include "InsertParagraphCommand.h"
 
-InsertParagraphCommand::InsertParagraphCommand(const std::shared_ptr<IDocumentEditContext>& document,
+InsertParagraphCommand::InsertParagraphCommand(IDocumentEditContext* document,
 	const std::shared_ptr<IParagraph>& paragraph, std::optional<size_t> position)
 	: Command(document)
 	, m_paragraph(paragraph)

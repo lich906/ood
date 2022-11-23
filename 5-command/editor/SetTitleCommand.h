@@ -5,7 +5,7 @@
 class SetTitleCommand : public Command
 {
 public:
-	SetTitleCommand(const std::shared_ptr<IDocumentEditContext>& document, const std::string& title, const std::string& oldTitle);
+	SetTitleCommand(IDocumentEditContext* document, const std::string& title, const std::string& oldTitle);
 
 	void ExecuteImpl() override;
 

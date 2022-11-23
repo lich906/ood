@@ -6,7 +6,7 @@
 class DeleteItemCommand : public Command
 {
 public:
-	DeleteItemCommand(const std::shared_ptr<IDocumentEditContext>& document, size_t index, DocumentItem deletedItem);
+	DeleteItemCommand(IDocumentEditContext* document, size_t index, DocumentItem deletedItem);
 
 	void ExecuteImpl() override;
 

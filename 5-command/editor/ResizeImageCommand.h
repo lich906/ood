@@ -5,7 +5,7 @@
 class ResizeImageCommand : public Command
 {
 public:
-	ResizeImageCommand(const std::shared_ptr<IDocumentEditContext>& document, size_t index, int width, int height, int oldWidth, int oldHeight);
+	ResizeImageCommand(IDocumentEditContext* document, size_t index, int width, int height, int oldWidth, int oldHeight);
 
 	void ExecuteImpl() override;
 

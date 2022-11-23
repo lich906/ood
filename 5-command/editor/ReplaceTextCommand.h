@@ -5,7 +5,7 @@
 class ReplaceTextCommand : public Command
 {
 public:
-	ReplaceTextCommand(const std::shared_ptr<IDocumentEditContext>& document, size_t index,
+	ReplaceTextCommand(IDocumentEditContext* document, size_t index,
 		const std::string& text, const std::string& oldText);
 
 	void ExecuteImpl() override;

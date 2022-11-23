@@ -1,6 +1,6 @@
 #include "ReplaceTextCommand.h"
 
-ReplaceTextCommand::ReplaceTextCommand(const std::shared_ptr<IDocumentEditContext>& document, size_t index,
+ReplaceTextCommand::ReplaceTextCommand(IDocumentEditContext* document, size_t index,
 	const std::string& text, const std::string& oldText)
 	: Command(document)
 	, m_index(index)

@@ -147,7 +147,51 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\editor\Command.cpp" />
+    <ClCompile Include="..\editor\CommandHistory.cpp" />
+    <ClCompile Include="..\editor\CommandLineEditor.cpp" />
+    <ClCompile Include="..\editor\ConstDocumentItem.cpp" />
+    <ClCompile Include="..\editor\DeleteItemCommand.cpp" />
+    <ClCompile Include="..\editor\Document.cpp" />
+    <ClCompile Include="..\editor\DocumentHtmlSaveStrategy.cpp" />
+    <ClCompile Include="..\editor\DocumentItem.cpp" />
+    <ClCompile Include="..\editor\Image.cpp" />
+    <ClCompile Include="..\editor\InsertImageCommand.cpp" />
+    <ClCompile Include="..\editor\InsertParagraphCommand.cpp" />
+    <ClCompile Include="..\editor\Menu.cpp" />
+    <ClCompile Include="..\editor\Paragraph.cpp" />
+    <ClCompile Include="..\editor\ReplaceTextCommand.cpp" />
+    <ClCompile Include="..\editor\ResizeImageCommand.cpp" />
+    <ClCompile Include="..\editor\SetTitleCommand.cpp" />
     <ClCompile Include="catch_main.cpp" />
+    <ClCompile Include="CommandLineEditorWithMenu.tests.cpp" />
+    <ClCompile Include="Document.tests.cpp" />
+    <ClCompile Include="Menu.tests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\editor\Command.h" />
+    <ClInclude Include="..\editor\CommandExecutionException.h" />
+    <ClInclude Include="..\editor\CommandHistory.h" />
+    <ClInclude Include="..\editor\CommandLineEditor.h" />
+    <ClInclude Include="..\editor\ConstDocumentItem.h" />
+    <ClInclude Include="..\editor\DeleteItemCommand.h" />
+    <ClInclude Include="..\editor\Document.h" />
+    <ClInclude Include="..\editor\DocumentHtmlSaveStrategy.h" />
+    <ClInclude Include="..\editor\DocumentItem.h" />
+    <ClInclude Include="..\editor\IDocument.h" />
+    <ClInclude Include="..\editor\IDocumentEditContext.h" />
+    <ClInclude Include="..\editor\IDocumentSaveStrategy.h" />
+    <ClInclude Include="..\editor\IImage.h" />
+    <ClInclude Include="..\editor\Image.h" />
+    <ClInclude Include="..\editor\InsertImageCommand.h" />
+    <ClInclude Include="..\editor\InsertParagraphCommand.h" />
+    <ClInclude Include="..\editor\IParagraph.h" />
+    <ClInclude Include="..\editor\Menu.h" />
+    <ClInclude Include="..\editor\MenuItem.h" />
+    <ClInclude Include="..\editor\Paragraph.h" />
+    <ClInclude Include="..\editor\ReplaceTextCommand.h" />
+    <ClInclude Include="..\editor\ResizeImageCommand.h" />
+    <ClInclude Include="..\editor\SetTitleCommand.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
