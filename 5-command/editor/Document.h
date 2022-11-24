@@ -48,6 +48,8 @@ public:
 	void Save(const std::filesystem::path& path) const;
 
 private:
+	const std::string DEFAULT_TITLE = "Untitled";
+
 	std::shared_ptr<IParagraph> InsertParagraphEdit(const std::shared_ptr<IParagraph>& paragraph,
 		std::optional<size_t> position = std::nullopt) override;
 
@@ -64,7 +66,7 @@ private:
 
 	DocumentItem& GetItemForEdit(size_t index) override;
 
-	std::string m_title;
+	std::string m_title = DEFAULT_TITLE;
 	std::vector<DocumentItem> m_items;
 	CommandHistory m_commandHistory;
 	std::shared_ptr<IDocumentSaveStrategy> m_documentSaveStrategy;

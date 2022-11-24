@@ -27,6 +27,7 @@ std::shared_ptr<IImage> Document::InsertImage(const std::filesystem::path& path,
 
 void Document::ReplaceParagraphText(size_t index, const std::string& text)
 {
+	auto item = GetItem(index);
 	if (auto paragraph = GetItem(index).GetParagraph())
 	{
 		std::unique_ptr<Command> command = std::make_unique<ReplaceTextCommand>(static_cast<IDocumentEditContext*>(this), index,
@@ -45,7 +46,7 @@ void Document::ResizeImage(size_t index, int width, int height)
 	if (auto image = GetItem(index).GetImage())
 	{
 		std::unique_ptr<Command> command = std::make_unique<ResizeImageCommand>(static_cast<IDocumentEditContext*>(this),
-			index, width, height, image->GetWidth(), image->GetWidth());
+			index, width, height, image->GetWidth(), image->GetHeight());
 		command->Execute();
 		m_commandHistory.AddCommand(std::move(command));
 	}

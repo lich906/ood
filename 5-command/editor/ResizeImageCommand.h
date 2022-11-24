@@ -12,9 +12,6 @@ public:
 	void UnexecuteImpl() override;
 
 private:
-	const int MIN_DIMENSION_SIZE = 1;
-	const int MAX_DIMENSION_SIZE = 10000;
-
 	void ResizeImage(int width, int height) const;
 
 	size_t m_index;

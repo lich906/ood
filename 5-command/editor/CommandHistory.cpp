@@ -27,7 +27,7 @@ void CommandHistory::Redo()
 {
 	if (!CanRedo())
 	{
-		throw std::logic_error("Unable to redo command.");
+		throw CommandExecutionException("Unable to redo command: no commands available for redo");
 	}
 
 	m_commands[m_lastExecutedCommandIndex + 1]->Execute();
@@ -38,7 +38,7 @@ void CommandHistory::Undo()
 {
 	if (!CanUndo())
 	{
-		throw std::logic_error("Unable to undo command: no commands stored in command history");
+		throw CommandExecutionException("Unable to undo command: no commands stored in command history");
 	}
 	
 	m_commands[m_lastExecutedCommandIndex]->Unexecute();

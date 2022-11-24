@@ -3,7 +3,7 @@
 DeleteItemCommand::DeleteItemCommand(IDocumentEditContext* document, size_t index, DocumentItem deletedItem)
 	: Command(document)
 	, m_index(index)
-	, m_deletedItem(deletedItem)
+	, m_deletedItem(std::move(deletedItem))
 {
 }
 

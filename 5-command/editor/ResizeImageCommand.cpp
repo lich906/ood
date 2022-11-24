@@ -19,16 +19,11 @@ void ResizeImageCommand::UnexecuteImpl()
 	ResizeImage(m_oldWidth, m_oldHeight);
 }
 
-void ResizeImageCommand::ResizeImage(int width, int height) const
+void ResizeImageCommand::ResizeImage(int w, int h) const
 {
 	if (auto image = m_documentEditContext->GetItemForEdit(m_index).GetImage())
 	{
-		if (width < MIN_DIMENSION_SIZE || width > MAX_DIMENSION_SIZE || height < MIN_DIMENSION_SIZE || height > MAX_DIMENSION_SIZE)
-		{
-			throw CommandExecutionException("Unable to resize image: unacceptable size");
-		}
-
-		image->Resize(m_width, m_height);
+		image->Resize(w, h);
 	}
 	else
 	{

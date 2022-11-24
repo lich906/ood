@@ -179,3 +179,237 @@ TEST_CASE("Execute more than 10 commands, commands older than 10 previous ones a
 	CHECK(doc->GetItemsCount() == 1);
 	CHECK(doc->GetItem(0).GetParagraph()->GetText() == "First");
 }
+
+TEST_CASE("Insert image into document")
+{
+	std::unique_ptr<IDocument> doc = std::make_unique<Document>(std::shared_ptr<IDocumentSaveStrategy>());
+	std::filesystem::path path("dir/img.png");
+
+	SECTION("Insert image with valid size")
+	{
+		CHECK_NOTHROW(doc->InsertImage(path, 1, 10000, {}));
+		CHECK(doc->GetItemsCount() == 1);
+
+		auto img = doc->GetItem(0).GetImage();
+
+		CHECK(img->GetPath() == path);
+		CHECK(img->GetWidth() == 1);
+		CHECK(img->GetHeight() == 10000);
+	}
+
+	SECTION("Insert image with invalid size")
+	{
+		CHECK_THROWS_AS(doc->InsertImage("dir/img.png", -1, 10000, {}), CommandExecutionException);
+		CHECK_THROWS_AS(doc->InsertImage("dir/img.png", 1, 10001, {}), CommandExecutionException);
+	}
+
+	SECTION("Insert image and undo insertion")
+	{
+		int width = 200, height = 300;
+		doc->InsertImage(path, width, height, {});
+
+		CHECK(doc->GetItemsCount() == 1);
+		CHECK(doc->CanUndo());
+
+		doc->Undo();
+
+		CHECK(!doc->CanUndo());
+		CHECK(doc->GetItemsCount() == 0);
+		CHECK_THROWS_AS(doc->GetItem(0), std::out_of_range);
+
+		SECTION("Try undo when undo is unavailable, should cause exception")
+		{
+			CHECK_THROWS_AS(doc->Undo(), CommandExecutionException);
+		}
+
+		SECTION("Redo image insertion, image should become first element of document")
+		{
+			CHECK(doc->CanRedo());
+
+			doc->Redo();
+
+			auto img = doc->GetItem(0).GetImage();
+
+			CHECK(img->GetPath() == path);
+			CHECK(img->GetWidth() == width);
+			CHECK(img->GetHeight() == height);
+		}
+	}
+}
+
+TEST_CASE("Replace paragraph text")
+{
+	std::unique_ptr<IDocument> doc = std::make_unique<Document>(std::shared_ptr<IDocumentSaveStrategy>());
+	std::string initial = "init", replace = "repl";
+
+	doc->InsertParagraph(initial, {});
+
+	SECTION("Replace text of paragraph")
+	{
+		CHECK_NOTHROW(doc->ReplaceParagraphText(0, replace));
+		CHECK(doc->GetItem(0).GetParagraph()->GetText() == replace);
+
+		SECTION("Insert another paragraph and ensure that text is replaced of correct paragraph")
+		{
+			doc->InsertParagraph(initial, {});
+			doc->ReplaceParagraphText(0, initial);
+
+			CHECK(doc->GetItem(0).GetParagraph()->GetText() == initial);
+			CHECK(doc->GetItem(1).GetParagraph()->GetText() == initial);
+		}
+	}
+
+	SECTION("Replace text then undo changes")
+	{
+		doc->ReplaceParagraphText(0, replace);
+
+		CHECK(doc->CanUndo());
+		CHECK_NOTHROW(doc->Undo());
+		CHECK(doc->GetItem(0).GetParagraph()->GetText() == initial);
+
+		SECTION("And redo changes")
+		{
+			CHECK(doc->CanRedo());
+			CHECK_NOTHROW(doc->Redo());
+			CHECK(doc->GetItem(0).GetParagraph()->GetText() == replace);
+		}
+	}
+
+	SECTION("Replace text at bad index, should cause exception")
+	{
+		CHECK(doc->GetItemsCount() == 1);
+		CHECK_THROWS_AS(doc->ReplaceParagraphText(1, replace), std::out_of_range);
+	}
+
+	SECTION("Try replace text of an image, should cause exception")
+	{
+		doc->InsertImage("img.png", 10, 20, {});
+
+		CHECK_THROWS_AS(doc->ReplaceParagraphText(1, replace), CommandExecutionException);
+	}
+}
+
+TEST_CASE("Resize image")
+{
+	std::unique_ptr<IDocument> doc = std::make_unique<Document>(std::shared_ptr<IDocumentSaveStrategy>());
+	std::filesystem::path path("dir/img.png");
+	int w = 200, h = 300;
+
+	doc->InsertImage(path, w, h, {});
+
+	SECTION("Resize image with valid size")
+	{
+		CHECK_NOTHROW(doc->ResizeImage(0, w+h, h-w));
+
+		auto img = doc->GetItem(0).GetImage();
+
+		CHECK(img->GetWidth() == w+h);
+		CHECK(img->GetHeight() == h-w);
+	}
+
+	SECTION("Resize image with invalid size")
+	{
+		CHECK_THROWS_AS(doc->ResizeImage(0, w-h, h-w), CommandExecutionException);
+	}
+
+	SECTION("Resize image then undo changes")
+	{
+		doc->ResizeImage(0, w+h, h-w);
+		doc->Undo();
+		auto img = doc->GetItem(0).GetImage();
+
+		CHECK(img->GetWidth() == w);
+		CHECK(img->GetHeight() == h);
+
+		SECTION("Redo changes")
+		{
+			CHECK(doc->CanRedo());
+
+			doc->Redo();
+
+			auto img = doc->GetItem(0).GetImage();
+
+			CHECK(img->GetWidth() == w+h);
+			CHECK(img->GetHeight() == h-w);
+		}
+	}
+}
+
+TEST_CASE("Deleting item")
+{
+	std::unique_ptr<IDocument> doc = std::make_unique<Document>(std::shared_ptr<IDocumentSaveStrategy>());
+
+	doc->InsertParagraph("Paragraph", {});
+	doc->InsertImage("img.png", 100, 200, {});
+
+	CHECK(doc->GetItemsCount() == 2);
+
+	SECTION("Delete paragraph")
+	{
+		doc->DeleteItem(0);
+
+		CHECK(doc->GetItemsCount() == 1);
+		CHECK(doc->GetItem(0).GetImage()->GetPath() == "img.png");
+		CHECK(doc->GetItem(0).GetImage()->GetWidth() == 100);
+		CHECK(doc->GetItem(0).GetImage()->GetHeight() == 200);
+	}
+
+	SECTION("Undo deletions")
+	{
+		SECTION("Delete pagraph")
+		{
+			doc->DeleteItem(0);
+			doc->Undo();
+		}
+
+		SECTION("Delete image")
+		{
+			doc->DeleteItem(1);
+			doc->Undo();
+		}
+
+		CHECK(doc->GetItemsCount() == 2);
+		CHECK(doc->GetItem(0).GetParagraph()->GetText() == "Paragraph");
+		CHECK(doc->GetItem(1).GetImage()->GetPath() == "img.png");
+		CHECK(doc->GetItem(1).GetImage()->GetWidth() == 100);
+		CHECK(doc->GetItem(1).GetImage()->GetHeight() == 200);
+	}
+
+	SECTION("Undo deletions then redo again")
+	{
+		doc->DeleteItem(0);
+		doc->DeleteItem(0);
+
+		doc->Undo();
+		doc->Undo();
+
+		CHECK(doc->GetItemsCount() == 2);
+		CHECK(doc->GetItem(0).GetParagraph()->GetText() == "Paragraph");
+		CHECK(doc->GetItem(1).GetImage()->GetPath() == "img.png");
+		CHECK(doc->GetItem(1).GetImage()->GetWidth() == 100);
+		CHECK(doc->GetItem(1).GetImage()->GetHeight() == 200);
+
+		while (doc->CanRedo())
+			doc->Redo();
+
+		CHECK(doc->GetItemsCount() == 0);
+	}
+}
+
+TEST_CASE("Set document's title")
+{
+	std::unique_ptr<IDocument> doc = std::make_unique<Document>(std::shared_ptr<IDocumentSaveStrategy>());
+	std::string title = "New title";
+
+	doc->SetTitle(title);
+
+	CHECK(doc->GetTitle() == title);
+
+	doc->Undo();
+
+	CHECK(doc->GetTitle() == "Untitled");
+
+	doc->Redo();
+
+	CHECK(doc->GetTitle() == title);
+}
