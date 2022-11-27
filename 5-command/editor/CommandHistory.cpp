@@ -38,7 +38,7 @@ void CommandHistory::Undo()
 {
 	if (!CanUndo())
 	{
-		throw CommandExecutionException("Unable to undo command: no commands stored in command history");
+		throw CommandExecutionException("Unable to undo command: no commands available for undo");
 	}
 	
 	m_commands[m_lastExecutedCommandIndex]->Unexecute();

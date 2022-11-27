@@ -182,6 +182,7 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MenuItem.h" />
     <ClInclude Include="Paragraph.h" />
+    <ClInclude Include="PathConstants.h" />
     <ClInclude Include="ReplaceTextCommand.h" />
     <ClInclude Include="ResizeImageCommand.h" />
     <ClInclude Include="SetTitleCommand.h" />

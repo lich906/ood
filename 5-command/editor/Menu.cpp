@@ -33,7 +33,14 @@ void Menu::Run()
 
 		if (item != m_items.end())
 		{
-			item->second.callback();
+			try
+			{
+				item->second.callback();
+			}
+			catch(const std::exception& e)
+			{
+				std::cout << "Error: " << e.what() << std::endl;
+			}
 		}
 		else
 		{

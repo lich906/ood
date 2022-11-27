@@ -25,7 +25,7 @@ void Image::Resize(int width, int height)
 {
 	if (width < MIN_DIMENSION_SIZE || width > MAX_DIMENSION_SIZE || height < MIN_DIMENSION_SIZE || height > MAX_DIMENSION_SIZE)
 	{
-		throw CommandExecutionException("Unable to resize image: unacceptable size");
+		throw CommandExecutionException("Unable to change image size: unacceptable size");
 	}
 
 	m_width = width;

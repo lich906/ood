@@ -3,6 +3,7 @@
 #include <iostream>
 #include <unordered_map>
 
+#include "CommandExecutionException.h"
 #include "MenuItem.h"
 
 class Menu

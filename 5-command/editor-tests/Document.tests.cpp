@@ -183,7 +183,7 @@ TEST_CASE("Execute more than 10 commands, commands older than 10 previous ones a
 TEST_CASE("Insert image into document")
 {
 	std::unique_ptr<IDocument> doc = std::make_unique<Document>(std::shared_ptr<IDocumentSaveStrategy>());
-	std::filesystem::path path("dir/img.png");
+	std::filesystem::path path("img.png");
 
 	SECTION("Insert image with valid size")
 	{
@@ -192,21 +192,21 @@ TEST_CASE("Insert image into document")
 
 		auto img = doc->GetItem(0).GetImage();
 
-		CHECK(img->GetPath() == path);
+		CHECK(img->GetPath() == "images\\img1.png");
 		CHECK(img->GetWidth() == 1);
 		CHECK(img->GetHeight() == 10000);
 	}
 
 	SECTION("Insert image with invalid size")
 	{
-		CHECK_THROWS_AS(doc->InsertImage("dir/img.png", -1, 10000, {}), CommandExecutionException);
-		CHECK_THROWS_AS(doc->InsertImage("dir/img.png", 1, 10001, {}), CommandExecutionException);
+		CHECK_THROWS_AS(doc->InsertImage("img.png", -1, 10000, {}), CommandExecutionException);
+		CHECK_THROWS_AS(doc->InsertImage("img.png", 1, 10001, {}), CommandExecutionException);
 	}
 
 	SECTION("Insert image and undo insertion")
 	{
-		int width = 200, height = 300;
-		doc->InsertImage(path, width, height, {});
+		int w = 200, h = 300;
+		doc->InsertImage(path, w, h, {});
 
 		CHECK(doc->GetItemsCount() == 1);
 		CHECK(doc->CanUndo());
@@ -221,19 +221,24 @@ TEST_CASE("Insert image into document")
 		{
 			CHECK_THROWS_AS(doc->Undo(), CommandExecutionException);
 		}
+	}
 
-		SECTION("Redo image insertion, image should become first element of document")
-		{
-			CHECK(doc->CanRedo());
+	SECTION("Redo image insertion, image should become first element of document")
+	{
+		int w = 200, h = 300;
+		doc->InsertImage(path, w, h, {});
 
-			doc->Redo();
+		doc->Undo();
 
-			auto img = doc->GetItem(0).GetImage();
+		CHECK(doc->CanRedo());
 
-			CHECK(img->GetPath() == path);
-			CHECK(img->GetWidth() == width);
-			CHECK(img->GetHeight() == height);
-		}
+		doc->Redo();
+
+		auto img = doc->GetItem(0).GetImage();
+
+		CHECK(img->GetPath() == "images\\img3.png");
+		CHECK(img->GetWidth() == w);
+		CHECK(img->GetHeight() == h);
 	}
 }
 
@@ -292,7 +297,7 @@ TEST_CASE("Replace paragraph text")
 TEST_CASE("Resize image")
 {
 	std::unique_ptr<IDocument> doc = std::make_unique<Document>(std::shared_ptr<IDocumentSaveStrategy>());
-	std::filesystem::path path("dir/img.png");
+	std::filesystem::path path("img.png");
 	int w = 200, h = 300;
 
 	doc->InsertImage(path, w, h, {});
@@ -349,28 +354,31 @@ TEST_CASE("Deleting item")
 		doc->DeleteItem(0);
 
 		CHECK(doc->GetItemsCount() == 1);
-		CHECK(doc->GetItem(0).GetImage()->GetPath() == "img.png");
+		CHECK(doc->GetItem(0).GetImage()->GetPath() == "images\\img8.png");
 		CHECK(doc->GetItem(0).GetImage()->GetWidth() == 100);
 		CHECK(doc->GetItem(0).GetImage()->GetHeight() == 200);
 	}
 
-	SECTION("Undo deletions")
+	SECTION("Delete image and undo deletion")
 	{
-		SECTION("Delete pagraph")
-		{
-			doc->DeleteItem(0);
-			doc->Undo();
-		}
-
-		SECTION("Delete image")
-		{
-			doc->DeleteItem(1);
-			doc->Undo();
-		}
+		doc->DeleteItem(1);
+		doc->Undo();
 
 		CHECK(doc->GetItemsCount() == 2);
 		CHECK(doc->GetItem(0).GetParagraph()->GetText() == "Paragraph");
-		CHECK(doc->GetItem(1).GetImage()->GetPath() == "img.png");
+		CHECK(doc->GetItem(1).GetImage()->GetPath() == "images\\img9.png");
+		CHECK(doc->GetItem(1).GetImage()->GetWidth() == 100);
+		CHECK(doc->GetItem(1).GetImage()->GetHeight() == 200);
+	}
+
+	SECTION("Delete pagraph and undo deletion")
+	{
+		doc->DeleteItem(0);
+		doc->Undo();
+
+		CHECK(doc->GetItemsCount() == 2);
+		CHECK(doc->GetItem(0).GetParagraph()->GetText() == "Paragraph");
+		CHECK(doc->GetItem(1).GetImage()->GetPath() == "images\\img10.png");
 		CHECK(doc->GetItem(1).GetImage()->GetWidth() == 100);
 		CHECK(doc->GetItem(1).GetImage()->GetHeight() == 200);
 	}
@@ -385,7 +393,7 @@ TEST_CASE("Deleting item")
 
 		CHECK(doc->GetItemsCount() == 2);
 		CHECK(doc->GetItem(0).GetParagraph()->GetText() == "Paragraph");
-		CHECK(doc->GetItem(1).GetImage()->GetPath() == "img.png");
+		CHECK(doc->GetItem(1).GetImage()->GetPath() == "images\\img11.png");
 		CHECK(doc->GetItem(1).GetImage()->GetWidth() == 100);
 		CHECK(doc->GetItem(1).GetImage()->GetHeight() == 200);
 

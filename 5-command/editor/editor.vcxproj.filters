@@ -182,5 +182,8 @@
     <ClInclude Include="ResizeImageCommand.h">
       <Filter>Header Files\Command\Concrete</Filter>
     </ClInclude>
+    <ClInclude Include="PathConstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
