@@ -62,14 +62,8 @@ public:
 			std::string command;
 			while ((std::cout << ">")
 				&& getline(std::cin, command)
-				&& command != "end_macro"
 				&& AddCommandToMacro(m_macroInfo.commands, command))
 			{
-			}
-
-			if (command == "end_macro")
-			{
-				EndMacro();
 			}
 		}
 		else
@@ -126,7 +120,14 @@ private:
 		});
 		if (it != m_items.end())
 		{
-			commands.push_back(it->command);
+			if (command == "begin_macro" || command == "end_macro")
+			{
+				it->command();
+			}
+			else
+			{
+				commands.push_back(it->command);
+			}
 		}
 		else
 		{
