@@ -77,7 +77,14 @@ void CommandLineEditor::ReplaceText()
 	std::getline(m_input, txt);
 	ltrim(txt);
 
-	m_document->ReplaceParagraphText(index, txt);
+	if (auto paragraph = m_document->GetItem(index).GetParagraph())
+	{
+		paragraph->SetText(txt);
+	}
+	else
+	{
+		throw CommandExecutionException("Unable to change paragraph text: item at index isn't a paragraph");
+	}
 }
 
 void CommandLineEditor::ResizeImage()
@@ -87,7 +94,14 @@ void CommandLineEditor::ResizeImage()
 	int w, h;
 	m_input >> w >> h;
 
-	m_document->ResizeImage(index, w, h);
+	if (auto image = m_document->GetItem(index).GetImage())
+	{
+		image->Resize(w, h);
+	}
+	else
+	{
+		throw CommandExecutionException("Unable to resize image: item at index isn't an image");
+	}
 }
 
 void CommandLineEditor::DeleteItem()

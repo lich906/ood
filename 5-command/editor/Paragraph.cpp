@@ -1,7 +1,9 @@
 #include "Paragraph.h"
 
-Paragraph::Paragraph(std::string text)
-	: m_text(std::move(text))
+Paragraph::Paragraph(IDocumentEditContext* const documentEditCtx, size_t index, std::string text)
+	: m_documentEditContext(documentEditCtx)
+	, m_position(index)
+	, m_text(std::move(text))
 {
 }
 
@@ -12,5 +14,5 @@ std::string Paragraph::GetText() const
 
 void Paragraph::SetText(const std::string& text)
 {
-	m_text = text;
+	m_documentEditContext->ReplaceParagraphText(m_position, m_text, text);
 }

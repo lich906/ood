@@ -37,7 +37,7 @@ void Menu::Run()
 			{
 				item->second.callback();
 			}
-			catch(const std::exception& e)
+			catch (const std::exception& e)
 			{
 				std::cout << "Error: " << e.what() << std::endl;
 			}

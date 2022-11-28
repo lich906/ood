@@ -14,5 +14,5 @@ public:
 
 private:
 	DocumentItem m_deletedItem;
-	size_t m_index;
+	size_t m_position;
 };

@@ -7,7 +7,7 @@ Document::Document(const std::shared_ptr<IDocumentSaveStrategy>& saveStrategy)
 
 std::shared_ptr<IParagraph> Document::InsertParagraph(const std::string& text, std::optional<size_t> position)
 {
-	std::shared_ptr<IParagraph> paragraph = std::make_shared<Paragraph>(text);
+	std::shared_ptr<IParagraph> paragraph = std::make_shared<Paragraph>(static_cast<IDocumentEditContext*>(this), GetIndex(position), text);
 	std::unique_ptr<Command> command = std::make_unique<InsertParagraphCommand>(static_cast<IDocumentEditContext*>(this), paragraph, position);
 	command->Execute();
 	m_commandHistory.AddCommand(std::move(command));
@@ -17,7 +17,7 @@ std::shared_ptr<IParagraph> Document::InsertParagraph(const std::string& text, s
 
 std::shared_ptr<IImage> Document::InsertImage(const std::filesystem::path& path, int width, int height, std::optional<size_t> position)
 {
-	std::shared_ptr<IImage> image = std::make_shared<Image>(path, width, height);
+	std::shared_ptr<IImage> image = std::make_shared<Image>(static_cast<IDocumentEditContext*>(this), path, width, height);
 	std::unique_ptr<Command> command = std::make_unique<InsertImageCommand>(static_cast<IDocumentEditContext*>(this), image, position);
 	command->Execute();
 	m_commandHistory.AddCommand(std::move(command));
@@ -25,13 +25,11 @@ std::shared_ptr<IImage> Document::InsertImage(const std::filesystem::path& path,
 	return image;
 }
 
-void Document::ReplaceParagraphText(size_t index, const std::string& text)
+void Document::ReplaceParagraphText(size_t index, std::string& textRef, const std::string& text)
 {
-	auto item = GetItem(index);
 	if (auto paragraph = GetItem(index).GetParagraph())
 	{
-		std::unique_ptr<Command> command = std::make_unique<ReplaceTextCommand>(static_cast<IDocumentEditContext*>(this), index,
-			text, paragraph->GetText());
+		std::unique_ptr<Command> command = std::make_unique<ReplaceTextCommand>(textRef, paragraph->GetText(), text);
 		command->Execute();
 		m_commandHistory.AddCommand(std::move(command));
 	}
@@ -41,19 +39,11 @@ void Document::ReplaceParagraphText(size_t index, const std::string& text)
 	}
 }
 
-void Document::ResizeImage(size_t index, int width, int height)
+void Document::ResizeImage(int& widthRef, int& heightRef, int width, int height)
 {
-	if (auto image = GetItem(index).GetImage())
-	{
-		std::unique_ptr<Command> command = std::make_unique<ResizeImageCommand>(static_cast<IDocumentEditContext*>(this),
-			index, width, height, image->GetWidth(), image->GetHeight());
-		command->Execute();
-		m_commandHistory.AddCommand(std::move(command));
-	}
-	else
-	{
-		throw CommandExecutionException("Unable to replace paragraph text: item at position isn't a paragraph");
-	}
+	std::unique_ptr<Command> command = std::make_unique<ResizeImageCommand>(widthRef, heightRef, width, height);
+	command->Execute();
+	m_commandHistory.AddCommand(std::move(command));
 }
 
 void Document::DeleteItem(size_t index)
@@ -194,4 +184,16 @@ DocumentItem Document::GetItem(size_t index)
 	}
 
 	return m_items[index];
+}
+
+size_t Document::GetIndex(std::optional<size_t> position) const
+{
+	if (position.has_value())
+	{
+		return *position;
+	}
+	else
+	{
+		return m_items.size();
+	}
 }

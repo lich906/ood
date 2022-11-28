@@ -189,9 +189,13 @@
     <ClInclude Include="..\editor\Menu.h" />
     <ClInclude Include="..\editor\MenuItem.h" />
     <ClInclude Include="..\editor\Paragraph.h" />
+    <ClInclude Include="..\editor\PathConstants.h" />
     <ClInclude Include="..\editor\ReplaceTextCommand.h" />
     <ClInclude Include="..\editor\ResizeImageCommand.h" />
     <ClInclude Include="..\editor\SetTitleCommand.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="img.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

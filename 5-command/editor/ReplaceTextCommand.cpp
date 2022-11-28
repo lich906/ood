@@ -1,9 +1,8 @@
 #include "ReplaceTextCommand.h"
 
-ReplaceTextCommand::ReplaceTextCommand(IDocumentEditContext* document, size_t index,
-	const std::string& text, const std::string& oldText)
-	: Command(document)
-	, m_index(index)
+ReplaceTextCommand::ReplaceTextCommand(std::string& textRef, const std::string& oldText, const std::string& text)
+	: Command(nullptr)
+	, m_textRef(textRef)
 	, m_text(text)
 	, m_oldText(oldText)
 {
@@ -21,14 +20,7 @@ void ReplaceTextCommand::UnexecuteImpl()
 
 void ReplaceTextCommand::ReplaceText(const std::string& text) const
 {
-	if (auto paragraph = m_documentEditContext->GetItemForEdit(m_index).GetParagraph())
-	{
-		paragraph->SetText(text);
-	}
-	else
-	{
-		throw CommandExecutionException("Unable to replace paragraph text: item at index isn't a paragraph");
-	}
+	m_textRef = text;
 }
 
 

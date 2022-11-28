@@ -199,8 +199,8 @@ TEST_CASE("Insert image into document")
 
 	SECTION("Insert image with invalid size")
 	{
-		CHECK_THROWS_AS(doc->InsertImage("img.png", -1, 10000, {}), CommandExecutionException);
-		CHECK_THROWS_AS(doc->InsertImage("img.png", 1, 10001, {}), CommandExecutionException);
+		CHECK_THROWS_AS(doc->InsertImage(path, -1, 10000, {}), CommandExecutionException);
+		CHECK_THROWS_AS(doc->InsertImage(path, 1, 10001, {}), CommandExecutionException);
 	}
 
 	SECTION("Insert image and undo insertion")
@@ -251,13 +251,13 @@ TEST_CASE("Replace paragraph text")
 
 	SECTION("Replace text of paragraph")
 	{
-		CHECK_NOTHROW(doc->ReplaceParagraphText(0, replace));
+		CHECK_NOTHROW(doc->GetItem(0).GetParagraph()->SetText(replace));
 		CHECK(doc->GetItem(0).GetParagraph()->GetText() == replace);
 
 		SECTION("Insert another paragraph and ensure that text is replaced of correct paragraph")
 		{
 			doc->InsertParagraph(initial, {});
-			doc->ReplaceParagraphText(0, initial);
+			doc->GetItem(0).GetParagraph()->SetText(initial);
 
 			CHECK(doc->GetItem(0).GetParagraph()->GetText() == initial);
 			CHECK(doc->GetItem(1).GetParagraph()->GetText() == initial);
@@ -266,7 +266,7 @@ TEST_CASE("Replace paragraph text")
 
 	SECTION("Replace text then undo changes")
 	{
-		doc->ReplaceParagraphText(0, replace);
+		doc->GetItem(0).GetParagraph()->SetText(replace);
 
 		CHECK(doc->CanUndo());
 		CHECK_NOTHROW(doc->Undo());
@@ -283,14 +283,7 @@ TEST_CASE("Replace paragraph text")
 	SECTION("Replace text at bad index, should cause exception")
 	{
 		CHECK(doc->GetItemsCount() == 1);
-		CHECK_THROWS_AS(doc->ReplaceParagraphText(1, replace), std::out_of_range);
-	}
-
-	SECTION("Try replace text of an image, should cause exception")
-	{
-		doc->InsertImage("img.png", 10, 20, {});
-
-		CHECK_THROWS_AS(doc->ReplaceParagraphText(1, replace), CommandExecutionException);
+		CHECK_THROWS_AS(doc->GetItem(1).GetParagraph()->SetText(replace), std::out_of_range);
 	}
 }
 
@@ -304,7 +297,7 @@ TEST_CASE("Resize image")
 
 	SECTION("Resize image with valid size")
 	{
-		CHECK_NOTHROW(doc->ResizeImage(0, w+h, h-w));
+		CHECK_NOTHROW(doc->GetItem(0).GetImage()->Resize(w + h, h - w));
 
 		auto img = doc->GetItem(0).GetImage();
 
@@ -314,12 +307,12 @@ TEST_CASE("Resize image")
 
 	SECTION("Resize image with invalid size")
 	{
-		CHECK_THROWS_AS(doc->ResizeImage(0, w-h, h-w), CommandExecutionException);
+		CHECK_THROWS_AS(doc->GetItem(0).GetImage()->Resize(w-h, h-w), CommandExecutionException);
 	}
 
 	SECTION("Resize image then undo changes")
 	{
-		doc->ResizeImage(0, w+h, h-w);
+		doc->GetItem(0).GetImage()->Resize(w+h, h-w);
 		doc->Undo();
 		auto img = doc->GetItem(0).GetImage();
 
@@ -354,7 +347,7 @@ TEST_CASE("Deleting item")
 		doc->DeleteItem(0);
 
 		CHECK(doc->GetItemsCount() == 1);
-		CHECK(doc->GetItem(0).GetImage()->GetPath() == "images\\img8.png");
+		CHECK(doc->GetItem(0).GetImage()->GetPath() == "images\\img7.png");
 		CHECK(doc->GetItem(0).GetImage()->GetWidth() == 100);
 		CHECK(doc->GetItem(0).GetImage()->GetHeight() == 200);
 	}
@@ -366,7 +359,7 @@ TEST_CASE("Deleting item")
 
 		CHECK(doc->GetItemsCount() == 2);
 		CHECK(doc->GetItem(0).GetParagraph()->GetText() == "Paragraph");
-		CHECK(doc->GetItem(1).GetImage()->GetPath() == "images\\img9.png");
+		CHECK(doc->GetItem(1).GetImage()->GetPath() == "images\\img8.png");
 		CHECK(doc->GetItem(1).GetImage()->GetWidth() == 100);
 		CHECK(doc->GetItem(1).GetImage()->GetHeight() == 200);
 	}
@@ -378,7 +371,7 @@ TEST_CASE("Deleting item")
 
 		CHECK(doc->GetItemsCount() == 2);
 		CHECK(doc->GetItem(0).GetParagraph()->GetText() == "Paragraph");
-		CHECK(doc->GetItem(1).GetImage()->GetPath() == "images\\img10.png");
+		CHECK(doc->GetItem(1).GetImage()->GetPath() == "images\\img9.png");
 		CHECK(doc->GetItem(1).GetImage()->GetWidth() == 100);
 		CHECK(doc->GetItem(1).GetImage()->GetHeight() == 200);
 	}
@@ -393,7 +386,7 @@ TEST_CASE("Deleting item")
 
 		CHECK(doc->GetItemsCount() == 2);
 		CHECK(doc->GetItem(0).GetParagraph()->GetText() == "Paragraph");
-		CHECK(doc->GetItem(1).GetImage()->GetPath() == "images\\img11.png");
+		CHECK(doc->GetItem(1).GetImage()->GetPath() == "images\\img10.png");
 		CHECK(doc->GetItem(1).GetImage()->GetWidth() == 100);
 		CHECK(doc->GetItem(1).GetImage()->GetHeight() == 200);
 

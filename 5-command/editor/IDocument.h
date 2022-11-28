@@ -23,10 +23,6 @@ public:
 		std::optional<size_t> position = std::nullopt)
 		= 0;
 
-	virtual void ReplaceParagraphText(size_t index, const std::string& text) = 0;
-
-	virtual void ResizeImage(size_t index, int width, int height) = 0;
-
 	// Возвращает количество элементов в документе
 	virtual size_t GetItemsCount() const = 0;
 

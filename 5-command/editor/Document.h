@@ -25,10 +25,6 @@ public:
 	std::shared_ptr<IImage> InsertImage(const std::filesystem::path& path, int width, int height,
 		std::optional<size_t> position = std::nullopt) override;
 
-	void ReplaceParagraphText(size_t index, const std::string& text) override;
-
-	void ResizeImage(size_t index, int width, int height) override;
-
 	size_t GetItemsCount() const override;
 
 	ConstDocumentItem GetItem(size_t index) const override;
@@ -65,6 +61,12 @@ private:
 	void RecoverDeletedItem(size_t index, const DocumentItem& item) override;
 
 	DocumentItem& GetItemForEdit(size_t index) override;
+
+	void ReplaceParagraphText(size_t index, std::string& textRef, const std::string& text) override;
+
+	void ResizeImage(int& widthRef, int& heightRef, int width, int height) override;
+
+	size_t GetIndex(std::optional<size_t> position) const;
 
 	std::string m_title = DEFAULT_TITLE;
 	std::vector<DocumentItem> m_items;

@@ -5,15 +5,15 @@
 class ResizeImageCommand : public Command
 {
 public:
-	ResizeImageCommand(IDocumentEditContext* document, size_t index, int width, int height, int oldWidth, int oldHeight);
+	ResizeImageCommand(int& widthRef, int& heightRef, int width, int height);
 
 	void ExecuteImpl() override;
 
 	void UnexecuteImpl() override;
 
 private:
-	void ResizeImage(int width, int height) const;
+	void SwapSize();
 
-	size_t m_index;
-	int m_width, m_height, m_oldWidth, m_oldHeight;
+	int& m_widthRef, & m_heightRef;
+	int m_width, m_height;
 };

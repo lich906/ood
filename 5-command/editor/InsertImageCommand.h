@@ -22,7 +22,7 @@ private:
 	std::shared_ptr<IImage> CreateImageTempCopy(const std::shared_ptr<IImage>& image) const;
 
 	std::shared_ptr<IImage> m_image;
-	std::optional<size_t> m_index;
+	std::optional<size_t> m_position;
 
 	std::filesystem::path m_tmpCopyFilename;
 

@@ -14,5 +14,5 @@ public:
 
 private:
 	std::shared_ptr<IParagraph> m_paragraph;
-	std::optional<size_t> m_index;
+	std::optional<size_t> m_position;
 };

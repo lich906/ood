@@ -30,16 +30,6 @@ public:
 		return {};
 	}
 
-	void ReplaceParagraphText(size_t index, const std::string& text) override
-	{
-		m_output << "Replace text text='" << text << "' at index " << index << std::endl;
-	}
-
-	void ResizeImage(size_t index, int width, int height) override
-	{
-		m_output << "Resize image w='" << width << "' h='" << height << "' at index " << index << std::endl;
-	}
-
 	DocumentItem GetItem(size_t index) override
 	{
 		m_output << "Get item at index " << index << std::endl;
@@ -122,8 +112,6 @@ TEST_CASE("Passing CommandLineEditor's methods to MenuItem's lambdas then invoke
 							 "InsertImage 4 100 200 /path/img.png\n"
 							 "InsertImage end 100 200 /now/insert/to/the/end/img.png\n"
 							 "SetTitle New title oh yeah!\n"
-							 "ReplaceText 2 This text is better than previous one\n"
-							 "ResizeImage 4 666 228\n"
 							 "DeleteItem 88\n"
 							 "Undo\n"
 							 "Redo\n"
@@ -136,8 +124,6 @@ TEST_CASE("Passing CommandLineEditor's methods to MenuItem's lambdas then invoke
 	menu.AddItem({ "InsertParagraph", {}, "", std::bind(&CommandLineEditor::InsertParagraph, &editor) });
 	menu.AddItem({ "InsertImage", {}, "", std::bind(&CommandLineEditor::InsertImage, &editor) });
 	menu.AddItem({ "SetTitle", {}, "", std::bind(&CommandLineEditor::SetTitle, &editor) });
-	menu.AddItem({ "ReplaceText", {}, "", std::bind(&CommandLineEditor::ReplaceText, &editor) });
-	menu.AddItem({ "ResizeImage", {}, "", std::bind(&CommandLineEditor::ResizeImage, &editor) });
 	menu.AddItem({ "DeleteItem", {}, "", std::bind(&CommandLineEditor::DeleteItem, &editor) });
 	menu.AddItem({ "Undo", {}, "", std::bind(&CommandLineEditor::Undo, &editor) });
 	menu.AddItem({ "Redo", {}, "", std::bind(&CommandLineEditor::Redo, &editor) });
@@ -150,8 +136,6 @@ TEST_CASE("Passing CommandLineEditor's methods to MenuItem's lambdas then invoke
 						  "Insert image path='\"/path/img.png\"' w='100' h='200' in position 4\n"
 						  "Insert image path='\"/now/insert/to/the/end/img.png\"' w='100' h='200' in position end\n"
 						  "Set title New title oh yeah!\n"
-						  "Replace text text='This text is better than previous one' at index 2\n"
-						  "Resize image w='666' h='228' at index 4\n"
 						  "Delete item at index 88\n"
 						  "Undo invoked\n"
 						  "Redo invoked\n"

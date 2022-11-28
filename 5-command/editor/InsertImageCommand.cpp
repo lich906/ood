@@ -2,7 +2,7 @@
 
 InsertImageCommand::InsertImageCommand(IDocumentEditContext* document, const std::shared_ptr<IImage>& image, std::optional<size_t> position)
 	: Command(document)
-	, m_index(position)
+	, m_position(position)
 {
 	try
 	{
@@ -17,14 +17,14 @@ InsertImageCommand::InsertImageCommand(IDocumentEditContext* document, const std
 
 void InsertImageCommand::ExecuteImpl()
 {
-	m_documentEditContext->InsertImageEdit(m_image, m_index);
+	m_documentEditContext->InsertImageEdit(m_image, m_position);
 }
 
 void InsertImageCommand::UnexecuteImpl()
 {
-	if (m_index.has_value())
+	if (m_position.has_value())
 	{
-		m_documentEditContext->DeleteItemEdit(*m_index);
+		m_documentEditContext->DeleteItemEdit(*m_position);
 	}
 	else
 	{
@@ -34,6 +34,7 @@ void InsertImageCommand::UnexecuteImpl()
 
 InsertImageCommand::~InsertImageCommand() noexcept
 {
+	// исправить удаление изображения при превышении глубины команд
 	std::error_code ec;
 	if (!std::filesystem::remove(m_image->GetPath(), ec))
 	{
@@ -54,10 +55,10 @@ std::shared_ptr<IImage> InsertImageCommand::CreateImageTempCopy(const std::share
 	}
 
 	std::filesystem::path tmpCopyPath(PathConstants::TempImageStorageDir);
-
-	tmpCopyPath /= ("img" + std::to_string(++m_tmpImageCopyIndex) + image->GetPath().extension().string());
+	std::string tmpFileName = "img" + std::to_string(++m_tmpImageCopyIndex) + image->GetPath().extension().string();
+	tmpCopyPath /= tmpFileName;
 
 	std::filesystem::copy_file(image->GetPath(), tmpCopyPath, std::filesystem::copy_options::overwrite_existing);
 
-	return std::make_shared<Image>(tmpCopyPath, image->GetWidth(), image->GetHeight());
+	return std::make_shared<Image>(m_documentEditContext, tmpCopyPath, image->GetWidth(), image->GetHeight());
 }

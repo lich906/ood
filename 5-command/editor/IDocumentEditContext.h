@@ -27,5 +27,9 @@ public:
 
 	virtual DocumentItem& GetItemForEdit(size_t index) = 0;
 
+	virtual void ReplaceParagraphText(size_t index, std::string& textRef, const std::string& text) = 0;
+
+	virtual void ResizeImage(int& widthRef, int& heightRef, int width, int height) = 0;
+
 	virtual ~IDocumentEditContext() = default;
 };
