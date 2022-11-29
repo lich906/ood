@@ -16,7 +16,7 @@ public:
 
 	void UnexecuteImpl() override;
 
-	~InsertImageCommand() noexcept;
+	void Destroy() noexcept override;
 
 private:
 	std::shared_ptr<IImage> CreateImageTempCopy(const std::shared_ptr<IImage>& image) const;

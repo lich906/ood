@@ -2,23 +2,25 @@
 
 void CommandHistory::AddCommand(std::unique_ptr<Command>&& command)
 {
-	if (CanRedo()) // remove undoable commands
+	if (CanRedo()) // destroy and remove redoable commands
 	{
+		for (size_t index = 1 + m_lastExecutedCommandIndex; index < m_commands.size(); ++index)
+		{
+			m_commands[index]->Destroy();
+		}
+
 		++m_lastExecutedCommandIndex;
-		m_commands.resize(m_lastExecutedCommandIndex);
+		m_commands.resize(m_lastExecutedCommandIndex + 1);
 		m_commands.back() = std::move(command);
 	}
 	else // inserting command back
 	{
-		if (m_commands.size() == HistoryDepthLimit)
+		if (DepthLimitReached())
 		{
-			m_commands.erase(m_commands.begin());
-		}
-		else
-		{
-			++m_lastExecutedCommandIndex;
+			++m_lastUndoableCommandIndex;
 		}
 
+		++m_lastExecutedCommandIndex;
 		m_commands.emplace_back(std::move(command));
 	}
 }
@@ -30,8 +32,7 @@ void CommandHistory::Redo()
 		throw CommandExecutionException("Unable to redo command: no commands available for redo");
 	}
 
-	m_commands[m_lastExecutedCommandIndex + 1]->Execute();
-	++m_lastExecutedCommandIndex;
+	m_commands[1 + m_lastExecutedCommandIndex++]->Execute();
 }
 
 void CommandHistory::Undo()
@@ -41,16 +42,28 @@ void CommandHistory::Undo()
 		throw CommandExecutionException("Unable to undo command: no commands available for undo");
 	}
 	
-	m_commands[m_lastExecutedCommandIndex]->Unexecute();
-	--m_lastExecutedCommandIndex;
+	m_commands[m_lastExecutedCommandIndex--]->Unexecute();
 }
 
 bool CommandHistory::CanUndo() const
 {
-	return m_lastExecutedCommandIndex >= 0;
+	return m_lastExecutedCommandIndex >= m_lastUndoableCommandIndex;
 }
 
 bool CommandHistory::CanRedo() const
 {
-	return m_lastExecutedCommandIndex < static_cast<int8_t>(m_commands.size() - 1);
+	return m_lastExecutedCommandIndex < static_cast<int>(m_commands.size() - 1);
+}
+
+CommandHistory::~CommandHistory() noexcept
+{
+	for (auto& command : m_commands)
+	{
+		command->Destroy();
+	}
+}
+
+bool CommandHistory::DepthLimitReached() const
+{
+	return (m_lastExecutedCommandIndex - m_lastUndoableCommandIndex) == (HistoryDepthLimit - 1);
 }

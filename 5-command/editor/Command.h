@@ -22,6 +22,11 @@ public:
 	*/
 	void Unexecute();
 
+	/*
+	¬ыполн€ет удаление ресурсов, необходимых дл€ выполнени€ данной команды.
+	*/
+	virtual void Destroy() noexcept;
+
 	virtual ~Command() = default;
 
 protected:

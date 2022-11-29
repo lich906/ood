@@ -4,6 +4,9 @@
 
 struct CommandExecutionException : public std::exception
 {
-	CommandExecutionException(const char* message)
+	explicit CommandExecutionException(const char* message)
 		: std::exception(message){};
+
+	explicit CommandExecutionException(const std::string& message)
+		: std::exception(message.data()){};
 };

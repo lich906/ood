@@ -6,6 +6,7 @@
 
 #include "IDocumentSaveStrategy.h"
 #include "PathConstants.h"
+#include "CommandExecutionException.h"
 
 class DocumentHtmlSaveStrategy : public IDocumentSaveStrategy
 {
@@ -27,5 +28,9 @@ private:
 
 	std::string GetImageHtml(const std::shared_ptr<const IImage>& image) const;
 
-	void SaveImageFile(std::filesystem::path path, const std::shared_ptr<const IImage>& image) const;
+	std::filesystem::path GetSavedImagePath(const std::filesystem::path& imagePath) const;
+
+	void SaveImageToFile(const std::shared_ptr<const IImage>& image) const;
+
+	std::filesystem::path m_parentPath;
 };

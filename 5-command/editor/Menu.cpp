@@ -27,7 +27,7 @@ void Menu::ShowHelpMessage()
 
 void Menu::Run()
 {
-	for (std::string commandShortcut; m_input >> commandShortcut;)
+	for (std::string commandShortcut; !m_exit && (m_input >> commandShortcut);)
 	{
 		auto item = m_items.find(commandShortcut);
 
@@ -47,4 +47,10 @@ void Menu::Run()
 			std::cout << "Unknown command '" << commandShortcut << '\'' << std::endl;
 		}
 	}
+}
+
+void Menu::Exit()
+{
+	std::cout << "Bye..." << std::endl;
+	m_exit = true;
 }

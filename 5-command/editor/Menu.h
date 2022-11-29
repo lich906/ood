@@ -16,8 +16,12 @@ public:
 	void ShowHelpMessage();
 
 	void Run();
+
+	void Exit();
 	
 private:
+	bool m_exit = false;
+
 	std::unordered_map<std::string, MenuItem> m_items;
 	std::istream& m_input;
 };

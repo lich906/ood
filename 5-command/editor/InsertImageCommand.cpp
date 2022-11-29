@@ -32,7 +32,7 @@ void InsertImageCommand::UnexecuteImpl()
 	}
 }
 
-InsertImageCommand::~InsertImageCommand() noexcept
+void InsertImageCommand::Destroy() noexcept
 {
 	// исправить удаление изображения при превышении глубины команд
 	std::error_code ec;
@@ -43,7 +43,7 @@ InsertImageCommand::~InsertImageCommand() noexcept
 
 	if (std::filesystem::is_empty(PathConstants::TempImageStorageDir))
 	{
-		std::filesystem::remove(PathConstants::TempImageStorageDir);
+		std::filesystem::remove_all(PathConstants::TempDir);
 	}
 }
 
@@ -51,7 +51,7 @@ std::shared_ptr<IImage> InsertImageCommand::CreateImageTempCopy(const std::share
 {
 	if (!std::filesystem::exists(PathConstants::TempImageStorageDir))
 	{
-		std::filesystem::create_directory(PathConstants::TempImageStorageDir);
+		std::filesystem::create_directories(PathConstants::TempImageStorageDir);
 	}
 
 	std::filesystem::path tmpCopyPath(PathConstants::TempImageStorageDir);

@@ -3,7 +3,20 @@
 const std::string HtmlExtension(".html");
 
 void DocumentHtmlSaveStrategy::Save(std::filesystem::path path, const IDocument* document)
+try
 {
+	if (!path.has_filename())
+	{
+		throw std::runtime_error("specified path does not contain filename.");
+	}
+
+	m_parentPath = path.parent_path();
+
+	if (!m_parentPath.string().empty() && !std::filesystem::exists(m_parentPath))
+	{
+		throw std::runtime_error("directory '" + m_parentPath.string() + "' does not exist.");
+	}
+
 	if (!path.has_extension())
 	{
 		path += HtmlExtension;
@@ -30,16 +43,20 @@ void DocumentHtmlSaveStrategy::Save(std::filesystem::path path, const IDocument*
 		else if (auto image = item.GetImage())
 		{
 			file << GetImageHtml(image) << std::endl;
-			SaveImageFile(path.parent_path(), image);
+			SaveImageToFile(image);
 		}
 		else
 		{
-			throw std::logic_error("Failed to save document: document item isn't paragraph or image");
+			throw std::logic_error("document item isn't paragraph or image.");
 		}
 	}
 
 	file << "</body>\n"
 		 << "</html>\n";
+}
+catch (const std::exception& e)
+{
+	throw CommandExecutionException(std::string("Failed to save document: ") + e.what());
 }
 
 std::string DocumentHtmlSaveStrategy::GetHtmlEncodedString(const std::string& source) const
@@ -68,23 +85,30 @@ std::string DocumentHtmlSaveStrategy::GetParagraphHtml(const std::shared_ptr<con
 
 std::string DocumentHtmlSaveStrategy::GetImageHtml(const std::shared_ptr<const IImage>& image) const
 {
-	return "<img src=\"" + image->GetPath().string() + "\" width=\"" + std::to_string(image->GetWidth()) + "\" height=\"" + std::to_string(image->GetHeight()) + "\" />";
+	return "<img src=\"images\\" + image->GetPath().filename().string() + 
+		"\" width=\"" + std::to_string(image->GetWidth()) + 
+		"\" height=\"" + std::to_string(image->GetHeight()) + "\" />";
 }
 
-void DocumentHtmlSaveStrategy::SaveImageFile(std::filesystem::path path, const std::shared_ptr<const IImage>& image) const
+std::filesystem::path DocumentHtmlSaveStrategy::GetSavedImagePath(const std::filesystem::path& imagePath) const
 {
-	path /= PathConstants::ImagesDir;
+	std::filesystem::path resultPath(m_parentPath);
+	resultPath /= PathConstants::ImagesDir;
+	return resultPath /= imagePath.filename();
+}
 
-	if (!std::filesystem::exists(PathConstants::ImagesDir))
+void DocumentHtmlSaveStrategy::SaveImageToFile(const std::shared_ptr<const IImage>& image) const
+{
+	std::filesystem::path imagesDir(m_parentPath);
+	imagesDir /= PathConstants::ImagesDir;
+	if (!std::filesystem::exists(imagesDir))
 	{
-		std::filesystem::create_directory(PathConstants::ImagesDir);
+		std::filesystem::create_directory(imagesDir);
 	}
-
-	path /= image->GetPath().filename();
 
 	try
 	{
-		std::filesystem::copy_file(image->GetPath(), path, std::filesystem::copy_options::overwrite_existing);
+		std::filesystem::copy_file(image->GetPath(), GetSavedImagePath(image->GetPath()), std::filesystem::copy_options::overwrite_existing);
 	}
 	catch(...)
 	{

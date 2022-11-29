@@ -1,6 +1,9 @@
 #include <catch.hpp>
+#include <fstream>
+#include <sstream>
 
 #include "Document.h"
+#include "DocumentHtmlSaveStrategy.h"
 
 TEST_CASE("Getting item of empty document should cause exception")
 {
@@ -192,7 +195,7 @@ TEST_CASE("Insert image into document")
 
 		auto img = doc->GetItem(0).GetImage();
 
-		CHECK(img->GetPath() == "images\\img1.png");
+		CHECK(img->GetPath() == "temp\\images\\img1.png");
 		CHECK(img->GetWidth() == 1);
 		CHECK(img->GetHeight() == 10000);
 	}
@@ -236,7 +239,7 @@ TEST_CASE("Insert image into document")
 
 		auto img = doc->GetItem(0).GetImage();
 
-		CHECK(img->GetPath() == "images\\img3.png");
+		CHECK(img->GetPath() == "temp\\images\\img3.png");
 		CHECK(img->GetWidth() == w);
 		CHECK(img->GetHeight() == h);
 	}
@@ -347,7 +350,7 @@ TEST_CASE("Deleting item")
 		doc->DeleteItem(0);
 
 		CHECK(doc->GetItemsCount() == 1);
-		CHECK(doc->GetItem(0).GetImage()->GetPath() == "images\\img7.png");
+		CHECK(doc->GetItem(0).GetImage()->GetPath() == "temp\\images\\img7.png");
 		CHECK(doc->GetItem(0).GetImage()->GetWidth() == 100);
 		CHECK(doc->GetItem(0).GetImage()->GetHeight() == 200);
 	}
@@ -359,7 +362,7 @@ TEST_CASE("Deleting item")
 
 		CHECK(doc->GetItemsCount() == 2);
 		CHECK(doc->GetItem(0).GetParagraph()->GetText() == "Paragraph");
-		CHECK(doc->GetItem(1).GetImage()->GetPath() == "images\\img8.png");
+		CHECK(doc->GetItem(1).GetImage()->GetPath() == "temp\\images\\img8.png");
 		CHECK(doc->GetItem(1).GetImage()->GetWidth() == 100);
 		CHECK(doc->GetItem(1).GetImage()->GetHeight() == 200);
 	}
@@ -371,7 +374,7 @@ TEST_CASE("Deleting item")
 
 		CHECK(doc->GetItemsCount() == 2);
 		CHECK(doc->GetItem(0).GetParagraph()->GetText() == "Paragraph");
-		CHECK(doc->GetItem(1).GetImage()->GetPath() == "images\\img9.png");
+		CHECK(doc->GetItem(1).GetImage()->GetPath() == "temp\\images\\img9.png");
 		CHECK(doc->GetItem(1).GetImage()->GetWidth() == 100);
 		CHECK(doc->GetItem(1).GetImage()->GetHeight() == 200);
 	}
@@ -386,7 +389,7 @@ TEST_CASE("Deleting item")
 
 		CHECK(doc->GetItemsCount() == 2);
 		CHECK(doc->GetItem(0).GetParagraph()->GetText() == "Paragraph");
-		CHECK(doc->GetItem(1).GetImage()->GetPath() == "images\\img10.png");
+		CHECK(doc->GetItem(1).GetImage()->GetPath() == "temp\\images\\img10.png");
 		CHECK(doc->GetItem(1).GetImage()->GetWidth() == 100);
 		CHECK(doc->GetItem(1).GetImage()->GetHeight() == 200);
 
@@ -413,4 +416,81 @@ TEST_CASE("Set document's title")
 	doc->Redo();
 
 	CHECK(doc->GetTitle() == title);
+}
+
+TEST_CASE("Set title, then undo changes, then set another title, then undo changes, title should be Untitled")
+{
+	std::unique_ptr<IDocument> doc = std::make_unique<Document>(std::shared_ptr<IDocumentSaveStrategy>());
+	std::string title1 = "First title";
+	std::string title2 = "Second title";
+
+	doc->SetTitle(title1);
+	doc->Undo();
+	doc->SetTitle(title2);
+	doc->Undo();
+
+	CHECK(doc->GetTitle() == "Untitled");
+	CHECK(doc->CanRedo());
+	CHECK(!doc->CanUndo());
+}
+
+bool FileContentEqual(std::filesystem::path filePath, const std::string& expectFileContent)
+{
+	std::ifstream file(filePath);
+	std::stringstream ss;
+	ss << file.rdbuf();
+
+	return ss.str() == expectFileContent;
+}
+
+TEST_CASE("Saving document with image")
+{
+	std::unique_ptr<IDocument> doc = std::make_unique<Document>(std::make_shared<DocumentHtmlSaveStrategy>());
+	std::filesystem::path imgPath("img.png"), savedDocPath("doc.html");
+	doc->InsertImage(imgPath, 100, 100, {});
+
+	SECTION("Undo image insertion and redo again, document should be saved correctly")
+	{
+		doc->Undo();
+		doc->Redo();
+
+		CHECK_NOTHROW(doc->Save(savedDocPath));
+
+		REQUIRE(std::filesystem::exists(savedDocPath));
+
+		CHECK(FileContentEqual(savedDocPath,
+			"<!DOCTYPE html>\n"
+			"<html>\n"
+			"<head>\n"
+			"    <title>Untitled</title>\n"
+			"</head>\n"
+			"<body>\n"
+			"    <img src=\"images\\img11.png\" width=\"100\" height=\"100\" />\n"
+			"</body>\n"
+			"</html>\n"));
+	}
+
+	SECTION("Push out image insertion command from history, document saving should complete sucessfully")
+	{
+		for (int i = 0; i < CommandHistory::HistoryDepthLimit; ++i)
+			doc->SetTitle("Push commands out.");
+
+		CHECK_NOTHROW(doc->Save(savedDocPath));
+
+		REQUIRE(std::filesystem::exists(savedDocPath));
+
+		CHECK(FileContentEqual(savedDocPath,
+			"<!DOCTYPE html>\n"
+			"<html>\n"
+			"<head>\n"
+			"    <title>Push commands out.</title>\n"
+			"</head>\n"
+			"<body>\n"
+			"    <img src=\"images\\img12.png\" width=\"100\" height=\"100\" />\n"
+			"</body>\n"
+			"</html>\n"));
+	}
+
+	std::filesystem::remove(savedDocPath);
+	std::filesystem::remove_all(PathConstants::ImagesDir);
 }
