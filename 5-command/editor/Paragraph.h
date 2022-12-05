@@ -1,18 +1,18 @@
 #pragma once
 
 #include "IParagraph.h"
-#include "IDocumentEditContext.h"
+#include "ReplaceTextCommand.h"
 
 class Paragraph : public IParagraph
 {
 public:
-	Paragraph(IDocumentEditContext* documentEditCtx, size_t index, std::string text);
+	Paragraph(std::string text, std::function<void(std::unique_ptr<Command>&&)> commandSaver);
 
 	std::string GetText() const override;
 	void SetText(const std::string& text) override;
 
 private:
-	IDocumentEditContext* const m_documentEditContext;
+	// параграф не должен знать о своем индексе
 	std::string m_text;
-	size_t m_position;
+	std::function<void(std::unique_ptr<Command>&&)> m_commandSaver;
 };

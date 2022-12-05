@@ -57,3 +57,16 @@ TEST_CASE("Draw single line from default start point")
 					   "  <line fromX=\"0\" fromY=\"0\" toX=\"1\" toY=\"2\" />\n"
 					   "</draw>\n");
 }
+
+TEST_CASE("Draw single line from specific start point")
+{
+	std::ostringstream oss;
+	ModernGraphicsRendererAdapter adapter(oss);
+
+	adapter.MoveTo(10, 20);
+	adapter.LineTo(1, 2);
+
+	CHECK(oss.str() == "<draw>\n"
+					   "  <line fromX=\"10\" fromY=\"20\" toX=\"1\" toY=\"2\" />\n"
+					   "</draw>\n");
+}

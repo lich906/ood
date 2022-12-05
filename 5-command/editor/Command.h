@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "IDocumentEditContext.h"
 #include "CommandExecutionException.h"
 
 class Command
@@ -30,13 +29,6 @@ public:
 	virtual ~Command() = default;
 
 protected:
-	explicit Command(IDocumentEditContext* documentEditContext);
-
-	/*
-	”казатель на получател€ команды
-	*/
-	IDocumentEditContext* const m_documentEditContext;
-
 	virtual void ExecuteImpl() = 0;
 	virtual void UnexecuteImpl() = 0;
 

@@ -107,9 +107,6 @@
     <ClInclude Include="..\editor\IDocument.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\editor\IDocumentEditContext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\editor\IDocumentSaveStrategy.h">
       <Filter>Header Files</Filter>
     </ClInclude>

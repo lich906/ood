@@ -1,25 +1,17 @@
 #include "ResizeImageCommand.h"
 
-ResizeImageCommand::ResizeImageCommand(int& widthRef, int& heightRef, int width, int height)
-	: Command(nullptr)
-	, m_widthRef(widthRef)
-	, m_heightRef(heightRef)
-	, m_width(width), m_height(height)
+ResizeImageCommand::ResizeImageCommand(std::function<void()> onExecute, std::function<void()> onUnexecute)
+	: m_onExecute(std::move(onExecute))
+	, m_onUnexecute(std::move(onUnexecute))
 {
 }
 
 void ResizeImageCommand::ExecuteImpl()
 {
-	SwapSize();
+	m_onExecute();
 }
 
 void ResizeImageCommand::UnexecuteImpl()
 {
-	SwapSize();
-}
-
-void ResizeImageCommand::SwapSize()
-{
-	std::swap(m_widthRef, m_width);
-	std::swap(m_heightRef, m_height);
+	m_onUnexecute();
 }

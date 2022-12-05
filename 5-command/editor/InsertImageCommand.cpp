@@ -1,8 +1,13 @@
 #include "InsertImageCommand.h"
 
-InsertImageCommand::InsertImageCommand(IDocumentEditContext* document, const std::shared_ptr<IImage>& image, std::optional<size_t> position)
-	: Command(document)
-	, m_position(position)
+constexpr auto ImageNamePrefix = "img";
+
+InsertImageCommand::InsertImageCommand(const std::shared_ptr<IImage>& image, 
+	std::function<void(const std::shared_ptr<IImage>&)> onExecute, std::function<void()> onUnexecute,
+	std::function<void(std::unique_ptr<Command>&&)> commandSaver)
+	: m_onExecute(std::move(onExecute))
+	, m_onUnexecute(std::move(onUnexecute))
+	, m_commandSaver(std::move(commandSaver))
 {
 	try
 	{
@@ -17,19 +22,12 @@ InsertImageCommand::InsertImageCommand(IDocumentEditContext* document, const std
 
 void InsertImageCommand::ExecuteImpl()
 {
-	m_documentEditContext->InsertImageEdit(m_image, m_position);
+	m_onExecute(m_image);
 }
 
 void InsertImageCommand::UnexecuteImpl()
 {
-	if (m_position.has_value())
-	{
-		m_documentEditContext->DeleteItemEdit(*m_position);
-	}
-	else
-	{
-		m_documentEditContext->DeleteLastItemEdit();
-	}
+	m_onUnexecute();
 }
 
 void InsertImageCommand::Destroy() noexcept
@@ -55,10 +53,10 @@ std::shared_ptr<IImage> InsertImageCommand::CreateImageTempCopy(const std::share
 	}
 
 	std::filesystem::path tmpCopyPath(PathConstants::TempImageStorageDir);
-	std::string tmpFileName = "img" + std::to_string(++m_tmpImageCopyIndex) + image->GetPath().extension().string();
+	std::string tmpFileName = ImageNamePrefix + std::to_string(++m_tmpImageCopyIndex) + image->GetPath().extension().string();
 	tmpCopyPath /= tmpFileName;
 
 	std::filesystem::copy_file(image->GetPath(), tmpCopyPath, std::filesystem::copy_options::overwrite_existing);
 
-	return std::make_shared<Image>(m_documentEditContext, tmpCopyPath, image->GetWidth(), image->GetHeight());
+	return std::make_shared<Image>(tmpCopyPath, image->GetWidth(), image->GetHeight(), m_commandSaver);
 }

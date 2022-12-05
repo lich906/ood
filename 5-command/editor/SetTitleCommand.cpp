@@ -1,18 +1,17 @@
 #include "SetTitleCommand.h"
 
-SetTitleCommand::SetTitleCommand(IDocumentEditContext* document, const std::string& title, const std::string& oldTitle)
-	: Command(document)
-	, m_title(title)
-	, m_oldTitle(oldTitle)
+SetTitleCommand::SetTitleCommand(std::function<void()> onExecute, std::function<void()> onUnexecute)
+	: m_onExecute(std::move(onExecute))
+	, m_onUnexecute(std::move(onUnexecute))
 {
 }
 
 void SetTitleCommand::ExecuteImpl()
 {
-	m_documentEditContext->SetTitleEdit(m_title);
+	m_onExecute();
 }
 
 void SetTitleCommand::UnexecuteImpl()
 {
-	m_documentEditContext->SetTitleEdit(m_oldTitle);
+	m_onUnexecute();
 }

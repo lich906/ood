@@ -16,6 +16,7 @@ void ModernGraphicsRendererAdapter::MoveTo(int x, int y)
 
 void ModernGraphicsRendererAdapter::LineTo(int x, int y)
 {
+	// вызывать BeginDraw() и EndDraw() в конструкторе / деструкторе
 	BeginDraw();
 	DrawLine(m_currentPoint, { x, y });
 	EndDraw();

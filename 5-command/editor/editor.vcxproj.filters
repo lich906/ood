@@ -164,9 +164,6 @@
     <ClInclude Include="InsertParagraphCommand.h">
       <Filter>Header Files\Command\Concrete</Filter>
     </ClInclude>
-    <ClInclude Include="IDocumentEditContext.h">
-      <Filter>Header Files\Document</Filter>
-    </ClInclude>
     <ClInclude Include="InsertImageCommand.h">
       <Filter>Header Files\Command\Concrete</Filter>
     </ClInclude>

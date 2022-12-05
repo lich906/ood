@@ -51,6 +51,6 @@ void Menu::Run()
 
 void Menu::Exit()
 {
-	std::cout << "Bye..." << std::endl;
+	std::cout << "Bye!" << std::endl;
 	m_exit = true;
 }

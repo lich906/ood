@@ -1,18 +1,19 @@
 #pragma once
 
+#include <functional>
+
 #include "Command.h"
 #include "DocumentItem.h"
 
 class DeleteItemCommand : public Command
 {
 public:
-	DeleteItemCommand(IDocumentEditContext* document, size_t index, DocumentItem deletedItem);
+	DeleteItemCommand(std::function<void()> onExecute, std::function<void()> onUnexecute);
 
 	void ExecuteImpl() override;
 
 	void UnexecuteImpl() override;
 
 private:
-	DocumentItem m_deletedItem;
-	size_t m_position;
+	std::function<void()> m_onExecute, m_onUnexecute;
 };

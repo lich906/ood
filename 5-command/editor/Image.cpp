@@ -1,8 +1,8 @@
 #include "Image.h"
 
-Image::Image(IDocumentEditContext* documentEditCtx, std::filesystem::path path, int width, int height)
-	: m_documentEditContext(documentEditCtx)
-	, m_path(std::move(path))
+Image::Image(std::filesystem::path path, int width, int height, std::function<void(std::unique_ptr<Command>&&)> commandSaver)
+	: m_path(std::move(path))
+	, m_commandSaver(commandSaver)
 {
 	if (!IsValidSize(width, height))
 	{
@@ -35,7 +35,19 @@ void Image::Resize(int w, int h)
 		throw CommandExecutionException("Unable to change image size: unacceptable size");
 	}
 
-	m_documentEditContext->ResizeImage(m_width, m_height, w, h);
+	std::unique_ptr<Command> command = std::make_unique<ResizeImageCommand>(
+		[this, w, h]() {
+			m_width = w;
+			m_height = h;
+		},
+		[this, w = m_width, h = m_height]() {
+			m_width = w;
+			m_height = h;
+		}
+	);
+
+	command->Execute();
+	m_commandSaver(std::move(command));
 }
 
 bool Image::IsValidSize(int w, int h) const

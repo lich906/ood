@@ -7,48 +7,73 @@ Document::Document(const std::shared_ptr<IDocumentSaveStrategy>& saveStrategy)
 
 std::shared_ptr<IParagraph> Document::InsertParagraph(const std::string& text, std::optional<size_t> position)
 {
-	std::shared_ptr<IParagraph> paragraph = std::make_shared<Paragraph>(static_cast<IDocumentEditContext*>(this), GetIndex(position), text);
-	std::unique_ptr<Command> command = std::make_unique<InsertParagraphCommand>(static_cast<IDocumentEditContext*>(this), paragraph, position);
+	std::shared_ptr<IParagraph> paragraph = std::make_shared<Paragraph>(text, [this](std::unique_ptr<Command>&& cmd) {
+		SaveCommandToHistory(std::move(cmd));
+	});
+
+	std::unique_ptr<Command> command = std::make_unique<InsertParagraphCommand>(
+		[this, paragraph, position]() {
+			InsertParagraphEdit(paragraph, position);
+		},
+		[this, position]() {
+			if (position.has_value())
+			{
+				DeleteItemEdit(*position);
+			}
+			else
+			{
+				DeleteLastItemEdit();
+			}
+		}
+	);
+
 	command->Execute();
-	m_commandHistory.AddCommand(std::move(command));
+	SaveCommandToHistory(std::move(command));
 
 	return paragraph;
 }
 
 std::shared_ptr<IImage> Document::InsertImage(const std::filesystem::path& path, int width, int height, std::optional<size_t> position)
 {
-	std::shared_ptr<IImage> image = std::make_shared<Image>(static_cast<IDocumentEditContext*>(this), path, width, height);
-	std::unique_ptr<Command> command = std::make_unique<InsertImageCommand>(static_cast<IDocumentEditContext*>(this), image, position);
+	auto commandSaver = [this](std::unique_ptr<Command>&& cmd) {
+		SaveCommandToHistory(std::move(cmd));
+	};
+
+	std::shared_ptr<IImage> image = std::make_shared<Image>(path, width, height, commandSaver);
+
+	std::unique_ptr<Command> command = std::make_unique<InsertImageCommand>(image,
+		[this, position](const std::shared_ptr<IImage>& img) {
+			InsertImageEdit(img, position);
+		},
+		[this, position]() {
+			if (position.has_value())
+			{
+				DeleteItemEdit(*position);
+			}
+			else
+			{
+				DeleteLastItemEdit();
+			}
+		}, commandSaver);
+
 	command->Execute();
 	m_commandHistory.AddCommand(std::move(command));
 
 	return image;
 }
 
-void Document::ReplaceParagraphText(size_t index, std::string& textRef, const std::string& text)
-{
-	if (auto paragraph = GetItem(index).GetParagraph())
-	{
-		std::unique_ptr<Command> command = std::make_unique<ReplaceTextCommand>(textRef, paragraph->GetText(), text);
-		command->Execute();
-		m_commandHistory.AddCommand(std::move(command));
-	}
-	else
-	{
-		throw CommandExecutionException("Unable to replace paragraph text: item at position isn't a paragraph");
-	}
-}
-
-void Document::ResizeImage(int& widthRef, int& heightRef, int width, int height)
-{
-	std::unique_ptr<Command> command = std::make_unique<ResizeImageCommand>(widthRef, heightRef, width, height);
-	command->Execute();
-	m_commandHistory.AddCommand(std::move(command));
-}
-
 void Document::DeleteItem(size_t index)
 {
-	std::unique_ptr<Command> command = std::make_unique<DeleteItemCommand>(static_cast<IDocumentEditContext*>(this), index, m_items[index]);
+	auto deletedItem = m_items.at(index);
+	std::unique_ptr<Command> command = std::make_unique<DeleteItemCommand>(
+		[this, index]() {
+			DeleteItemEdit(index);
+		},
+		[this, index, deletedItem]() {
+			InsertDocumentItem(index, deletedItem);
+		}
+	);
+
 	command->Execute();
 	m_commandHistory.AddCommand(std::move(command));
 }
@@ -60,7 +85,15 @@ std::string Document::GetTitle() const
 
 void Document::SetTitle(const std::string& title)
 {
-	std::unique_ptr<Command> command = std::make_unique<SetTitleCommand>(static_cast<IDocumentEditContext*>(this), title, m_title);
+	std::unique_ptr<Command> command = std::make_unique<SetTitleCommand>(
+		[this, title]() {
+			m_title = title;
+		},
+		[this, title = m_title]() {
+			m_title = title;
+		}
+	);
+
 	command->Execute();
 	m_commandHistory.AddCommand(std::move(command));
 }
@@ -88,6 +121,11 @@ void Document::Redo()
 void Document::Save(const std::filesystem::path& path) const
 {
 	m_documentSaveStrategy->Save(path, this);
+}
+
+void Document::SaveCommandToHistory(std::unique_ptr<Command>&& command)
+{
+	m_commandHistory.AddCommand(std::forward<std::unique_ptr<Command>>(command));
 }
 
 std::shared_ptr<IParagraph> Document::InsertParagraphEdit(const std::shared_ptr<IParagraph>& paragraph, std::optional<size_t> position)
@@ -136,29 +174,14 @@ void Document::DeleteItemEdit(size_t index)
 	m_items.erase(m_items.begin() + index);
 }
 
-void Document::SetTitleEdit(const std::string& title)
-{
-	m_title = title;
-}
-
 void Document::DeleteLastItemEdit()
 {
 	DeleteItemEdit(m_items.size() - 1);
 }
 
-void Document::RecoverDeletedItem(size_t index, const DocumentItem& item)
+void Document::InsertDocumentItem(size_t index, const DocumentItem& item)
 {
 	m_items.insert(m_items.begin() + index, item);
-}
-
-DocumentItem& Document::GetItemForEdit(size_t index)
-{
-	if (index >= m_items.size())
-	{
-		throw CommandExecutionException("Failed to edit item: invalid position");
-	}
-
-	return m_items[index];
 }
 
 size_t Document::GetItemsCount() const

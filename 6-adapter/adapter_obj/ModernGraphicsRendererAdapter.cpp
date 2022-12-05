@@ -16,6 +16,7 @@ void ModernGraphicsRendererAdapter::MoveTo(int x, int y)
 
 void ModernGraphicsRendererAdapter::LineTo(int x, int y)
 {
+	// не вызывать BeginDraw(), EndDraw()
 	m_renderer.BeginDraw();
 	m_renderer.DrawLine(m_currentPoint, { x, y });
 	m_renderer.EndDraw();

@@ -75,3 +75,35 @@ TEST_CASE("Draw single line from default start point with default color")
 					   "  </line>\n"
 					   "</draw>\n");
 }
+
+TEST_CASE("Draw single line from specific point")
+{
+	std::ostringstream oss;
+	modern_graphics_lib::CModernGraphicsRenderer renderer(oss);
+	ModernGraphicsRendererAdapter adapter(renderer);
+
+	adapter.MoveTo(10, 20);
+	adapter.LineTo(1, 2);
+
+	CHECK(oss.str() == "<draw>\n"
+					   "  <line fromX=\"10\" fromY=\"20\" toX=\"1\" toY=\"2\">\n"
+					   "    <color r=\"0\" g=\"0\" b=\"0\" a=\"1\" />\n"
+					   "  </line>\n"
+					   "</draw>\n");
+}
+
+TEST_CASE("Draw single line from default start point with specific color")
+{
+	std::ostringstream oss;
+	modern_graphics_lib::CModernGraphicsRenderer renderer(oss);
+	ModernGraphicsRendererAdapter adapter(renderer);
+
+	adapter.SetColor(0xFF00FF);
+	adapter.LineTo(1, 2);
+
+	CHECK(oss.str() == "<draw>\n"
+					   "  <line fromX=\"0\" fromY=\"0\" toX=\"1\" toY=\"2\">\n"
+					   "    <color r=\"1\" g=\"0\" b=\"1\" a=\"1\" />\n"
+					   "  </line>\n"
+					   "</draw>\n");
+}

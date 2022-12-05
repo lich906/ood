@@ -179,7 +179,6 @@
     <ClInclude Include="..\editor\DocumentHtmlSaveStrategy.h" />
     <ClInclude Include="..\editor\DocumentItem.h" />
     <ClInclude Include="..\editor\IDocument.h" />
-    <ClInclude Include="..\editor\IDocumentEditContext.h" />
     <ClInclude Include="..\editor\IDocumentSaveStrategy.h" />
     <ClInclude Include="..\editor\IImage.h" />
     <ClInclude Include="..\editor\Image.h" />

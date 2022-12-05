@@ -5,7 +5,6 @@
 #include "CommandHistory.h"
 #include "Paragraph.h"
 #include "Image.h"
-#include "IDocumentEditContext.h"
 #include "CommandExecutionException.h"
 #include "InsertParagraphCommand.h"
 #include "InsertImageCommand.h"
@@ -14,7 +13,7 @@
 #include "ReplaceTextCommand.h"
 #include "ResizeImageCommand.h"
 
-class Document : public IDocument, private IDocumentEditContext
+class Document : public IDocument
 {
 public:
 	explicit Document(const std::shared_ptr<IDocumentSaveStrategy>& saveStrategy);
@@ -46,25 +45,19 @@ public:
 private:
 	const std::string DEFAULT_TITLE = "Untitled";
 
+	void SaveCommandToHistory(std::unique_ptr<Command>&& command);
+
 	std::shared_ptr<IParagraph> InsertParagraphEdit(const std::shared_ptr<IParagraph>& paragraph,
-		std::optional<size_t> position = std::nullopt) override;
+		std::optional<size_t> position = std::nullopt);
 
 	std::shared_ptr<IImage> InsertImageEdit(const std::shared_ptr<IImage>& image,
-		std::optional<size_t> position = std::nullopt) override;
+		std::optional<size_t> position = std::nullopt);
 
-	void DeleteItemEdit(size_t index) override;
+	void DeleteItemEdit(size_t index);
 
-	void SetTitleEdit(const std::string& title) override;
+	void DeleteLastItemEdit();
 
-	void DeleteLastItemEdit() override;
-
-	void RecoverDeletedItem(size_t index, const DocumentItem& item) override;
-
-	DocumentItem& GetItemForEdit(size_t index) override;
-
-	void ReplaceParagraphText(size_t index, std::string& textRef, const std::string& text) override;
-
-	void ResizeImage(int& widthRef, int& heightRef, int width, int height) override;
+	void InsertDocumentItem(size_t index, const DocumentItem& item);
 
 	size_t GetIndex(std::optional<size_t> position) const;
 

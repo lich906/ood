@@ -1,10 +1,5 @@
 #include "Command.h"
 
-Command::Command(IDocumentEditContext* documentEditContext)
-	: m_documentEditContext(documentEditContext)
-{
-}
-
 void Command::Execute()
 {
 	if (!m_executed)

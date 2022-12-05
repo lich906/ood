@@ -1,19 +1,18 @@
 #pragma once
 
+#include <functional>
+
 #include "Command.h"
 
 class ResizeImageCommand : public Command
 {
 public:
-	ResizeImageCommand(int& widthRef, int& heightRef, int width, int height);
+	ResizeImageCommand(std::function<void()> onExecute, std::function<void()> onUnexecute);
 
 	void ExecuteImpl() override;
 
 	void UnexecuteImpl() override;
 
 private:
-	void SwapSize();
-
-	int& m_widthRef, & m_heightRef;
-	int m_width, m_height;
+	std::function<void()> m_onExecute, m_onUnexecute;
 };

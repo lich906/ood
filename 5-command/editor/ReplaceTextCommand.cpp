@@ -1,26 +1,17 @@
 #include "ReplaceTextCommand.h"
 
-ReplaceTextCommand::ReplaceTextCommand(std::string& textRef, const std::string& oldText, const std::string& text)
-	: Command(nullptr)
-	, m_textRef(textRef)
-	, m_text(text)
-	, m_oldText(oldText)
+ReplaceTextCommand::ReplaceTextCommand(std::function<void()> onExecute, std::function<void()> onUnexecute)
+	: m_onExecute(std::move(onExecute))
+	, m_onUnexecute(std::move(onUnexecute))
 {
 }
 
 void ReplaceTextCommand::ExecuteImpl()
 {
-	ReplaceText(m_text);
+	m_onExecute();
 }
 
 void ReplaceTextCommand::UnexecuteImpl()
 {
-	ReplaceText(m_oldText);
+	m_onUnexecute();
 }
-
-void ReplaceTextCommand::ReplaceText(const std::string& text) const
-{
-	m_textRef = text;
-}
-
-

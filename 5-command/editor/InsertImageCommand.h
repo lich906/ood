@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <string>
 
 #include "Image.h"
 #include "Command.h"
@@ -9,8 +10,9 @@
 class InsertImageCommand : public Command
 {
 public:
-	InsertImageCommand(IDocumentEditContext* document, const std::shared_ptr<IImage>& image,
-		std::optional<size_t> position = std::nullopt);
+	InsertImageCommand(const std::shared_ptr<IImage>& image, 
+		std::function<void(const std::shared_ptr<IImage>&)> onExecute, std::function<void()> onUnexecute,
+		std::function<void(std::unique_ptr<Command>&&)> commandSaver);
 
 	void ExecuteImpl() override;
 
@@ -21,10 +23,11 @@ public:
 private:
 	std::shared_ptr<IImage> CreateImageTempCopy(const std::shared_ptr<IImage>& image) const;
 
+	std::function<void(const std::shared_ptr<IImage>&)> m_onExecute;
+	std::function<void()> m_onUnexecute;
 	std::shared_ptr<IImage> m_image;
-	std::optional<size_t> m_position;
-
 	std::filesystem::path m_tmpCopyFilename;
+	std::function<void(std::unique_ptr<Command>&&)> m_commandSaver;
 
 	static inline size_t m_tmpImageCopyIndex = 0;
 };
