@@ -28,8 +28,10 @@ void PaintPictureOnCanvas()
 void PaintPictureOnModernGraphicsRenderer()
 {
 	modern_graphics_lib::CModernGraphicsRenderer renderer(std::cout);
+	renderer.BeginDraw();
 	ModernGraphicsRendererAdapter adapter(renderer);
 	shape_drawing_lib::CCanvasPainter painter(adapter);
 	PaintPicture(painter);
+	renderer.EndDraw();
 }
 } // namespace app

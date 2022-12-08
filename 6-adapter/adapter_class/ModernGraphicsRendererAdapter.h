@@ -8,6 +8,8 @@ class ModernGraphicsRendererAdapter : public graphics_lib::ICanvas, private mode
 public:
 	ModernGraphicsRendererAdapter(std::ostream& stream);
 
+	~ModernGraphicsRendererAdapter();
+
 	void MoveTo(int x, int y) override;
 
 	void LineTo(int x, int y) override;
