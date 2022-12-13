@@ -7,8 +7,10 @@
 class InsertParagraphCommand : public Command
 {
 public:
+	// Переименовать
 	InsertParagraphCommand(std::function<void()> onExecute, std::function<void()> onUnexecute);
 
+	// сделать private
 	void ExecuteImpl() override;
 
 	void UnexecuteImpl() override;

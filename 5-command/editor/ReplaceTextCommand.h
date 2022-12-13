@@ -7,6 +7,7 @@
 class ReplaceTextCommand : public Command
 {
 public:
+	// переименовать класс
 	ReplaceTextCommand(std::function<void()> onExecute, std::function<void()> onUnexecute);
 
 	void ExecuteImpl() override;

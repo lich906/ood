@@ -2,7 +2,7 @@
 
 Paragraph::Paragraph(std::string text, std::function<void(std::unique_ptr<Command>&&)> commandSaver)
 	: m_text(std::move(text))
-	, m_commandSaver(commandSaver)
+	, m_commandSaver(std::move(commandSaver))
 {
 }
 
