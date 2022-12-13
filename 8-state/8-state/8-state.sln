@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.32929.386
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gumball_machine", "gumball_machine\gumball_machine.vcxproj", "{05899804-45E7-4B3A-8A93-067D6183A075}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gumball_machine_naive", "gumball_machine_naive\gumball_machine_naive.vcxproj", "{B3CC3FB0-501B-4D02-A40A-D1B45A4B2485}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{05899804-45E7-4B3A-8A93-067D6183A075}.Release|x64.Build.0 = Release|x64
 		{05899804-45E7-4B3A-8A93-067D6183A075}.Release|x86.ActiveCfg = Release|Win32
 		{05899804-45E7-4B3A-8A93-067D6183A075}.Release|x86.Build.0 = Release|Win32
+		{B3CC3FB0-501B-4D02-A40A-D1B45A4B2485}.Debug|x64.ActiveCfg = Debug|x64
+		{B3CC3FB0-501B-4D02-A40A-D1B45A4B2485}.Debug|x64.Build.0 = Debug|x64
+		{B3CC3FB0-501B-4D02-A40A-D1B45A4B2485}.Debug|x86.ActiveCfg = Debug|Win32
+		{B3CC3FB0-501B-4D02-A40A-D1B45A4B2485}.Debug|x86.Build.0 = Debug|Win32
+		{B3CC3FB0-501B-4D02-A40A-D1B45A4B2485}.Release|x64.ActiveCfg = Release|x64
+		{B3CC3FB0-501B-4D02-A40A-D1B45A4B2485}.Release|x64.Build.0 = Release|x64
+		{B3CC3FB0-501B-4D02-A40A-D1B45A4B2485}.Release|x86.ActiveCfg = Release|Win32
+		{B3CC3FB0-501B-4D02-A40A-D1B45A4B2485}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

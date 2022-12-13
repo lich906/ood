@@ -19,22 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GumballMachine.h" />
-    <ClInclude Include="IGumballMachine.h" />
-    <ClInclude Include="State\HasQuarterState.hpp" />
-    <ClInclude Include="State\IState.h" />
-    <ClInclude Include="State\NoQuarterState.hpp" />
-    <ClInclude Include="State\SoldOutState.hpp" />
-    <ClInclude Include="State\SoldState.hpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClInclude Include="NaiveGumBallMachine.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{05899804-45e7-4b3a-8a93-067d6183a075}</ProjectGuid>
-    <RootNamespace>gumballmachine</RootNamespace>
+    <ProjectGuid>{b3cc3fb0-501b-4d02-a40a-d1b45a4b2485}</ProjectGuid>
+    <RootNamespace>gumballmachinenaive</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

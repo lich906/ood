@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include <iostream>
 #include <format>
+#include <iostream>
 
 namespace naive
 {
@@ -10,10 +10,10 @@ class CGumballMachine
 public:
 	enum class State
 	{
-		SoldOut,		// Жвачка закончилась
-		NoQuarter,		// Нет монетки
-		HasQuarter,		// Есть монетка
-		Sold,			// Монетка выдана
+		SoldOut, // Жвачка закончилась
+		NoQuarter, // Нет монетки
+		HasQuarter, // Есть монетка
+		Sold, // Монетка выдана
 	};
 
 	CGumballMachine(unsigned count)
@@ -92,19 +92,18 @@ public:
 		m_state = numBalls > 0 ? State::NoQuarter : State::SoldOut;
 	}
 
-	std::string ToString()const
+	std::string ToString() const
 	{
-		std::string state =
-			(m_state == State::SoldOut)    ? "sold out" :
-			(m_state == State::NoQuarter)  ? "waiting for quarter" :
-			(m_state == State::HasQuarter) ? "waiting for turn of crank"
-			                               : "delivering a gumball";
+		std::string state = (m_state == State::SoldOut) ? "sold out" : (m_state == State::NoQuarter) ? "waiting for quarter"
+			: (m_state == State::HasQuarter)														 ? "waiting for turn of crank"
+																									 : "delivering a gumball";
 		return std::format(R"(
 Mighty Gumball, Inc.
 C++-enabled Standing Gumball Model #2016
 Inventory: {} gumball{}
 Machine is {}
-)", m_count, (m_count != 1 ? "s" : ""), state);
+)",
+			m_count, (m_count != 1 ? "s" : ""), state);
 	}
 
 private:
@@ -136,7 +135,7 @@ private:
 		}
 	}
 
-	unsigned m_count;	// Количество шариков
+	unsigned m_count; // Количество шариков
 	State m_state = State::SoldOut;
 };
-}
+} // namespace naive

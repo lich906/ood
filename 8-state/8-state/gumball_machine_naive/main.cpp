@@ -1,4 +1,4 @@
-#include "GumballMachine.h"
+#include "NaiveGumBallMachine.h"
 
 using namespace std;
 
@@ -37,15 +37,15 @@ void TestGumballMachine(GumballMachineType& m)
 	cout << m.ToString() << endl;
 }
 
-void TestGumballMachineWithState()
+void TestNaiveGumballMachine()
 {
-	GumballMachine m(5);
+	naive::CGumballMachine m(5);
 	TestGumballMachine(m);
 }
 
 int main()
 {
-	TestGumballMachineWithState();
+	TestNaiveGumballMachine();
 
 	return 0;
 }
