@@ -10,14 +10,14 @@ struct IState
 	virtual void EjectQuarter() = 0;
 	virtual void TurnCrank() = 0;
 	virtual void Dispense() = 0;
-	virtual std::string ToString()const = 0;
+	virtual std::string ToString() const = 0;
 	virtual ~IState() = default;
 };
 
 struct IGumballMachine
 {
 	virtual void ReleaseBall() = 0;
-	virtual unsigned GetBallCount()const = 0;
+	virtual unsigned GetBallCount() const = 0;
 
 	virtual void SetSoldOutState() = 0;
 	virtual void SetNoQuarterState() = 0;
@@ -30,9 +30,10 @@ struct IGumballMachine
 class CSoldState : public IState
 {
 public:
-	CSoldState(IGumballMachine & gumballMachine)
-		:m_gumballMachine(gumballMachine)
-	{}
+	CSoldState(IGumballMachine& gumballMachine)
+		: m_gumballMachine(gumballMachine)
+	{
+	}
 	void InsertQuarter() override
 	{
 		std::cout << "Please wait, we're already giving you a gumball\n";
@@ -62,16 +63,18 @@ public:
 	{
 		return "delivering a gumball";
 	}
+
 private:
-	IGumballMachine & m_gumballMachine;
+	IGumballMachine& m_gumballMachine;
 };
 
 class CSoldOutState : public IState
 {
 public:
-	CSoldOutState(IGumballMachine & gumballMachine)
-		:m_gumballMachine(gumballMachine)
-	{}
+	CSoldOutState(IGumballMachine& gumballMachine)
+		: m_gumballMachine(gumballMachine)
+	{
+	}
 
 	void InsertQuarter() override
 	{
@@ -93,16 +96,18 @@ public:
 	{
 		return "sold out";
 	}
+
 private:
-	IGumballMachine & m_gumballMachine;
+	IGumballMachine& m_gumballMachine;
 };
 
 class CHasQuarterState : public IState
 {
 public:
-	CHasQuarterState(IGumballMachine & gumballMachine)
-		:m_gumballMachine(gumballMachine)
-	{}
+	CHasQuarterState(IGumballMachine& gumballMachine)
+		: m_gumballMachine(gumballMachine)
+	{
+	}
 
 	void InsertQuarter() override
 	{
@@ -126,16 +131,18 @@ public:
 	{
 		return "waiting for turn of crank";
 	}
+
 private:
-	IGumballMachine & m_gumballMachine;
+	IGumballMachine& m_gumballMachine;
 };
 
 class CNoQuarterState : public IState
 {
 public:
-	CNoQuarterState(IGumballMachine & gumballMachine)
+	CNoQuarterState(IGumballMachine& gumballMachine)
 		: m_gumballMachine(gumballMachine)
-	{}
+	{
+	}
 
 	void InsertQuarter() override
 	{
@@ -158,8 +165,9 @@ public:
 	{
 		return "waiting for quarter";
 	}
+
 private:
-	IGumballMachine & m_gumballMachine;
+	IGumballMachine& m_gumballMachine;
 };
 
 class CGumballMachine : private IGumballMachine
@@ -191,7 +199,7 @@ public:
 		m_currentState->TurnCrank();
 		m_currentState->Dispense();
 	}
-	std::string ToString()const
+	std::string ToString() const
 	{
 		return std::format(R"(
 Mighty Gumball, Inc.
@@ -200,6 +208,7 @@ Inventory: {} gumball{}
 Machine is {}
 )", m_count, m_count != 1 ? "s" : "", m_currentState->ToString());
 	}
+
 private:
 	unsigned GetBallCount() const override
 	{
@@ -215,24 +224,24 @@ private:
 	}
 	void SetSoldOutState() override
 	{
-		m_currentState.reset(new CSoldOutState(*this));
+		m_currentState.reset(std::make_unique<CSoldOutState>(*this).release());
 	}
 	void SetNoQuarterState() override
 	{
-		m_currentState.reset(new CNoQuarterState(*this));
+		m_currentState.reset(std::make_unique<CNoQuarterState>(*this).release());
 	}
 	void SetSoldState() override
 	{
-		m_currentState.reset(new CSoldState(*this));
+		m_currentState.reset(std::make_unique<CSoldState>(*this).release());
 	}
 	void SetHasQuarterState() override
 	{
-		m_currentState.reset(new CHasQuarterState(*this));
+		m_currentState.reset(std::make_unique<CHasQuarterState>(*this).release());
 	}
+
 private:
 	unsigned m_count = 0;
 	std::unique_ptr<IState> m_currentState;
-
 };
 
-}
+} // namespace with_dynamic_state
