@@ -13,27 +13,33 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\State">
+      <UniqueIdentifier>{fd73d8c8-7613-4b01-8ab9-619d00fec7e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GumballMachine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="State\IState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IGumballMachine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="State\SoldState.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="State\SoldOutState.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="State\HasQuarterState.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="State\IState.h">
+      <Filter>Header Files\State</Filter>
     </ClInclude>
     <ClInclude Include="State\NoQuarterState.hpp">
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="State\SoldOutState.hpp">
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="State\SoldState.hpp">
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="State\HasMaxQuarterState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
