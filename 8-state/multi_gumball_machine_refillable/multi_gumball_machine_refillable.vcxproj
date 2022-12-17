@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="GumballMachine.h" />
     <ClInclude Include="IGumballMachine.h" />
+    <ClInclude Include="MenuFP.h" />
     <ClInclude Include="State\HasMaxQuarterState.hpp" />
     <ClInclude Include="State\HasQuarterState.hpp" />
     <ClInclude Include="State\IState.h" />
