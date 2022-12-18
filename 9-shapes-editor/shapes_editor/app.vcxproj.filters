@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\View">
+      <UniqueIdentifier>{172ae87a-d162-440c-92ff-297cd2375291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Presenter">
+      <UniqueIdentifier>{2556305f-6a43-4018-a5ba-756a9c13469d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Model">
+      <UniqueIdentifier>{a77e5f65-9e07-451f-8a9b-1038421f4d3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model">
+      <UniqueIdentifier>{f91a43d6-56ae-4a00-be05-0b705a7cd562}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Presenter">
+      <UniqueIdentifier>{5f1b70e7-689c-4770-904b-48d30cc6c246}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model\Shape.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model\ShapeStore.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Presenter\CommandHistory.cpp">
+      <Filter>Source Files\Presenter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Presenter\Editor.cpp">
+      <Filter>Source Files\Presenter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Presenter\ShapesPresenter.cpp">
+      <Filter>Source Files\Presenter</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\View\ICanvas.h">
+      <Filter>Header Files\View</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Presenter\IMouseActionsHandler.h">
+      <Filter>Header Files\Presenter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Presenter\CommandHistory.h">
+      <Filter>Header Files\Presenter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Presenter\Editor.h">
+      <Filter>Header Files\Presenter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Presenter\ResizeNode.h">
+      <Filter>Header Files\Presenter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Presenter\ShapesPresenter.h">
+      <Filter>Header Files\Presenter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Model\Color.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Model\Defaults.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Model\Point.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Model\Shape.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Model\ShapeStore.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Model\ShapeType.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
