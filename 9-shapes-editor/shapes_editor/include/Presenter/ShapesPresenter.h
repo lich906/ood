@@ -2,24 +2,20 @@
 
 #include <optional>
 
-#include "../Model/ShapeStore.h"
+#include "Selection.h"
+#include "../Model/IShapesPresenter.h"
+#include "../Model/ShapeComposition.h"
 #include "ResizeNode.h"
 #include "../View/ICanvas.h"
 #include "IMouseActionsHandler.h"
+#include "constants.h"
 
-namespace constants
-{
-constexpr auto ResizeMarkerSize = 10;
-}
-
-class ShapesPresenter : public IMouseActionsHandler
+class ShapesPresenter : public IShapesPresenter, public IMouseActionsHandler
 {
 public:
-	ShapesPresenter(ShapeStore& shapeStore);
+	ShapesPresenter(const ShapeComposition& shapeStore, Selection& selection);
 
-	void UpdateView(ICanvasPtr canvas);
-
-	bool IsResizing() const;
+	void UpdatePresentation(const std::vector<std::shared_ptr<Shape>>& shapes);
 
 	void OnMouseDown(float x, float y) override;
 
@@ -27,16 +23,16 @@ public:
 
 	void OnMouseDrag(float dx, float dy) override;
 
-	void StopResizing();
-
-	void ResetSelection();
-
 private:
-	void UpdateSelectedShape(float x, float y);
+	void UpdateShapeSelection(float x, float y);
+	ResizeNode GetPressedResizeNode(float x, float y) const;
+	void DrawShape(const Shape& shape, ICanvasPtr canvas);
+	void DrawSelectionFrame(const Point& leftTop, const Point& bottomRight, ICanvasPtr canvas);
 
-	std::optional<ResizeNode> GetPressedResizeNode(float x, float y) const;
+	Selection& m_selection;
+	const ShapeComposition& m_shapeComposition;
+	ResizeNode m_resizeNode = ResizeNode::None;
+	bool m_isMoving = false;
 
-	std::optional<size_t> m_selectedShapeId;
-	ShapeStore& m_shapeStore;
-	ResizeNode m_currentResizeNode = ResizeNode::None;
+	Point m_dragOffset;
 };

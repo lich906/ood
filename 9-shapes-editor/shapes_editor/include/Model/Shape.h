@@ -1,44 +1,46 @@
 #pragma once
 
 #include <type_traits>
+#include <functional>
 
-#include "ShapeType.h"
-#include "Point.h"
-#include "Color.h"
+#include "IShape.h"
 #include "Defaults.h"
+#include "Command/FunctionalCommand.h"
 
-class Shape
+class Shape : public IShape
 {
 public:
-	Shape(ShapeType type, int zIndex);
+	Shape(ShapeType type, int zIndex, std::function<void(std::unique_ptr<Command>&&)> registerCommand);
 
-	size_t GetId() const;
+	ShapeId GetId() const override;
 
-	ShapeType GetType() const;
+	ShapeType GetType() const override;
 
-	Point GetTopLeft() const;
-	void SetTopLeft(Point point);
+	Point GetTopLeft() const override;
+	Point GetBottomRight() const override;
 
-	Point GetBottomRight() const;
-	void SetBottomRight(Point point);
+	void Resize(const Point& topLeft, const Point& bottomRight) override;
+	void Move(float dx, float dy) override;
 
-	Color GetFillColor() const;
-	void SetFillColor(Color color);
+	Color GetFillColor() const override;
+	void SetFillColor(Color color) override;
 
-	Color GetBorderColor() const;
-	void SetBorderColor(Color color);
+	Color GetBorderColor() const override;
+	void SetBorderColor(Color color) override;
 
 	int GetZIndex() const;
 	void SetZIndex(int zIndex);
 
 private:
 	ShapeType m_type;
-	size_t m_id;
+	ShapeId m_id;
 	Point m_topLeft = Defaults::TopLeftPoint;
 	Point m_bottomRight = Defaults::BottomRightPoint;
 	Color m_fillColor = Defaults::FillColor;
 	Color m_borderColor = Defaults::BorderColor;
 	int m_zIndex;
 
-	inline static size_t lastId = 0;
+	std::function<void(std::unique_ptr<Command>&&)> m_registerCommand;
+
+	inline static ShapeId lastId = 0;
 };

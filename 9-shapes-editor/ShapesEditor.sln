@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{045628DF-C926-4F9D-BA01-D452B60AB9A4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "app_tests", "tests\app_tests\app_tests.vcxproj", "{3E2154B4-9185-4E64-AE90-071950D22513}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "app_tests", "tests\app_tests\app_tests.vcxproj", "{EE21BEF5-1CBB-4854-AEA0-96F105A680AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,20 +31,20 @@ Global
 		{4ECF598D-96DD-4A56-8C4C-DA6EC31AB8A6}.Release|x64.Build.0 = Release|x64
 		{4ECF598D-96DD-4A56-8C4C-DA6EC31AB8A6}.Release|x86.ActiveCfg = Release|Win32
 		{4ECF598D-96DD-4A56-8C4C-DA6EC31AB8A6}.Release|x86.Build.0 = Release|Win32
-		{3E2154B4-9185-4E64-AE90-071950D22513}.Debug|x64.ActiveCfg = Debug|x64
-		{3E2154B4-9185-4E64-AE90-071950D22513}.Debug|x64.Build.0 = Debug|x64
-		{3E2154B4-9185-4E64-AE90-071950D22513}.Debug|x86.ActiveCfg = Debug|Win32
-		{3E2154B4-9185-4E64-AE90-071950D22513}.Debug|x86.Build.0 = Debug|Win32
-		{3E2154B4-9185-4E64-AE90-071950D22513}.Release|x64.ActiveCfg = Release|x64
-		{3E2154B4-9185-4E64-AE90-071950D22513}.Release|x64.Build.0 = Release|x64
-		{3E2154B4-9185-4E64-AE90-071950D22513}.Release|x86.ActiveCfg = Release|Win32
-		{3E2154B4-9185-4E64-AE90-071950D22513}.Release|x86.Build.0 = Release|Win32
+		{EE21BEF5-1CBB-4854-AEA0-96F105A680AD}.Debug|x64.ActiveCfg = Debug|x64
+		{EE21BEF5-1CBB-4854-AEA0-96F105A680AD}.Debug|x64.Build.0 = Debug|x64
+		{EE21BEF5-1CBB-4854-AEA0-96F105A680AD}.Debug|x86.ActiveCfg = Debug|Win32
+		{EE21BEF5-1CBB-4854-AEA0-96F105A680AD}.Debug|x86.Build.0 = Debug|Win32
+		{EE21BEF5-1CBB-4854-AEA0-96F105A680AD}.Release|x64.ActiveCfg = Release|x64
+		{EE21BEF5-1CBB-4854-AEA0-96F105A680AD}.Release|x64.Build.0 = Release|x64
+		{EE21BEF5-1CBB-4854-AEA0-96F105A680AD}.Release|x86.ActiveCfg = Release|Win32
+		{EE21BEF5-1CBB-4854-AEA0-96F105A680AD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{3E2154B4-9185-4E64-AE90-071950D22513} = {045628DF-C926-4F9D-BA01-D452B60AB9A4}
+		{EE21BEF5-1CBB-4854-AEA0-96F105A680AD} = {045628DF-C926-4F9D-BA01-D452B60AB9A4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B35D7CA1-A6DF-4E58-87B0-1DFF04B9D070}

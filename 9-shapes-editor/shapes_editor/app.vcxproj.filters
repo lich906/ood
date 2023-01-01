@@ -36,10 +36,10 @@
     <ClCompile Include="src\Model\Shape.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="src\Model\ShapeStore.cpp">
+    <ClCompile Include="src\Model\ShapeComposition.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="src\Presenter\CommandHistory.cpp">
+    <ClCompile Include="src\Command\CommandHistory.cpp">
       <Filter>Source Files\Presenter</Filter>
     </ClCompile>
     <ClCompile Include="src\Presenter\Editor.cpp">
@@ -47,6 +47,18 @@
     </ClCompile>
     <ClCompile Include="src\Presenter\ShapesPresenter.cpp">
       <Filter>Source Files\Presenter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\View\MouseActionsDispatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Command\Command.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Command\FunctionalCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Presenter\Selection.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,7 +68,7 @@
     <ClInclude Include="include\Presenter\IMouseActionsHandler.h">
       <Filter>Header Files\Presenter</Filter>
     </ClInclude>
-    <ClInclude Include="include\Presenter\CommandHistory.h">
+    <ClInclude Include="include\Command\CommandHistory.h">
       <Filter>Header Files\Presenter</Filter>
     </ClInclude>
     <ClInclude Include="include\Presenter\Editor.h">
@@ -80,11 +92,38 @@
     <ClInclude Include="include\Model\Shape.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="include\Model\ShapeStore.h">
+    <ClInclude Include="include\Model\ShapeComposition.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="include\Model\ShapeType.h">
       <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="include\View\MouseActionsDispatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Presenter\IMenuActionsHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Command\Command.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Command\FunctionalCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Presenter\constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Model\IShapeComposition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Model\IShapesPresenter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Presenter\Selection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Model\IShape.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

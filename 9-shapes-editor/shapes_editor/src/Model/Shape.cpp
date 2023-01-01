@@ -1,9 +1,10 @@
 #include "../../include/Model/Shape.h"
 
-Shape::Shape(ShapeType type, int zIndex)
+Shape::Shape(ShapeType type, int zIndex, std::function<void(std::unique_ptr<Command>&&)> registerCommand)
 	: m_type(type)
 	, m_id(++lastId)
 	, m_zIndex(zIndex)
+	, m_registerCommand(std::move(registerCommand))
 {
 }
 
@@ -22,19 +23,43 @@ Point Shape::GetTopLeft() const
 	return m_topLeft;
 }
 
-void Shape::SetTopLeft(Point point)
-{
-	m_topLeft = std::move(point);
-}
-
 Point Shape::GetBottomRight() const
 {
 	return m_bottomRight;
 }
 
-void Shape::SetBottomRight(Point point)
+void Shape::Resize(const Point& topLeft, const Point& bottomRight)
 {
-	m_bottomRight = std::move(point);
+	auto command = std::make_unique<FunctionalCommand>(
+		[this, topLeft, bottomRight]() {
+			m_topLeft = topLeft;
+			m_bottomRight = bottomRight;
+		},
+		[this, prevTl = m_topLeft, prevBr = m_bottomRight]() {
+			m_topLeft = prevTl;
+			m_bottomRight = prevBr;
+		});
+
+	m_registerCommand(std::move(command));
+}
+
+void Shape::Move(float dx, float dy)
+{
+	auto command = std::make_unique<FunctionalCommand>(
+		[this, dx, dy]() {
+			m_topLeft.x += dx;
+			m_bottomRight.x += dx;
+			m_topLeft.y += dy;
+			m_bottomRight.y += dy;
+		},
+		[this, dx, dy]() {
+			m_topLeft.x -= dx;
+			m_bottomRight.x -= dx;
+			m_topLeft.y -= dy;
+			m_bottomRight.y -= dy;
+		});
+
+	m_registerCommand(std::move(command));
 }
 
 Color Shape::GetFillColor() const
@@ -44,7 +69,15 @@ Color Shape::GetFillColor() const
 
 void Shape::SetFillColor(Color color)
 {
-	m_fillColor = std::move(color);
+	auto command = std::make_unique<FunctionalCommand>(
+		[this, color]() {
+			m_fillColor = color;
+		},
+		[this, prevColor = m_fillColor]() {
+			m_fillColor = prevColor;
+		});
+
+	m_registerCommand(std::move(command));
 }
 
 Color Shape::GetBorderColor() const
@@ -54,7 +87,15 @@ Color Shape::GetBorderColor() const
 
 void Shape::SetBorderColor(Color color)
 {
-	m_borderColor = std::move(color);
+	auto command = std::make_unique<FunctionalCommand>(
+		[this, color]() {
+			m_borderColor = color;
+		},
+		[this, prevColor = m_borderColor]() {
+			m_borderColor = prevColor;
+		});
+
+	m_registerCommand(std::move(command));
 }
 
 int Shape::GetZIndex() const
@@ -64,5 +105,13 @@ int Shape::GetZIndex() const
 
 void Shape::SetZIndex(int zIndex)
 {
-	m_zIndex = zIndex;
+	auto command = std::make_unique<FunctionalCommand>(
+		[this, zIndex]() {
+			m_zIndex = zIndex;
+		},
+		[this, prevZIndex = m_zIndex]() {
+			m_zIndex = prevZIndex;
+		});
+
+	m_registerCommand(std::move(command));
 }

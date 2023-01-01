@@ -21,24 +21,37 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Model\Shape.cpp" />
-    <ClCompile Include="src\Model\ShapeStore.cpp" />
-    <ClCompile Include="src\Presenter\CommandHistory.cpp" />
+    <ClCompile Include="src\Model\ShapeComposition.cpp" />
+    <ClCompile Include="src\Command\CommandHistory.cpp" />
+    <ClCompile Include="src\Command\Command.cpp" />
+    <ClCompile Include="src\Command\FunctionalCommand.cpp" />
     <ClCompile Include="src\Presenter\Editor.cpp" />
+    <ClCompile Include="src\Presenter\Selection.cpp" />
     <ClCompile Include="src\Presenter\ShapesPresenter.cpp" />
+    <ClCompile Include="src\View\MouseActionsDispatcher.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Model\Color.h" />
     <ClInclude Include="include\Model\Defaults.h" />
+    <ClInclude Include="include\Model\IShape.h" />
+    <ClInclude Include="include\Model\IShapeComposition.h" />
     <ClInclude Include="include\Model\Point.h" />
     <ClInclude Include="include\Model\Shape.h" />
-    <ClInclude Include="include\Model\ShapeStore.h" />
+    <ClInclude Include="include\Model\ShapeComposition.h" />
     <ClInclude Include="include\Model\ShapeType.h" />
-    <ClInclude Include="include\Presenter\CommandHistory.h" />
+    <ClInclude Include="include\Command\Command.h" />
+    <ClInclude Include="include\Command\CommandHistory.h" />
+    <ClInclude Include="include\Command\FunctionalCommand.h" />
+    <ClInclude Include="include\Presenter\constants.h" />
     <ClInclude Include="include\Presenter\Editor.h" />
+    <ClInclude Include="include\Presenter\IMenuActionsHandler.h" />
     <ClInclude Include="include\Presenter\IMouseActionsHandler.h" />
+    <ClInclude Include="include\Model\IShapesPresenter.h" />
     <ClInclude Include="include\Presenter\ResizeNode.h" />
+    <ClInclude Include="include\Presenter\Selection.h" />
     <ClInclude Include="include\Presenter\ShapesPresenter.h" />
     <ClInclude Include="include\View\ICanvas.h" />
+    <ClInclude Include="include\View\MouseActionsDispatcher.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -49,28 +62,28 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -111,7 +124,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>..\vcpkg_installed\x64-windows\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vcpkg_installed\x64-windows\include;include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,7 +148,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>..\vcpkg_installed\x64-windows\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vcpkg_installed\x64-windows\include;include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,7 +172,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>..\vcpkg_installed\x64-windows\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vcpkg_installed\x64-windows\include;include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -183,7 +196,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>..\vcpkg_installed\x64-windows\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\vcpkg_installed\x64-windows\include;include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

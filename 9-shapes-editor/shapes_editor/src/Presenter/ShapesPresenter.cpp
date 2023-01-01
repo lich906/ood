@@ -1,67 +1,79 @@
 #include "../../include/Presenter/ShapesPresenter.h"
 
-ShapesPresenter::ShapesPresenter(ShapeStore& shapeStore)
-	: m_shapeStore(shapeStore)
+ShapesPresenter::ShapesPresenter(const ShapeComposition& shapeStore, Selection& selection)
+	: m_shapeComposition(shapeStore)
+	, m_selection(selection)
 {
 }
 
-void ShapesPresenter::UpdateView(ICanvasPtr canvas)
+void ShapesPresenter::UpdatePresentation(const std::vector<std::shared_ptr<Shape>>& shapes)
 {
-}
-
-bool ShapesPresenter::IsResizing() const
-{
-	return m_currentResizeNode != ResizeNode::None;
 }
 
 void ShapesPresenter::OnMouseDown(float x, float y)
 {
-	UpdateSelectedShape(x, y);
+	UpdateShapeSelection(x, y);
 
-	if (m_selectedShapeId.has_value())
+	if (m_selection)
 	{
 		auto pressedResizeNode = GetPressedResizeNode(x, y);
+		if (pressedResizeNode != ResizeNode::None)
+		{
+			m_resizeNode = pressedResizeNode;
+		}
+		else
+		{
+			m_isMoving = true;
+		}
 	}
 }
 
 void ShapesPresenter::OnMouseUp(float dx, float dy)
 {
+	if (m_resizeNode != ResizeNode::None)
+	{
+		m_resizeNode = ResizeNode::None;
+	}
+	if (m_isMoving)
+	{
+		m_isMoving = false;
+	}
+	m_dragOffset.x = 0;
+	m_dragOffset.y = 0;
 }
 
 void ShapesPresenter::OnMouseDrag(float dx, float dy)
 {
-}
-
-void ShapesPresenter::StopResizing()
-{
-	m_currentResizeNode = ResizeNode::None;
-}
-
-void ShapesPresenter::ResetSelection()
-{
-	m_selectedShapeId.reset();
-}
-
-void ShapesPresenter::UpdateSelectedShape(float x, float y)
-{
-	if (auto shape = m_shapeStore.GetShapeByCoords(x, y))
+	if (m_isMoving || m_resizeNode != ResizeNode::None)
 	{
-		m_selectedShapeId = shape->GetId();
+		m_dragOffset.x = dx;
+		m_dragOffset.y = dy;
+	}
+}
+
+void ShapesPresenter::UpdateShapeSelection(float x, float y)
+{
+	if (auto shape = m_shapeComposition.FindShapeByCoords(x, y))
+	{
+		if (m_selection.GetSelectedShape()->GetId() != shape->GetId())
+		{
+			m_selection.SetSelectedShape(shape);
+		}
 	}
 	else
 	{
-		m_selectedShapeId.reset();
+		m_selection.Reset();
 	}
 }
 
-std::optional<ResizeNode> ShapesPresenter::GetPressedResizeNode(float x, float y) const
+ResizeNode ShapesPresenter::GetPressedResizeNode(float x, float y) const
 {
-	if (!m_selectedShapeId)
+	if (!m_selection)
 	{
-		return std::nullopt;
+		return ResizeNode::None;
 	}
 
-	auto selectedShape = m_shapeStore.GetShapeById(*m_selectedShapeId);
+	auto selectedShape = m_shapeComposition.GetShapeById(m_selection.GetSelectedShape()->GetId());
 
 	auto topLeft = selectedShape->GetTopLeft();
 	auto bottomRight = selectedShape->GetBottomRight();
@@ -89,5 +101,13 @@ std::optional<ResizeNode> ShapesPresenter::GetPressedResizeNode(float x, float y
 		}
 	}
 
-	return std::nullopt;
+	return ResizeNode::None;
+}
+
+void ShapesPresenter::DrawShape(const Shape& shape, ICanvasPtr canvas)
+{
+}
+
+void ShapesPresenter::DrawSelectionFrame(const Point& leftTop, const Point& bottomRight, ICanvasPtr canvas)
+{
 }
