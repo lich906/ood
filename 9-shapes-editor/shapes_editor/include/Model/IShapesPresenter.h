@@ -5,8 +5,8 @@
 
 #include "Shape.h"
 
-struct IShapesPresenter
+struct IShapePresenter
 {
-	virtual ~IShapesPresenter() = default;
+	virtual ~IShapePresenter() = default;
 	virtual void UpdatePresentation(const std::vector<std::shared_ptr<Shape>>& shapes) = 0;
 };

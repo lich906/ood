@@ -10,10 +10,10 @@
 #include "IMouseActionsHandler.h"
 #include "constants.h"
 
-class ShapesPresenter : public IShapesPresenter, public IMouseActionsHandler
+class ShapePresenter : public IShapePresenter, public IMouseActionsHandler
 {
 public:
-	ShapesPresenter(const ShapeComposition& shapeStore, Selection& selection);
+	ShapePresenter(const ShapeComposition& shapeStore, Selection& selection);
 
 	void UpdatePresentation(const std::vector<std::shared_ptr<Shape>>& shapes);
 

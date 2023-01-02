@@ -1,16 +1,16 @@
 #include "../../include/Presenter/ShapesPresenter.h"
 
-ShapesPresenter::ShapesPresenter(const ShapeComposition& shapeStore, Selection& selection)
+ShapePresenter::ShapePresenter(const ShapeComposition& shapeStore, Selection& selection)
 	: m_shapeComposition(shapeStore)
 	, m_selection(selection)
 {
 }
 
-void ShapesPresenter::UpdatePresentation(const std::vector<std::shared_ptr<Shape>>& shapes)
+void ShapePresenter::UpdatePresentation(const std::vector<std::shared_ptr<Shape>>& shapes)
 {
 }
 
-void ShapesPresenter::OnMouseDown(float x, float y)
+void ShapePresenter::OnMouseDown(float x, float y)
 {
 	UpdateShapeSelection(x, y);
 
@@ -28,7 +28,7 @@ void ShapesPresenter::OnMouseDown(float x, float y)
 	}
 }
 
-void ShapesPresenter::OnMouseUp(float dx, float dy)
+void ShapePresenter::OnMouseUp(float dx, float dy)
 {
 	if (m_resizeNode != ResizeNode::None)
 	{
@@ -42,7 +42,7 @@ void ShapesPresenter::OnMouseUp(float dx, float dy)
 	m_dragOffset.y = 0;
 }
 
-void ShapesPresenter::OnMouseDrag(float dx, float dy)
+void ShapePresenter::OnMouseDrag(float dx, float dy)
 {
 	if (m_isMoving || m_resizeNode != ResizeNode::None)
 	{
@@ -51,7 +51,7 @@ void ShapesPresenter::OnMouseDrag(float dx, float dy)
 	}
 }
 
-void ShapesPresenter::UpdateShapeSelection(float x, float y)
+void ShapePresenter::UpdateShapeSelection(float x, float y)
 {
 	if (auto shape = m_shapeComposition.FindShapeByCoords(x, y))
 	{
@@ -66,7 +66,7 @@ void ShapesPresenter::UpdateShapeSelection(float x, float y)
 	}
 }
 
-ResizeNode ShapesPresenter::GetPressedResizeNode(float x, float y) const
+ResizeNode ShapePresenter::GetPressedResizeNode(float x, float y) const
 {
 	if (!m_selection)
 	{
@@ -104,10 +104,10 @@ ResizeNode ShapesPresenter::GetPressedResizeNode(float x, float y) const
 	return ResizeNode::None;
 }
 
-void ShapesPresenter::DrawShape(const Shape& shape, ICanvasPtr canvas)
+void ShapePresenter::DrawShape(const Shape& shape, ICanvasPtr canvas)
 {
 }
 
-void ShapesPresenter::DrawSelectionFrame(const Point& leftTop, const Point& bottomRight, ICanvasPtr canvas)
+void ShapePresenter::DrawSelectionFrame(const Point& leftTop, const Point& bottomRight, ICanvasPtr canvas)
 {
 }
