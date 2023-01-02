@@ -8,6 +8,7 @@
 class HasQuarterState : public IState
 {
 public:
+	// TODO: обработать случай, когда QuarterCountLimit == 1
 	static const unsigned QuarterCountLimit = 5;
 
 	HasQuarterState(IGumballMachine& gumballMachine)
