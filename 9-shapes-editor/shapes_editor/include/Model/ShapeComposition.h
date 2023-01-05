@@ -19,6 +19,7 @@ namespace model
 class ShapeComposition : public IShapeComposition
 {
 public:
+	// <<interface>> IShapeComposition
 	ShapePtr GetShapeById(ShapeId id) override;
 	ShapeConstPtr GetShapeById(ShapeId id) const override;
 	ShapePtr FindShapeAtCoords(float x, float y) override;
@@ -28,7 +29,10 @@ public:
 	void RemoveShape(ShapeId id) override;
 	void Undo() override;
 	void Redo() override;
+	bool CanUndo() const override;
+	bool CanRedo() const override;
 	void RegisterOnChange(IShapeCompositionObserver* observer) override;
+	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 private:
 	std::vector<ShapePtr> GetShapesSortedByZIndex() const;

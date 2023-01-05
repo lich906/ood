@@ -88,14 +88,13 @@ ShapeId ShapeComposition::AddShape(ShapeType type)
 	auto command = std::make_unique<FunctionalCommand>(
 		[this, shape]() {
 			m_shapes.insert({ shape->GetId(), shape });
-			NotifyObserversOnChange();
 		},
 		[this, id = shape->GetId()]() {
 			m_shapes.erase(id);
-			NotifyObserversOnChange();
 		});
 
 	m_commandHistory.AddAndExecute(std::move(command));
+	NotifyObserversOnChange();
 
 	return shape->GetId();
 }
@@ -109,14 +108,13 @@ void ShapeComposition::RemoveShape(ShapeId id)
 		auto command = std::make_unique<FunctionalCommand>(
 			[this, id]() {
 				m_shapes.erase(id);
-				NotifyObserversOnChange();
 			},
 			[this, deletedShape]() {
 				m_shapes.insert({deletedShape->GetId(), deletedShape});
-				NotifyObserversOnChange();
 			});
 
 		m_commandHistory.AddAndExecute(std::move(command));
+		NotifyObserversOnChange();
 	}
 	else
 	{
@@ -129,6 +127,7 @@ void ShapeComposition::Undo()
 	if (m_commandHistory.CanUndo())
 	{
 		m_commandHistory.Undo();
+		NotifyObserversOnChange();
 	}
 }
 
@@ -137,7 +136,18 @@ void ShapeComposition::Redo()
 	if (m_commandHistory.CanRedo())
 	{
 		m_commandHistory.Redo();
+		NotifyObserversOnChange();
 	}
+}
+
+bool model::ShapeComposition::CanUndo() const
+{
+	return m_commandHistory.CanUndo();
+}
+
+bool model::ShapeComposition::CanRedo() const
+{
+	return m_commandHistory.CanRedo();
 }
 
 void model::ShapeComposition::RegisterOnChange(IShapeCompositionObserver* observer)

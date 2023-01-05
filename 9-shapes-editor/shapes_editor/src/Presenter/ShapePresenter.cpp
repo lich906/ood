@@ -12,7 +12,6 @@ ShapePresenter::ShapePresenter(model::IShapeComposition* shapeComposition, view:
 void ShapePresenter::OnChange(const std::vector<model::ShapePtr>& shapes)
 {
 	m_shapes = shapes;
-
 	UpdateView();
 }
 
@@ -64,13 +63,17 @@ void ShapePresenter::OnMouseDrag()
 			if (m_resizeNode != ResizeNode::None)
 			{
 				OnShapeResize(delta.x, delta.y);
-				UpdateView();
+				if ((m_selection.bottomRight.x - m_selection.topLeft.x) < constants::MinShapeSize)
+					m_selection.bottomRight.x = m_selection.topLeft.x + constants::MinShapeSize;
+				if ((m_selection.bottomRight.y - m_selection.topLeft.y) < constants::MinShapeSize)
+					m_selection.bottomRight.y = m_selection.topLeft.y + constants::MinShapeSize;
 			}
 			else if (m_isMoving)
 			{
 				OnShapeMove(delta.x, delta.y);
-				UpdateView();
 			}
+
+			UpdateView();
 		}
 	}
 }
@@ -315,4 +318,14 @@ void ShapePresenter::Undo()
 void ShapePresenter::Redo()
 {
 	m_shapeComposition->Redo();
+}
+
+bool presenter::ShapePresenter::CanUndo() const
+{
+	return m_shapeComposition->CanUndo();
+}
+
+bool presenter::ShapePresenter::CanRedo() const
+{
+	return m_shapeComposition->CanRedo();
 }

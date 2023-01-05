@@ -22,7 +22,7 @@ private:
 	// >>>>>>>>>>>>>>>>>>>
 
 	void CanvasArea();
-	void MainMenu();
+	void MenuBar();
 
 	ImVec2 m_canvasOrigin;
 	ImCanvas m_canvas;

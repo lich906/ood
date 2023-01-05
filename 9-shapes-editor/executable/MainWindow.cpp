@@ -8,7 +8,6 @@ void app::MainWindow::Init(view::IShapePresenter* shapePresenter)
 void app::MainWindow::Run()
 {
 	CanvasArea();
-	MainMenu();
 }
 
 view::ICanvas* app::MainWindow::GetCanvas()
@@ -30,7 +29,9 @@ common::Point app::MainWindow::GetMouseDelta() const
 
 void app::MainWindow::CanvasArea()
 {
-	ImGui::Begin("Canvas area");
+	ImGui::Begin("Canvas area", NULL, ImGuiWindowFlags_MenuBar);
+
+	MenuBar();
 
 	ImVec2 origin = ImGui::GetCursorScreenPos(); // ImDrawList API uses screen coordinates!
 	m_canvasOrigin = origin;
@@ -76,9 +77,8 @@ void app::MainWindow::CanvasArea()
 	ImGui::End();
 }
 
-void app::MainWindow::MainMenu()
+void app::MainWindow::MenuBar()
 {
-	ImGui::Begin("Main menu", NULL, ImGuiWindowFlags_MenuBar);
 	if (ImGui::BeginMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
@@ -96,7 +96,7 @@ void app::MainWindow::MainMenu()
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::BeginMenu("New"))
+		if (ImGui::BeginMenu("Add shape"))
 		{
 			if (ImGui::MenuItem("Triangle"))
 			{
@@ -116,11 +116,11 @@ void app::MainWindow::MainMenu()
 
 		if (ImGui::BeginMenu("Edit"))
 		{
-			if (ImGui::MenuItem("Undo"))
+			if (ImGui::MenuItem("Undo", NULL, false, m_shapePresenter->CanUndo()))
 			{
 				m_shapePresenter->Undo();
 			}
-			if (ImGui::MenuItem("Redo"))
+			if (ImGui::MenuItem("Redo", NULL, false, m_shapePresenter->CanRedo()))
 			{
 				m_shapePresenter->Redo();
 			}
@@ -130,5 +130,4 @@ void app::MainWindow::MainMenu()
 
 		ImGui::EndMenuBar();
 	}
-	ImGui::End();
 }
