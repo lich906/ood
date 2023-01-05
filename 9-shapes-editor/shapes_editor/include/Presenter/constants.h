@@ -1,6 +1,11 @@
 #pragma once
 
-namespace constants
+#include "Common/Color.h"
+
+namespace presenter::constants
 {
+
 constexpr auto ResizeMarkerSize = 10;
+constexpr common::Color SelectionFrameColor = { 255, 150, 0, 255 };
+
 }

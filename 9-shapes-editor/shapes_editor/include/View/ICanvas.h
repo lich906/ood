@@ -3,16 +3,21 @@
 #include <vector>
 #include <memory>
 
-#include "..\Model\Point.h"
-#include "..\Model\Color.h"
+#include "Common/Point.h"
+#include "Common/Color.h"
+
+namespace view
+{
 
 struct ICanvas
 {
 	virtual ~ICanvas() = default;
-	virtual void FillPolygon(const std::vector<Point>& points, const Color& fillColor) = 0;
-	virtual void DrawLine(const Point& from, const Point& to, const Color& color) = 0;
-	virtual void DrawEllipse(Point leftTop, Point bottomRight, const Color& fillColor, const Color& borderColor) = 0;
-	virtual void DrawResizeFrame(const Point& leftTop, const Point& bottomRight) = 0;
+	virtual void FillPolygon(const std::vector<common::Point>& points, const common::Color& color) = 0;
+	virtual void DrawOutline(const std::vector<common::Point>& points, const common::Color& color) = 0;
+	virtual void DrawEllipse(common::Point topLeft, common::Point bottomRight, const common::Color& fillColor, const common::Color& borderColor) = 0;
+	virtual void Clear() = 0;
+	virtual float GetWidth() = 0;
+	virtual float GetHeight() = 0;
 };
 
-using ICanvasPtr = std::shared_ptr<ICanvas>;
+} // namespace view

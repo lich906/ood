@@ -1,5 +1,7 @@
 #include "../../include/Model/ShapeComposition.h"
 
+using namespace model;
+
 std::shared_ptr<IShape> ShapeComposition::GetShapeById(ShapeId id)
 {
 	if (m_shapes.contains(id))
@@ -24,7 +26,7 @@ std::shared_ptr<const IShape> ShapeComposition::GetShapeById(ShapeId id) const
 	}
 }
 
-std::shared_ptr<IShape> ShapeComposition::FindShapeByCoords(float x, float y)
+std::shared_ptr<IShape> ShapeComposition::FindShapeAtCoords(float x, float y)
 {
 	std::shared_ptr<Shape> shapePtr;
 	int maxZIndex = -INT_MIN;
@@ -43,7 +45,7 @@ std::shared_ptr<IShape> ShapeComposition::FindShapeByCoords(float x, float y)
 	return shapePtr;
 }
 
-std::shared_ptr<const IShape> ShapeComposition::FindShapeByCoords(float x, float y) const
+std::shared_ptr<const IShape> ShapeComposition::FindShapeAtCoords(float x, float y) const
 {
 	std::shared_ptr<const Shape> shapePtr;
 	int maxZIndex = -INT_MIN;
@@ -67,6 +69,7 @@ void ShapeComposition::LiftShapeOnTop(ShapeId id)
 	if (m_shapes.contains(id))
 	{
 		m_shapes[id]->SetZIndex(GetHighestShapeZIndex() + 1);
+		NotifyObserversOnChange();
 	}
 	else
 	{
@@ -79,14 +82,17 @@ ShapeId ShapeComposition::AddShape(ShapeType type)
 	auto shape = std::make_shared<Shape>(type, GetHighestShapeZIndex() + 1,
 		[this](std::unique_ptr<Command>&& cmd) {
 			m_commandHistory.AddAndExecute(std::move(cmd));
+			NotifyObserversOnChange();
 		});
 
 	auto command = std::make_unique<FunctionalCommand>(
 		[this, shape]() {
 			m_shapes.insert({ shape->GetId(), shape });
+			NotifyObserversOnChange();
 		},
 		[this, id = shape->GetId()]() {
 			m_shapes.erase(id);
+			NotifyObserversOnChange();
 		});
 
 	m_commandHistory.AddAndExecute(std::move(command));
@@ -103,9 +109,11 @@ void ShapeComposition::RemoveShape(ShapeId id)
 		auto command = std::make_unique<FunctionalCommand>(
 			[this, id]() {
 				m_shapes.erase(id);
+				NotifyObserversOnChange();
 			},
 			[this, deletedShape]() {
 				m_shapes.insert({deletedShape->GetId(), deletedShape});
+				NotifyObserversOnChange();
 			});
 
 		m_commandHistory.AddAndExecute(std::move(command));
@@ -114,7 +122,6 @@ void ShapeComposition::RemoveShape(ShapeId id)
 	{
 		throw std::out_of_range("Failed to remove shape by id: no shape with such id available.");
 	}
-
 }
 
 void ShapeComposition::Undo()
@@ -133,9 +140,14 @@ void ShapeComposition::Redo()
 	}
 }
 
-std::vector<std::shared_ptr<const Shape>> ShapeComposition::GetShapesSortedByZIndex() const
+void model::ShapeComposition::RegisterOnChange(IShapeCompositionObserver* observer)
 {
-	std::vector<std::shared_ptr<const Shape>> sortedShapes;
+	m_observers.insert(observer);
+}
+
+std::vector<ShapePtr> ShapeComposition::GetShapesSortedByZIndex() const
+{
+	std::vector<std::shared_ptr<Shape>> sortedShapes;
 
 	for (auto& [id, shape] : m_shapes)
 	{
@@ -145,19 +157,28 @@ std::vector<std::shared_ptr<const Shape>> ShapeComposition::GetShapesSortedByZIn
 		sortedShapes.insert(it, shape);
 	}
 
-	return sortedShapes;
+	// must construct another vector since std::vector<Derived> cannot be implicitly converted to std::vector<Base>
+	return { sortedShapes.begin(), sortedShapes.end() };
 }
 
 int ShapeComposition::GetHighestShapeZIndex() const
 {
-	int resZIndex = -1;
+	int maxZIndex = -1;
 
 	for (auto& [id, shape] : m_shapes)
 	{
 		int zIndex = shape->GetZIndex();
-		if (zIndex > resZIndex)
-			resZIndex = zIndex;
+		if (zIndex > maxZIndex)
+			maxZIndex = zIndex;
 	}
 
-	return resZIndex;
+	return maxZIndex;
+}
+
+void model::ShapeComposition::NotifyObserversOnChange() const
+{
+	for (auto& obs : m_observers)
+	{
+		obs->OnChange(GetShapesSortedByZIndex());
+	}
 }

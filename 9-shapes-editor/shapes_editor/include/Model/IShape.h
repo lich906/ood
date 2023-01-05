@@ -1,10 +1,13 @@
 #pragma once
 
 #include "ShapeType.h"
-#include "Point.h"
-#include "Color.h"
+#include "Common/Point.h"
+#include "Common/Color.h"
 
-typedef size_t ShapeId;
+namespace model
+{
+
+using ShapeId = size_t;
 
 class IShape
 {
@@ -15,15 +18,19 @@ public:
 
 	virtual ShapeType GetType() const = 0;
 
-	virtual Point GetTopLeft() const = 0;
-	virtual Point GetBottomRight() const = 0;
+	virtual common::Point GetTopLeft() const = 0;
+	virtual common::Point GetBottomRight() const = 0;
 
-	virtual void Resize(const Point& topLeft, const Point& bottomRight) = 0;
-	virtual void Move(float dx, float dy) = 0;
+	virtual void Resize(const common::Point& topLeft, const common::Point& bottomRight) = 0;
 
-	virtual Color GetFillColor() const = 0;
-	virtual void SetFillColor(Color color) = 0;
+	virtual common::Color GetFillColor() const = 0;
+	virtual void SetFillColor(common::Color color) = 0;
 
-	virtual Color GetBorderColor() const = 0;
-	virtual void SetBorderColor(Color color) = 0;
+	virtual common::Color GetBorderColor() const = 0;
+	virtual void SetBorderColor(common::Color color) = 0;
 };
+
+using ShapePtr = std::shared_ptr<IShape>;
+using ShapeConstPtr = std::shared_ptr<const IShape>;
+
+} // namespace MyNamespace

@@ -3,23 +3,29 @@
 #include <memory>
 
 #include "IShape.h"
+#include "IShapeCompositionObserver.h"
+
+namespace model
+{
 
 struct IShapeComposition
 {
 	virtual ~IShapeComposition() = default;
 
-	virtual std::shared_ptr<IShape> GetShapeById(ShapeId id) = 0;
-	virtual std::shared_ptr<const IShape> GetShapeById(ShapeId id) const = 0;
+	virtual ShapePtr GetShapeById(ShapeId id) = 0;
+	virtual ShapeConstPtr GetShapeById(ShapeId id) const = 0;
 
 	/*
-	* @return shared_ptr to Shape or nullptr if shape not found
-	*/
-	virtual std::shared_ptr<IShape> FindShapeByCoords(float x, float y) = 0;
+	 * @return shared_ptr to Shape or nullptr if shape not found
+	 */
+	virtual ShapePtr FindShapeAtCoords(float x, float y) = 0;
 
 	/*
-	* @return shared_ptr to Shape or nullptr if shape not found
-	*/
-	virtual std::shared_ptr<const IShape> FindShapeByCoords(float x, float y) const = 0;
+	 * @return shared_ptr to Shape or nullptr if shape not found
+	 */
+	virtual ShapeConstPtr FindShapeAtCoords(float x, float y) const = 0;
+
+	virtual void RegisterOnChange(IShapeCompositionObserver* observer) = 0;
 
 	virtual void LiftShapeOnTop(ShapeId id) = 0;
 
@@ -31,3 +37,5 @@ struct IShapeComposition
 
 	virtual void Redo() = 0;
 };
+
+} // namespace model

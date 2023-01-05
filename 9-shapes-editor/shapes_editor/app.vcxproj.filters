@@ -30,9 +30,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Model\Shape.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
@@ -42,14 +39,8 @@
     <ClCompile Include="src\Command\CommandHistory.cpp">
       <Filter>Source Files\Presenter</Filter>
     </ClCompile>
-    <ClCompile Include="src\Presenter\Editor.cpp">
+    <ClCompile Include="src\Presenter\ShapePresenter.cpp">
       <Filter>Source Files\Presenter</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Presenter\ShapesPresenter.cpp">
-      <Filter>Source Files\Presenter</Filter>
-    </ClCompile>
-    <ClCompile Include="src\View\MouseActionsDispatcher.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Command\Command.cpp">
       <Filter>Source Files</Filter>
@@ -57,36 +48,27 @@
     <ClCompile Include="src\Command\FunctionalCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Presenter\Selection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\View\ICanvas.h">
       <Filter>Header Files\View</Filter>
     </ClInclude>
-    <ClInclude Include="include\Presenter\IMouseActionsHandler.h">
-      <Filter>Header Files\Presenter</Filter>
-    </ClInclude>
     <ClInclude Include="include\Command\CommandHistory.h">
-      <Filter>Header Files\Presenter</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Presenter\Editor.h">
       <Filter>Header Files\Presenter</Filter>
     </ClInclude>
     <ClInclude Include="include\Presenter\ResizeNode.h">
       <Filter>Header Files\Presenter</Filter>
     </ClInclude>
-    <ClInclude Include="include\Presenter\ShapesPresenter.h">
+    <ClInclude Include="include\Presenter\ShapePresenter.h">
       <Filter>Header Files\Presenter</Filter>
     </ClInclude>
-    <ClInclude Include="include\Model\Color.h">
+    <ClInclude Include="include\Common\Color.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="include\Model\Defaults.h">
+    <ClInclude Include="include\Model\constants.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="include\Model\Point.h">
+    <ClInclude Include="include\Common\Point.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="include\Model\Shape.h">
@@ -97,12 +79,6 @@
     </ClInclude>
     <ClInclude Include="include\Model\ShapeType.h">
       <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="include\View\MouseActionsDispatcher.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Presenter\IMenuActionsHandler.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Command\Command.h">
       <Filter>Header Files</Filter>
@@ -116,13 +92,16 @@
     <ClInclude Include="include\Model\IShapeComposition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Model\IShapesPresenter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Presenter\Selection.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Model\IShape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\View\IView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\View\IShapePresenter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Model\IShapeCompositionObserver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
