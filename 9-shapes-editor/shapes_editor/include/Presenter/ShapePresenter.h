@@ -36,6 +36,7 @@ public:
 	void Redo() override;
 	bool CanUndo() const override;
 	bool CanRedo() const override;
+	bool IsShapeSelected() const override;
 	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
@@ -43,7 +44,8 @@ private:
 	void OnShapeResize(float dx, float dy);
 	void OnShapeMove(float dx, float dy);
 
-	void UpdateShapeSelection(float x, float y);
+	void UpdateSelectedShapeData() const;
+	void ChangeShapeSelection(float x, float y);
 	ResizeNode GetPressedResizeNode(float x, float y) const;
 
 	void UpdateView();

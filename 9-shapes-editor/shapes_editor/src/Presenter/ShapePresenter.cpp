@@ -18,7 +18,7 @@ void ShapePresenter::OnChange(const std::vector<model::ShapePtr>& shapes)
 void ShapePresenter::OnMouseDown()
 {
 	common::Point pos = m_view->GetMousePos();
-	UpdateShapeSelection(pos.x, pos.y);
+	ChangeShapeSelection(pos.x, pos.y);
 
 	if (m_selection.shape)
 	{
@@ -63,10 +63,6 @@ void ShapePresenter::OnMouseDrag()
 			if (m_resizeNode != ResizeNode::None)
 			{
 				OnShapeResize(delta.x, delta.y);
-				if ((m_selection.bottomRight.x - m_selection.topLeft.x) < constants::MinShapeSize)
-					m_selection.bottomRight.x = m_selection.topLeft.x + constants::MinShapeSize;
-				if ((m_selection.bottomRight.y - m_selection.topLeft.y) < constants::MinShapeSize)
-					m_selection.bottomRight.y = m_selection.topLeft.y + constants::MinShapeSize;
 			}
 			else if (m_isMoving)
 			{
@@ -78,7 +74,17 @@ void ShapePresenter::OnMouseDrag()
 	}
 }
 
-void ShapePresenter::UpdateShapeSelection(float x, float y)
+void ShapePresenter::UpdateSelectedShapeData() const
+{
+	m_view->SetSelectedShapeData({
+		m_selection.topLeft,
+		m_selection.bottomRight,
+		m_selection.shape->GetFillColor(),
+		m_selection.shape->GetBorderColor()
+	});
+}
+
+void ShapePresenter::ChangeShapeSelection(float x, float y)
 {
 	if (auto shape = m_shapeComposition->FindShapeAtCoords(x, y))
 	{
@@ -136,6 +142,9 @@ ResizeNode ShapePresenter::GetPressedResizeNode(float x, float y) const
 
 void ShapePresenter::UpdateView()
 {
+	if (m_selection.shape)
+		UpdateSelectedShapeData();
+
 	m_view->GetCanvas()->Clear();
 
 	for (auto& shape : m_shapes)
@@ -254,18 +263,34 @@ void ShapePresenter::OnShapeResize(float dx, float dy)
 	case ResizeNode::TopLeft:
 		m_selection.topLeft.x += dx;
 		m_selection.topLeft.y += dy;
+		if ((m_selection.bottomRight.x - m_selection.topLeft.x) < constants::MinShapeSize)
+			m_selection.topLeft.x = m_selection.bottomRight.x - constants::MinShapeSize;
+		if ((m_selection.bottomRight.y - m_selection.topLeft.y) < constants::MinShapeSize)
+			m_selection.topLeft.y = m_selection.bottomRight.y - constants::MinShapeSize;
 		break;
 	case ResizeNode::TopRight:
 		m_selection.bottomRight.x += dx;
 		m_selection.topLeft.y += dy;
+		if ((m_selection.bottomRight.x - m_selection.topLeft.x) < constants::MinShapeSize)
+			m_selection.bottomRight.x = m_selection.topLeft.x + constants::MinShapeSize;
+		if ((m_selection.bottomRight.y - m_selection.topLeft.y) < constants::MinShapeSize)
+			m_selection.topLeft.y = m_selection.bottomRight.y - constants::MinShapeSize;
 		break;
 	case ResizeNode::BottomRight:
 		m_selection.bottomRight.x += dx;
 		m_selection.bottomRight.y += dy;
+		if ((m_selection.bottomRight.x - m_selection.topLeft.x) < constants::MinShapeSize)
+			m_selection.bottomRight.x = m_selection.topLeft.x + constants::MinShapeSize;
+		if ((m_selection.bottomRight.y - m_selection.topLeft.y) < constants::MinShapeSize)
+			m_selection.bottomRight.y = m_selection.topLeft.y + constants::MinShapeSize;
 		break;
 	case ResizeNode::BottomLeft:
 		m_selection.topLeft.x += dx;
 		m_selection.bottomRight.y += dy;
+		if ((m_selection.bottomRight.x - m_selection.topLeft.x) < constants::MinShapeSize)
+			m_selection.topLeft.x = m_selection.bottomRight.x - constants::MinShapeSize;
+		if ((m_selection.bottomRight.y - m_selection.topLeft.y) < constants::MinShapeSize)
+			m_selection.bottomRight.y = m_selection.topLeft.y + constants::MinShapeSize;
 		break;
 	default:
 		throw std::invalid_argument("Unknown type of resize node");
@@ -289,8 +314,9 @@ void ShapePresenter::DeleteShape()
 {
 	if (m_selection.shape)
 	{
-		m_shapeComposition->RemoveShape(m_selection.shape->GetId());
+		auto id = m_selection.shape->GetId();
 		m_selection.shape.reset();
+		m_shapeComposition->RemoveShape(id);
 	}
 }
 
@@ -328,4 +354,9 @@ bool presenter::ShapePresenter::CanUndo() const
 bool presenter::ShapePresenter::CanRedo() const
 {
 	return m_shapeComposition->CanRedo();
+}
+
+bool presenter::ShapePresenter::IsShapeSelected() const
+{
+	return (bool)m_selection.shape;
 }

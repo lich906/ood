@@ -19,16 +19,18 @@ private:
 	view::ICanvas* GetCanvas() override;
 	common::Point GetMousePos() const override;
 	common::Point GetMouseDelta() const override;
+	void SetSelectedShapeData(const view::SelectedShapeData&) override;
 	// >>>>>>>>>>>>>>>>>>>
 
 	void CanvasArea();
 	void MenuBar();
+	void SelectedShapeWindow();
 
+	view::SelectedShapeData m_selectedShapeData;
 	ImVec2 m_canvasOrigin;
 	ImCanvas m_canvas;
 	view::IShapePresenter* m_shapePresenter = nullptr;
-
-	bool m_mouseDown = false;
+	bool m_isMouseDown = false;
 };
 
 } // namespace app

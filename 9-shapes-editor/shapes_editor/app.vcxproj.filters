@@ -104,5 +104,8 @@
     <ClInclude Include="include\Model\IShapeCompositionObserver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\View\SelectedShapeData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

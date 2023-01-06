@@ -21,6 +21,8 @@ struct IShapePresenter
 	virtual void Redo() = 0;
 	virtual bool CanUndo() const = 0;
 	virtual bool CanRedo() const = 0;
+	virtual bool IsShapeSelected() const = 0;
+
 };
 
 } // namespace view

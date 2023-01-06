@@ -45,6 +45,7 @@
     <ClInclude Include="include\View\ICanvas.h" />
     <ClInclude Include="include\View\IShapePresenter.h" />
     <ClInclude Include="include\View\IView.h" />
+    <ClInclude Include="include\View\SelectedShapeData.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

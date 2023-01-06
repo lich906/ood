@@ -27,11 +27,19 @@ common::Point app::MainWindow::GetMouseDelta() const
 	return { io.MouseDelta.x, io.MouseDelta.y };
 }
 
+void app::MainWindow::SetSelectedShapeData(const view::SelectedShapeData& data)
+{
+	m_selectedShapeData = data;
+}
+
 void app::MainWindow::CanvasArea()
 {
 	ImGui::Begin("Canvas area", NULL, ImGuiWindowFlags_MenuBar);
 
 	MenuBar();
+
+	if (m_shapePresenter->IsShapeSelected())
+		SelectedShapeWindow();
 
 	ImVec2 origin = ImGui::GetCursorScreenPos(); // ImDrawList API uses screen coordinates!
 	m_canvasOrigin = origin;
@@ -51,16 +59,16 @@ void app::MainWindow::CanvasArea()
 	const bool isHovered = ImGui::IsItemHovered(); // Hovered
 	const bool isActive = ImGui::IsItemActive(); // Held
 
-	if (!m_mouseDown && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && isActive)
+	if (!m_isMouseDown && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && isActive)
 	{
 		m_shapePresenter->OnMouseDown();
-		m_mouseDown = true;
+		m_isMouseDown = true;
 	}
 
-	if (m_mouseDown && !ImGui::IsMouseDown(ImGuiMouseButton_Left) && isHovered)
+	if (m_isMouseDown && !ImGui::IsMouseDown(ImGuiMouseButton_Left) && isHovered)
 	{
 		m_shapePresenter->OnMouseUp();
-		m_mouseDown = false;
+		m_isMouseDown = false;
 	}
 
 	if (isActive && ImGui::IsMouseDragging(ImGuiMouseButton_Left))
@@ -130,4 +138,30 @@ void app::MainWindow::MenuBar()
 
 		ImGui::EndMenuBar();
 	}
+}
+
+void app::MainWindow::SelectedShapeWindow()
+{
+	ImGui::Begin("Selected shape");
+
+	if (ImGui::BeginTable("Boundings", 2))
+	{
+// clang-format off
+		ImGui::TableNextRow(); ImGui::TableSetColumnIndex(0); ImGui::Text("Top left:"); ImGui::TableSetColumnIndex(1); ImGui::Text("Bottom right:");
+		ImGui::TableNextRow(); ImGui::TableSetColumnIndex(0); ImGui::Text("x: %.1f", m_selectedShapeData.topLeft.x); ImGui::TableSetColumnIndex(1); ImGui::Text("x: %.1f", m_selectedShapeData.bottomRight.x);
+		ImGui::TableNextRow(); ImGui::TableSetColumnIndex(0); ImGui::Text("y: %.1f", m_selectedShapeData.topLeft.y); ImGui::TableSetColumnIndex(1); ImGui::Text("y: %.1f", m_selectedShapeData.bottomRight.y);
+		
+		ImGui::EndTable();
+// clang-format on
+	}
+	static float curFillCol[4];
+	static float curBorCol[4];
+	ImGui::ColorEdit4("Fill color", curFillCol, ImGuiColorEditFlags_NoInputs);
+	ImGui::SameLine();
+	ImGui::ColorEdit4("Border color", curBorCol, ImGuiColorEditFlags_NoInputs);
+
+	if (ImGui::Button("Remove shape"))
+		m_shapePresenter->DeleteShape();
+
+	ImGui::End();
 }
