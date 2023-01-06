@@ -5,8 +5,7 @@
 #include <algorithm>
 #include <functional>
 
-#include "imgui.h"
-
+#include "utils.h"
 #include "constants.h"
 #include "View/ICanvas.h"
 
@@ -34,8 +33,6 @@ private:
 	// >>>>>>>>>>>>>>>>>>>>>
 
 	std::vector<ImVec2> TranslatePointsToCanvasOrigin(const std::vector<ImVec2>&) const;
-	static std::vector<ImVec2> ToImVector(const std::vector<common::Point>&);
-	static ImU32 ToImU32(const common::Color&);
 
 	// Container that stores all draw command that should be executed on each render
 	std::vector<std::function<void()>> m_drawQ;

@@ -31,7 +31,7 @@ void app::ImCanvas::FillPolygon(const std::vector<common::Point>& points, const 
 {
 	if (m_drawList)
 	{
-		m_drawQ.emplace_back([this, points = ToImVector(points), col = ToImU32(color)]() {
+		m_drawQ.emplace_back([this, points = utils::ToImVec2Vector(points), col = utils::ToImU32(color)]() {
 			auto translatedPoints = TranslatePointsToCanvasOrigin(points);
 			m_drawList->AddConvexPolyFilled(translatedPoints.data(), translatedPoints.size(), col);
 		});
@@ -42,7 +42,7 @@ void app::ImCanvas::DrawOutline(const std::vector<common::Point>& points, const 
 {
 	if (m_drawList)
 	{
-		m_drawQ.emplace_back([this, points = ToImVector(points), col = ToImU32(color)]() {
+		m_drawQ.emplace_back([this, points = utils::ToImVec2Vector(points), col = utils::ToImU32(color)]() {
 			auto translatedPoints = TranslatePointsToCanvasOrigin(points);
 			m_drawList->AddPolyline(translatedPoints.data(), translatedPoints.size(),
 				col, ImDrawFlags_Closed, constants::OutlineThickness);
@@ -68,7 +68,7 @@ void app::ImCanvas::DrawEllipse(common::Point topLeft, common::Point bottomRight
 			const float y = cy + sin(a) * h;
 			points.push_back(ImVec2(x, y));
 		}
-		m_drawQ.emplace_back([this, points, fillCol = ToImU32(fillColor), borCol = ToImU32(borderColor)]() {
+		m_drawQ.emplace_back([this, points, fillCol = utils::ToImU32(fillColor), borCol = utils::ToImU32(borderColor)]() {
 			auto translatedPoints = TranslatePointsToCanvasOrigin(points);
 			m_drawList->AddConvexPolyFilled(translatedPoints.data(), translatedPoints.size(), fillCol);
 			m_drawList->AddPolyline(translatedPoints.data(), translatedPoints.size(),
@@ -95,19 +95,4 @@ std::vector<ImVec2> app::ImCanvas::TranslatePointsToCanvasOrigin(const std::vect
 	});
 
 	return res;
-}
-
-std::vector<ImVec2> app::ImCanvas::ToImVector(const std::vector<common::Point>& v)
-{
-	std::vector<ImVec2> res;
-	std::for_each(v.begin(), v.end(), [&](const common::Point& p) {
-		res.emplace_back(ImVec2(p.x, p.y));
-	});
-
-	return res;
-}
-
-ImU32 app::ImCanvas::ToImU32(const common::Color& col)
-{
-	return IM_COL32(col.r, col.g, col.b, col.a);
 }

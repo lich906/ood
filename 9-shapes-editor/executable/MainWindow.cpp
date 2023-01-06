@@ -154,14 +154,21 @@ void app::MainWindow::SelectedShapeWindow()
 		ImGui::EndTable();
 // clang-format on
 	}
-	static float curFillCol[4];
-	static float curBorCol[4];
-	ImGui::ColorEdit4("Fill color", curFillCol, ImGuiColorEditFlags_NoInputs);
+	static bool isColorChanged = false;
+	static float curFillColor[4];
+	static float curBorColor[4];
+	if(ImGui::ColorEdit4("Fill color", curFillColor, ImGuiColorEditFlags_NoInputs)) isColorChanged = true;
 	ImGui::SameLine();
-	ImGui::ColorEdit4("Border color", curBorCol, ImGuiColorEditFlags_NoInputs);
+	if(ImGui::ColorEdit4("Border color", curBorColor, ImGuiColorEditFlags_NoInputs)) isColorChanged = true;
 
-	if (ImGui::Button("Remove shape"))
-		m_shapePresenter->DeleteShape();
+	if (ImGui::Button("Remove shape")) m_shapePresenter->DeleteShape();
+	ImGui::SameLine();
+	if (isColorChanged && ImGui::Button("Apply color changes"))
+	{
+		m_shapePresenter->ChangeFillColor(utils::ImVec4ToColor(curFillColor));
+		m_shapePresenter->ChangeBorderColor(utils::ImVec4ToColor(curBorColor));
+		isColorChanged = false;
+	}
 
 	ImGui::End();
 }
