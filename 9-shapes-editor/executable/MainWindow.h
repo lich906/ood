@@ -25,12 +25,15 @@ private:
 	void CanvasArea();
 	void MenuBar();
 	void SelectedShapeWindow();
+	bool IsColorChanged() const;
 
 	view::SelectedShapeData m_selectedShapeData;
 	ImVec2 m_canvasOrigin;
 	ImCanvas m_canvas;
 	view::IShapePresenter* m_shapePresenter = nullptr;
 	bool m_isMouseDown = false;
+	ImVec4 m_curFillColor;
+	ImVec4 m_curBorderColor;
 };
 
 } // namespace app

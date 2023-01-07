@@ -50,7 +50,7 @@ common::Color Shape::GetFillColor() const
 	return m_fillColor;
 }
 
-void Shape::SetFillColor(common::Color color)
+void Shape::SetFillColor(const common::Color& color)
 {
 	auto command = std::make_unique<FunctionalCommand>(
 		[this, color]() {
@@ -68,7 +68,7 @@ common::Color Shape::GetBorderColor() const
 	return m_borderColor;
 }
 
-void Shape::SetBorderColor(common::Color color)
+void Shape::SetBorderColor(const common::Color& color)
 {
 	auto command = std::make_unique<FunctionalCommand>(
 		[this, color]() {

@@ -77,6 +77,7 @@ void ShapePresenter::OnMouseDrag()
 void ShapePresenter::UpdateSelectedShapeData() const
 {
 	m_view->SetSelectedShapeData({
+		m_selection.shape->GetId(),
 		m_selection.topLeft,
 		m_selection.bottomRight,
 		m_selection.shape->GetFillColor(),

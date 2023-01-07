@@ -25,10 +25,10 @@ public:
 	void Resize(const common::Point& topLeft, const common::Point& bottomRight) override;
 
 	common::Color GetFillColor() const override;
-	void SetFillColor(common::Color color) override;
+	void SetFillColor(const common::Color& color) override;
 
 	common::Color GetBorderColor() const override;
-	void SetBorderColor(common::Color color) override;
+	void SetBorderColor(const common::Color& color) override;
 
 	int GetZIndex() const;
 	void SetZIndex(int zIndex);

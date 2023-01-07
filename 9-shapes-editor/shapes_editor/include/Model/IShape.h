@@ -24,10 +24,10 @@ public:
 	virtual void Resize(const common::Point& topLeft, const common::Point& bottomRight) = 0;
 
 	virtual common::Color GetFillColor() const = 0;
-	virtual void SetFillColor(common::Color color) = 0;
+	virtual void SetFillColor(const common::Color& color) = 0;
 
 	virtual common::Color GetBorderColor() const = 0;
-	virtual void SetBorderColor(common::Color color) = 0;
+	virtual void SetBorderColor(const common::Color& color) = 0;
 };
 
 using ShapePtr = std::shared_ptr<IShape>;

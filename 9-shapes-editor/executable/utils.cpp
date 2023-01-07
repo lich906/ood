@@ -15,12 +15,22 @@ ImU32 app::utils::ToImU32(const common::Color& col)
 	return IM_COL32(col.r, col.g, col.b, col.a);
 }
 
-common::Color app::utils::ImVec4ToColor(float col[4])
+common::Color app::utils::ImVec4ToColor(const ImVec4& col)
 {
 	return {
-		static_cast<uint8_t>(col[0] * 0xFF),
-		static_cast<uint8_t>(col[1] * 0xFF),
-		static_cast<uint8_t>(col[2] * 0xFF),
-		static_cast<uint8_t>(col[3] * 0xFF)
+		static_cast<uint8_t>(col.x * 0xFF),
+		static_cast<uint8_t>(col.y * 0xFF),
+		static_cast<uint8_t>(col.z * 0xFF),
+		static_cast<uint8_t>(col.w * 0xFF)
 	};
+}
+
+ImVec4 app::utils::ColorToImVec4(const common::Color& col)
+{
+	return ImVec4(
+		static_cast<float>(col.r / 255.0f),
+		static_cast<float>(col.g / 255.0f),
+		static_cast<float>(col.b / 255.0f),
+		static_cast<float>(col.a / 255.0f)
+	);
 }

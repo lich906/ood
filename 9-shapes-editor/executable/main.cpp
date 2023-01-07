@@ -99,7 +99,7 @@ int main(int, char**)
 
 	// Our state
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-	bool show_demo_window = true;
+	//bool show_demo_window = false;
 	
 	model::ShapeComposition shapeComposition;
 	app::MainWindow mainWindow;
@@ -123,7 +123,7 @@ int main(int, char**)
 
 		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 		// if (show_demo_window)
-		ImGui::ShowDemoWindow(&show_demo_window);
+		//ImGui::ShowDemoWindow(&show_demo_window);
 
 		mainWindow.Run();
 

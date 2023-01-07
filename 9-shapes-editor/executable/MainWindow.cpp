@@ -29,6 +29,12 @@ common::Point app::MainWindow::GetMouseDelta() const
 
 void app::MainWindow::SetSelectedShapeData(const view::SelectedShapeData& data)
 {
+	if (data.id != m_selectedShapeData.id)
+	{
+		m_curFillColor = utils::ColorToImVec4(data.fillColor);
+		m_curBorderColor = utils::ColorToImVec4(data.borderColor);
+	}
+
 	m_selectedShapeData = data;
 }
 
@@ -154,21 +160,25 @@ void app::MainWindow::SelectedShapeWindow()
 		ImGui::EndTable();
 // clang-format on
 	}
-	static bool isColorChanged = false;
-	static float curFillColor[4];
-	static float curBorColor[4];
-	if(ImGui::ColorEdit4("Fill color", curFillColor, ImGuiColorEditFlags_NoInputs)) isColorChanged = true;
+
+	ImGui::ColorEdit4("Fill color", &m_curFillColor.x, ImGuiColorEditFlags_NoInputs);
 	ImGui::SameLine();
-	if(ImGui::ColorEdit4("Border color", curBorColor, ImGuiColorEditFlags_NoInputs)) isColorChanged = true;
+	ImGui::ColorEdit4("Border color", &m_curBorderColor.x, ImGuiColorEditFlags_NoInputs);
 
 	if (ImGui::Button("Remove shape")) m_shapePresenter->DeleteShape();
 	ImGui::SameLine();
-	if (isColorChanged && ImGui::Button("Apply color changes"))
+	if (IsColorChanged() && ImGui::Button("Apply color changes"))
 	{
-		m_shapePresenter->ChangeFillColor(utils::ImVec4ToColor(curFillColor));
-		m_shapePresenter->ChangeBorderColor(utils::ImVec4ToColor(curBorColor));
-		isColorChanged = false;
+		m_shapePresenter->ChangeFillColor(utils::ImVec4ToColor(m_curFillColor));
+		m_shapePresenter->ChangeBorderColor(utils::ImVec4ToColor(m_curBorderColor));
 	}
 
 	ImGui::End();
+}
+
+bool app::MainWindow::IsColorChanged() const
+{
+	return 
+		m_selectedShapeData.borderColor != utils::ImVec4ToColor(m_curBorderColor) ||
+		m_selectedShapeData.fillColor != utils::ImVec4ToColor(m_curFillColor);
 }
