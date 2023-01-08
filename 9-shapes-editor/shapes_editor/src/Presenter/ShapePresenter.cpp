@@ -141,6 +141,14 @@ ResizeNode ShapePresenter::GetPressedResizeNode(float x, float y) const
 	return ResizeNode::None;
 }
 
+void ShapePresenter::FixShapeOutOfCanvasOverflow()
+{
+	m_selection.topLeft.x = std::max(m_selection.topLeft.x, 0.0f);
+	m_selection.topLeft.y = std::max(m_selection.topLeft.y, 0.0f);
+	m_selection.bottomRight.x = std::min(m_selection.bottomRight.x, m_view->GetCanvas()->GetWidth());
+	m_selection.bottomRight.y = std::min(m_selection.bottomRight.y, m_view->GetCanvas()->GetHeight());
+}
+
 void ShapePresenter::UpdateView()
 {
 	if (m_selection.shape)
@@ -296,10 +304,15 @@ void ShapePresenter::OnShapeResize(float dx, float dy)
 	default:
 		throw std::invalid_argument("Unknown type of resize node");
 	}
+
+	FixShapeOutOfCanvasOverflow();
 }
 
 void ShapePresenter::OnShapeMove(float dx, float dy)
 {
+	if (m_selection.topLeft.x + dx < 0 || m_selection.bottomRight.x + dx > m_view->GetCanvas()->GetWidth()) dx = 0.0f;
+	if (m_selection.topLeft.y + dy < 0 || m_selection.bottomRight.y + dy > m_view->GetCanvas()->GetHeight()) dy = 0.0f;
+
 	m_selection.topLeft.x += dx;
 	m_selection.topLeft.y += dy;
 	m_selection.bottomRight.x += dx;

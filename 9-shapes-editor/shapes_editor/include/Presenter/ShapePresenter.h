@@ -47,6 +47,7 @@ private:
 	void UpdateSelectedShapeData() const;
 	void ChangeShapeSelection(float x, float y);
 	ResizeNode GetPressedResizeNode(float x, float y) const;
+	void FixShapeOutOfCanvasOverflow();
 
 	void UpdateView();
 	void DrawShape(const common::Point& topLeft, const common::Point& bottomRight, const model::ShapeConstPtr& shape);

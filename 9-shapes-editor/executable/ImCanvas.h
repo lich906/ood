@@ -28,8 +28,8 @@ private:
 	void DrawOutline(const std::vector<common::Point>& points, const common::Color& color) override;
 	void DrawEllipse(common::Point topLeft, common::Point bottomRight, const common::Color& fillColor, const common::Color& borderColor) override;
 	void Clear() override;
-	float GetWidth() override;
-	float GetHeight() override;
+	float GetWidth() const override;
+	float GetHeight() const override;
 	// >>>>>>>>>>>>>>>>>>>>>
 
 	std::vector<ImVec2> TranslatePointsToCanvasOrigin(const std::vector<ImVec2>&) const;

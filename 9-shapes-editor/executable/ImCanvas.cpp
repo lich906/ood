@@ -77,12 +77,12 @@ void app::ImCanvas::DrawEllipse(common::Point topLeft, common::Point bottomRight
 	}
 }
 
-float app::ImCanvas::GetWidth()
+float app::ImCanvas::GetWidth() const
 {
 	return m_width;
 }
 
-float app::ImCanvas::GetHeight()
+float app::ImCanvas::GetHeight() const
 {
 	return m_height;
 }

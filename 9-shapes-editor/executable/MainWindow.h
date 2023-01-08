@@ -25,6 +25,7 @@ private:
 	void CanvasArea();
 	void MenuBar();
 	void SelectedShapeWindow();
+	void HandleKeyboardInput();
 	bool IsColorChanged() const;
 
 	view::SelectedShapeData m_selectedShapeData;

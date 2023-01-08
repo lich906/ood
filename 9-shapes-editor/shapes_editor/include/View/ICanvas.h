@@ -16,8 +16,8 @@ struct ICanvas
 	virtual void DrawOutline(const std::vector<common::Point>& points, const common::Color& color) = 0;
 	virtual void DrawEllipse(common::Point topLeft, common::Point bottomRight, const common::Color& fillColor, const common::Color& borderColor) = 0;
 	virtual void Clear() = 0;
-	virtual float GetWidth() = 0;
-	virtual float GetHeight() = 0;
+	virtual float GetWidth() const = 0;
+	virtual float GetHeight() const = 0;
 };
 
 } // namespace view

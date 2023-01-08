@@ -8,6 +8,12 @@ void app::MainWindow::Init(view::IShapePresenter* shapePresenter)
 void app::MainWindow::Run()
 {
 	CanvasArea();
+	HandleKeyboardInput();
+
+	if (m_shapePresenter->IsShapeSelected())
+	{
+		SelectedShapeWindow();
+	}
 }
 
 view::ICanvas* app::MainWindow::GetCanvas()
@@ -44,12 +50,12 @@ void app::MainWindow::CanvasArea()
 
 	MenuBar();
 
-	if (m_shapePresenter->IsShapeSelected())
-		SelectedShapeWindow();
-
 	ImVec2 origin = ImGui::GetCursorScreenPos(); // ImDrawList API uses screen coordinates!
 	m_canvasOrigin = origin;
-	ImVec2 canvasSize = ImGui::GetContentRegionAvail(); // Resize canvas to what's available
+	ImVec2 canvasSize = ImVec2(
+		((view::ICanvas*)&m_canvas)->GetWidth(),
+		((view::ICanvas*)&m_canvas)->GetHeight()
+	);
 	if (canvasSize.x < 50.0f)
 		canvasSize.x = 50.0f;
 	if (canvasSize.y < 50.0f)
@@ -95,32 +101,17 @@ void app::MainWindow::MenuBar()
 {
 	if (ImGui::BeginMenuBar())
 	{
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Save"))
-			{
-			}
-			if (ImGui::MenuItem("Save As"))
-			{
-			}
-			if (ImGui::MenuItem("Close"))
-			{
-			}
-
-			ImGui::EndMenu();
-		}
-
 		if (ImGui::BeginMenu("Add shape"))
 		{
-			if (ImGui::MenuItem("Triangle"))
+			if (ImGui::MenuItem("Triangle", "Ctrl + N + T"))
 			{
 				m_shapePresenter->CreateShape(model::ShapeType::Triangle);
 			}
-			if (ImGui::MenuItem("Rectangle"))
+			if (ImGui::MenuItem("Rectangle", "Ctrl + N + R"))
 			{
 				m_shapePresenter->CreateShape(model::ShapeType::Rectangle);
 			}
-			if (ImGui::MenuItem("Ellipse"))
+			if (ImGui::MenuItem("Ellipse", "Ctrl + N + E"))
 			{
 				m_shapePresenter->CreateShape(model::ShapeType::Ellipse);
 			}
@@ -130,11 +121,11 @@ void app::MainWindow::MenuBar()
 
 		if (ImGui::BeginMenu("Edit"))
 		{
-			if (ImGui::MenuItem("Undo", NULL, false, m_shapePresenter->CanUndo()))
+			if (ImGui::MenuItem("Undo", "Ctrl + Z", false, m_shapePresenter->CanUndo()))
 			{
 				m_shapePresenter->Undo();
 			}
-			if (ImGui::MenuItem("Redo", NULL, false, m_shapePresenter->CanRedo()))
+			if (ImGui::MenuItem("Redo", "Ctrl + Y", false, m_shapePresenter->CanRedo()))
 			{
 				m_shapePresenter->Redo();
 			}
@@ -165,8 +156,8 @@ void app::MainWindow::SelectedShapeWindow()
 	ImGui::SameLine();
 	ImGui::ColorEdit4("Border color", &m_curBorderColor.x, ImGuiColorEditFlags_NoInputs);
 
-	if (ImGui::Button("Remove shape")) m_shapePresenter->DeleteShape();
-	ImGui::SameLine();
+	if (ImGui::Button("Remove shape (Del)")) m_shapePresenter->DeleteShape();
+
 	if (IsColorChanged() && ImGui::Button("Apply color changes"))
 	{
 		m_shapePresenter->ChangeFillColor(utils::ImVec4ToColor(m_curFillColor));
@@ -174,6 +165,24 @@ void app::MainWindow::SelectedShapeWindow()
 	}
 
 	ImGui::End();
+}
+
+void app::MainWindow::HandleKeyboardInput()
+{
+	if (ImGui::IsKeyPressed(ImGuiKey_Delete))
+		m_shapePresenter->DeleteShape(); // Del
+	else if (ImGui::IsKeyDown(ImGuiMod_Ctrl))
+		if (ImGui::IsKeyPressed(ImGuiKey_Z))
+			m_shapePresenter->Undo(); // Ctrl + Z
+		else if (ImGui::IsKeyPressed(ImGuiKey_Y))
+			m_shapePresenter->Redo(); // Ctrl + Y
+		else if (ImGui::IsKeyDown(ImGuiKey_N))
+			if (ImGui::IsKeyPressed(ImGuiKey_E))
+				m_shapePresenter->CreateShape(model::ShapeType::Ellipse); // Ctrl + N + E
+			else if (ImGui::IsKeyPressed(ImGuiKey_T))
+				m_shapePresenter->CreateShape(model::ShapeType::Triangle); // Ctrl + N + T
+			else if (ImGui::IsKeyPressed(ImGuiKey_R))
+				m_shapePresenter->CreateShape(model::ShapeType::Rectangle); // Ctrl + N + R
 }
 
 bool app::MainWindow::IsColorChanged() const
