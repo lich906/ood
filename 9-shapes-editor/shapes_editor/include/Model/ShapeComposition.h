@@ -24,7 +24,6 @@ public:
 	ShapeConstPtr GetShapeById(ShapeId id) const override;
 	ShapePtr FindShapeAtCoords(float x, float y) override;
 	ShapeConstPtr FindShapeAtCoords(float x, float y) const override;
-	void LiftShapeOnTop(ShapeId id);
 	ShapeId AddShape(ShapeType type) override;
 	void RemoveShape(ShapeId id) override;
 	void Undo() override;

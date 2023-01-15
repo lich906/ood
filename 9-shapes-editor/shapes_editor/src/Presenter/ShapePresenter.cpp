@@ -12,6 +12,18 @@ ShapePresenter::ShapePresenter(model::IShapeComposition* shapeComposition, view:
 void ShapePresenter::OnChange(const std::vector<model::ShapePtr>& shapes)
 {
 	m_shapes = shapes;
+	if (m_selection.shape)
+	{
+		if (std::find_if(m_shapes.begin(), m_shapes.end(), [&](const model::ShapePtr& s) { return s->GetId() == m_selection.shape->GetId(); }) != m_shapes.end())
+		{
+			m_selection.topLeft = m_selection.shape->GetTopLeft();
+			m_selection.bottomRight = m_selection.shape->GetBottomRight();
+		}
+		else
+		{
+			m_selection.shape.reset();
+		}
+	}
 	UpdateView();
 }
 
@@ -74,7 +86,7 @@ void ShapePresenter::OnMouseDrag()
 	}
 }
 
-void ShapePresenter::UpdateSelectedShapeData() const
+void ShapePresenter::UpdateSelectedShapeData()
 {
 	m_view->SetSelectedShapeData({
 		m_selection.shape->GetId(),
@@ -91,7 +103,6 @@ void ShapePresenter::ChangeShapeSelection(float x, float y)
 	{
 		if (!m_selection.shape || m_selection.shape->GetId() != shape->GetId())
 		{
-			m_shapeComposition->LiftShapeOnTop(shape->GetId());
 			m_selection.shape = shape;
 			m_selection.topLeft = shape->GetTopLeft();
 			m_selection.bottomRight = shape->GetBottomRight();

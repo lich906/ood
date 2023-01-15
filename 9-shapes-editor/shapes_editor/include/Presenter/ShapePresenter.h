@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <stdexcept>
+#include <algorithm>
 
 #include "ResizeNode.h"
 #include "constants.h"
@@ -44,7 +45,7 @@ private:
 	void OnShapeResize(float dx, float dy);
 	void OnShapeMove(float dx, float dy);
 
-	void UpdateSelectedShapeData() const;
+	void UpdateSelectedShapeData();
 	void ChangeShapeSelection(float x, float y);
 	ResizeNode GetPressedResizeNode(float x, float y) const;
 	void FixShapeOutOfCanvasOverflow();

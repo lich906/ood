@@ -1,16 +1,6 @@
 #include "pch.h"
 #include "Model/ShapeComposition.h"
 
-bool operator==(const common::Point& p1, const common::Point& p2)
-{
-	return p1.x == p2.x && p1.y == p2.y;
-}
-
-bool operator==(const common::Color& c1, const common::Color& c2)
-{
-	return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b && c1.a == c2.a;
-}
-
 TEST(AddShape, CheckDefaultValues)
 {
 	model::ShapeComposition composition;
@@ -85,68 +75,161 @@ TEST(RemoveShape, RedoRemoveShapeCommand)
 }
 
 
-TEST(OnShapeMove, GetShapeAndMoveIt)
+TEST(ResizeShape, ResizeShapeTest)
 {
 	model::ShapeComposition composition;
 	model::ShapeId id = composition.AddShape(model::ShapeType::Triangle);
-	float dx = 40, dy = 20;
 	auto shape = composition.GetShapeById(id);
+	float x1 = 10, y1 = 20, x2 = 30, y2 = 50;
 
 	ASSERT_EQ(shape->GetTopLeft(), model::constants::TopLeftPoint);
 	ASSERT_EQ(shape->GetBottomRight(), model::constants::BottomRightPoint);
 
-	shape->Move(dx, dy);
+	shape->Resize(common::Point(x1, y1), common::Point(x2, y2));
 
-	ASSERT_EQ(shape->GetTopLeft().x, model::constants::TopLeftPoint.x + dx);
-	ASSERT_EQ(shape->GetTopLeft().y, model::constants::TopLeftPoint.y + dy);
-	ASSERT_EQ(shape->GetBottomRight().x, model::constants::BottomRightPoint.x + dx);
-	ASSERT_EQ(shape->GetBottomRight().y, model::constants::BottomRightPoint.y + dy);
+	ASSERT_EQ(shape->GetTopLeft(), common::Point(x1, y1));
+	ASSERT_EQ(shape->GetBottomRight(), common::Point(x2, y2));
 }
 
-TEST(OnShapeMove, MoveShapeThenUndoCommand)
+TEST(ResizeShape, UndoShapeResizing)
 {
 	model::ShapeComposition composition;
 	model::ShapeId id = composition.AddShape(model::ShapeType::Triangle);
-	float dx = 40, dy = 20;
 	auto shape = composition.GetShapeById(id);
+	float x1 = 10, y1 = 20, x2 = 30, y2 = 50;
 
-	shape->Move(dx, dy);
+	ASSERT_EQ(shape->GetTopLeft(), model::constants::TopLeftPoint);
+	ASSERT_EQ(shape->GetBottomRight(), model::constants::BottomRightPoint);
+
+	shape->Resize(common::Point(x1, y1), common::Point(x2, y2));
 	composition.Undo();
 
 	ASSERT_EQ(shape->GetTopLeft(), model::constants::TopLeftPoint);
 	ASSERT_EQ(shape->GetBottomRight(), model::constants::BottomRightPoint);
 }
 
-TEST(OnShapeMove, MoveShapeThenUndoAndRedoCommand)
+TEST(ResizeShape, RedoShapeResizing)
 {
 	model::ShapeComposition composition;
 	model::ShapeId id = composition.AddShape(model::ShapeType::Triangle);
-	float dx = 40, dy = 20;
 	auto shape = composition.GetShapeById(id);
+	float x1 = 10, y1 = 20, x2 = 30, y2 = 50;
 
-	shape->Move(dx, dy);
+	ASSERT_EQ(shape->GetTopLeft(), model::constants::TopLeftPoint);
+	ASSERT_EQ(shape->GetBottomRight(), model::constants::BottomRightPoint);
+
+	shape->Resize(common::Point(x1, y1), common::Point(x2, y2));
 	composition.Undo();
 	composition.Redo();
 
-	ASSERT_EQ(shape->GetTopLeft().x, model::constants::TopLeftPoint.x + dx);
-	ASSERT_EQ(shape->GetTopLeft().y, model::constants::TopLeftPoint.y + dy);
-	ASSERT_EQ(shape->GetBottomRight().x, model::constants::BottomRightPoint.x + dx);
-	ASSERT_EQ(shape->GetBottomRight().y, model::constants::BottomRightPoint.y + dy);
+	ASSERT_EQ(shape->GetTopLeft(), common::Point(x1, y1));
+	ASSERT_EQ(shape->GetBottomRight(), common::Point(x2, y2));
 }
 
 
-TEST(OnShapeResize, ResizeShapeByTopLeftNode)
+TEST(ChangeColors, ChangeFillAndBorderColor)
 {
 	model::ShapeComposition composition;
 	model::ShapeId id = composition.AddShape(model::ShapeType::Triangle);
 	auto shape = composition.GetShapeById(id);
-	float x = 10, y = 20;
+	common::Color fillColor = { 1.0f, 2.0f, 3.0f, 4.0f }, borderColor = { 4.0f, 3.0f, 2.0f, 1.0f };
 
-	ASSERT_EQ(shape->GetTopLeft(), model::constants::TopLeftPoint);
-	ASSERT_EQ(shape->GetBottomRight(), model::constants::BottomRightPoint);
+	ASSERT_EQ(shape->GetFillColor(), model::constants::FillColor);
+	ASSERT_EQ(shape->GetBorderColor(), model::constants::BorderColor);
 
-	shape->Resize(common::Point(x, y), shape->GetBottomRight());
+	shape->SetFillColor(fillColor);
+	shape->SetBorderColor(borderColor);
 
-	ASSERT_EQ(shape->GetTopLeft(), common::Point(x, y));
-	ASSERT_EQ(shape->GetBottomRight(), model::constants::BottomRightPoint);
+	ASSERT_EQ(shape->GetFillColor(), fillColor);
+	ASSERT_EQ(shape->GetBorderColor(), borderColor);
+}
+
+TEST(ChangeColors, UndoColorChanges)
+{
+	model::ShapeComposition composition;
+	model::ShapeId id = composition.AddShape(model::ShapeType::Triangle);
+	auto shape = composition.GetShapeById(id);
+	common::Color fillColor = { 1.0f, 2.0f, 3.0f, 4.0f }, borderColor = { 4.0f, 3.0f, 2.0f, 1.0f };
+
+	ASSERT_EQ(shape->GetFillColor(), model::constants::FillColor);
+	ASSERT_EQ(shape->GetBorderColor(), model::constants::BorderColor);
+
+	shape->SetFillColor(fillColor);
+	shape->SetBorderColor(borderColor);
+
+	composition.Undo();
+
+	ASSERT_EQ(shape->GetFillColor(), fillColor);
+	ASSERT_EQ(shape->GetBorderColor(), model::constants::BorderColor);
+
+	composition.Undo();
+
+	ASSERT_EQ(shape->GetFillColor(), model::constants::FillColor);
+	ASSERT_EQ(shape->GetBorderColor(), model::constants::BorderColor);
+}
+
+TEST(ChangeColors, RedoColorChanges)
+{
+	model::ShapeComposition composition;
+	model::ShapeId id = composition.AddShape(model::ShapeType::Triangle);
+	auto shape = composition.GetShapeById(id);
+	common::Color fillColor = { 1.0f, 2.0f, 3.0f, 4.0f }, borderColor = { 4.0f, 3.0f, 2.0f, 1.0f };
+
+	ASSERT_EQ(shape->GetFillColor(), model::constants::FillColor);
+	ASSERT_EQ(shape->GetBorderColor(), model::constants::BorderColor);
+
+	shape->SetFillColor(fillColor);
+	shape->SetBorderColor(borderColor);
+
+	composition.Undo();
+	composition.Undo();
+
+	composition.Redo();
+	composition.Redo();
+
+	ASSERT_EQ(shape->GetFillColor(), fillColor);
+	ASSERT_EQ(shape->GetBorderColor(), borderColor);
+}
+
+
+TEST(FindShapeByCoords, FindSingleByCoordsAtCenterOfShape)
+{
+	model::ShapeComposition composition;
+	model::ShapeId id = composition.AddShape(model::ShapeType::Triangle);
+	float x = (model::constants::BottomRightPoint.x - model::constants::TopLeftPoint.x) / 2;
+	float y = (model::constants::BottomRightPoint.y - model::constants::TopLeftPoint.y) / 2;
+	auto shape = composition.GetShapeById(id);
+
+	auto foundShape = composition.FindShapeAtCoords(x, y);
+
+	ASSERT_TRUE((bool)foundShape);
+	ASSERT_EQ(shape, foundShape);
+}
+
+TEST(FindShapeByCoords, FindByCoordsOutOfShape)
+{
+	model::ShapeComposition composition;
+	model::ShapeId id = composition.AddShape(model::ShapeType::Triangle);
+	float x = model::constants::BottomRightPoint.x * 2;
+	float y = model::constants::BottomRightPoint.y * 2;
+	auto shape = composition.GetShapeById(id);
+
+	auto foundShape = composition.FindShapeAtCoords(x, y);
+
+	ASSERT_FALSE((bool)foundShape);
+}
+
+TEST(FindShapeByCoords, SelectSecondAddedShapeAtDefaultPosition)
+{
+	model::ShapeComposition composition;
+	model::ShapeId id1 = composition.AddShape(model::ShapeType::Triangle);
+	model::ShapeId id2 = composition.AddShape(model::ShapeType::Rectangle);
+	float x = (model::constants::BottomRightPoint.x - model::constants::TopLeftPoint.x) / 2;
+	float y = (model::constants::BottomRightPoint.y - model::constants::TopLeftPoint.y) / 2;
+	auto shape = composition.GetShapeById(id2);
+
+	auto foundShape = composition.FindShapeAtCoords(x, y);
+
+	ASSERT_TRUE((bool)foundShape);
+	ASSERT_EQ(foundShape, shape);
 }

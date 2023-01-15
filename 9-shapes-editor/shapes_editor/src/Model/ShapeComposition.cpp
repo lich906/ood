@@ -64,19 +64,6 @@ std::shared_ptr<const IShape> ShapeComposition::FindShapeAtCoords(float x, float
 	return shapePtr;
 }
 
-void ShapeComposition::LiftShapeOnTop(ShapeId id)
-{
-	if (m_shapes.contains(id))
-	{
-		m_shapes[id]->SetZIndex(GetHighestShapeZIndex() + 1);
-		NotifyObserversOnChange();
-	}
-	else
-	{
-		throw std::out_of_range("Shape with id '" + std::to_string(id) + "' not found.");
-	}
-}
-
 ShapeId ShapeComposition::AddShape(ShapeType type)
 {
 	auto shape = std::make_shared<Shape>(type, GetHighestShapeZIndex() + 1,

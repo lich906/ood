@@ -24,7 +24,6 @@ struct IShapeComposition
 	 */
 	virtual ShapeConstPtr FindShapeAtCoords(float x, float y) const = 0;
 
-	virtual void LiftShapeOnTop(ShapeId id) = 0;
 	virtual ShapeId AddShape(ShapeType type) = 0;
 	virtual void RemoveShape(ShapeId id) = 0;
 	virtual void Undo() = 0;
