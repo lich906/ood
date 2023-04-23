@@ -9,31 +9,24 @@ ShapePresenter::ShapePresenter(model::IShapeComposition* shapeComposition, view:
 	m_shapeComposition->RegisterOnChange(this);
 }
 
-void ShapePresenter::OnChange(const std::vector<model::ShapePtr>& shapes)
+void ShapePresenter::OnChange(const std::vector<model::ShapeConstPtr>& shapes)
 {
 	m_shapes = shapes;
-	if (m_selection.shape)
+
+	if (auto shape = m_shapeComposition->GetSelectedShape())
 	{
-		if (std::find_if(m_shapes.begin(), m_shapes.end(), [&](const model::ShapePtr& s) { return s->GetId() == m_selection.shape->GetId(); }) != m_shapes.end())
-		{
-			m_selection.topLeft = m_selection.shape->GetTopLeft();
-			m_selection.bottomRight = m_selection.shape->GetBottomRight();
-		}
-		else
-		{
-			m_selection.shape.reset();
-		}
+		UpdateSelectionBoundings(shape->GetTopLeft(), shape->GetBottomRight());
 	}
-	UpdateView();
 }
 
 void ShapePresenter::OnMouseDown()
 {
 	common::Point pos = m_view->GetMousePos();
-	ChangeShapeSelection(pos.x, pos.y);
+	m_shapeComposition->SelectShapeAtCoords(pos.x, pos.y);
 
-	if (m_selection.shape)
+	if (auto shape = m_shapeComposition->GetSelectedShape())
 	{
+		UpdateSelectionBoundings(shape->GetTopLeft(), shape->GetBottomRight());
 		auto pressedResizeNode = GetPressedResizeNode(pos.x, pos.y);
 		if (pressedResizeNode != ResizeNode::None)
 		{
@@ -44,15 +37,18 @@ void ShapePresenter::OnMouseDown()
 			m_isMoving = true;
 		}
 	}
+
+	UpdateView();
 }
 
 void ShapePresenter::OnMouseUp()
 {
-	if (m_selection.shape &&
-		(m_selection.topLeft != m_selection.shape->GetTopLeft() ||
-		m_selection.bottomRight != m_selection.shape->GetBottomRight()))
+	auto shape = m_shapeComposition->GetSelectedShape();
+	if (shape &&
+		(m_selection.topLeft != shape->GetTopLeft() ||
+		m_selection.bottomRight != shape->GetBottomRight()))
 	{
-		m_selection.shape->Resize(m_selection.topLeft, m_selection.bottomRight);
+		shape->Resize(m_selection.topLeft, m_selection.bottomRight);
 		if (m_resizeNode != ResizeNode::None)
 		{
 			m_resizeNode = ResizeNode::None;
@@ -66,7 +62,7 @@ void ShapePresenter::OnMouseUp()
 
 void ShapePresenter::OnMouseDrag()
 {
-	if (m_selection.shape)
+	if (m_shapeComposition->GetSelectedShape())
 	{
 		common::Point delta = m_view->GetMouseDelta();
 
@@ -86,45 +82,22 @@ void ShapePresenter::OnMouseDrag()
 	}
 }
 
-void ShapePresenter::UpdateSelectedShapeData()
+void presenter::ShapePresenter::UpdateSelectionBoundings(const common::Point& topLeft, const common::Point& bottomRight)
 {
-	m_view->SetSelectedShapeData({
-		m_selection.shape->GetId(),
-		m_selection.topLeft,
-		m_selection.bottomRight,
-		m_selection.shape->GetFillColor(),
-		m_selection.shape->GetBorderColor()
-	});
-}
-
-void ShapePresenter::ChangeShapeSelection(float x, float y)
-{
-	if (auto shape = m_shapeComposition->FindShapeAtCoords(x, y))
-	{
-		if (!m_selection.shape || m_selection.shape->GetId() != shape->GetId())
-		{
-			m_selection.shape = shape;
-			m_selection.topLeft = shape->GetTopLeft();
-			m_selection.bottomRight = shape->GetBottomRight();
-			UpdateView();
-		}
-	}
-	else
-	{
-		m_selection.shape.reset();
-		UpdateView();
-	}
+	m_selection.topLeft = topLeft;
+	m_selection.bottomRight = bottomRight;
 }
 
 ResizeNode ShapePresenter::GetPressedResizeNode(float x, float y) const
 {
-	if (!m_selection.shape)
+	auto selectedShape = m_shapeComposition->GetSelectedShape();
+	if (!selectedShape)
 	{
 		return ResizeNode::None;
 	}
 
-	auto tl = m_selection.shape->GetTopLeft();
-	auto br = m_selection.shape->GetBottomRight();
+	auto tl = selectedShape->GetTopLeft();
+	auto br = selectedShape->GetBottomRight();
 
 	if (tl.y <= y && y <= tl.y + constants::ResizeMarkerSize) // maybe top left or top right
 	{
@@ -162,14 +135,19 @@ void ShapePresenter::FixShapeOutOfCanvasOverflow()
 
 void ShapePresenter::UpdateView()
 {
-	if (m_selection.shape)
-		UpdateSelectedShapeData();
+	auto selectedShape = m_shapeComposition->GetSelectedShape();
+	if (selectedShape)
+	{
+		m_view->SetSelectedShapeData({ selectedShape->GetId(),
+			m_selection.topLeft, m_selection.bottomRight,
+			selectedShape->GetFillColor(), selectedShape->GetBorderColor() });
+	}
 
 	m_view->GetCanvas()->Clear();
 
 	for (auto& shape : m_shapes)
 	{
-		if (m_selection.shape && shape->GetId() == m_selection.shape->GetId())
+		if (selectedShape == shape && (m_isMoving || m_resizeNode != ResizeNode::None))
 		{
 			DrawShape(m_selection.topLeft, m_selection.bottomRight, shape);
 		}
@@ -179,7 +157,7 @@ void ShapePresenter::UpdateView()
 		}
 	}
 
-	if (m_selection.shape)
+	if (selectedShape)
 	{
 		DrawSelectionFrame(m_selection.topLeft, m_selection.bottomRight);
 	}
@@ -333,42 +311,45 @@ void ShapePresenter::OnShapeMove(float dx, float dy)
 void ShapePresenter::CreateShape(model::ShapeType type)
 {
 	m_shapeComposition->AddShape(type);
+	UpdateSelectionBoundings(m_shapeComposition->GetSelectedShape()->GetTopLeft(),
+		m_shapeComposition->GetSelectedShape()->GetBottomRight());
+	UpdateView();
 }
 
 void ShapePresenter::DeleteShape()
 {
-	if (m_selection.shape)
-	{
-		auto id = m_selection.shape->GetId();
-		m_selection.shape.reset();
-		m_shapeComposition->RemoveShape(id);
-	}
+	m_shapeComposition->RemoveSelectedShape();
+	UpdateView();
 }
 
 void ShapePresenter::ChangeFillColor(const common::Color& color)
 {
-	if (m_selection.shape)
+	if (auto shape = m_shapeComposition->GetSelectedShape())
 	{
-		m_selection.shape->SetFillColor(color);
+		shape->SetFillColor(color);
 	}
+	UpdateView();
 }
 
 void ShapePresenter::ChangeBorderColor(const common::Color& color)
 {
-	if (m_selection.shape)
+	if (auto shape = m_shapeComposition->GetSelectedShape())
 	{
-		m_selection.shape->SetBorderColor(color);
+		shape->SetBorderColor(color);
 	}
+	UpdateView();
 }
 
 void ShapePresenter::Undo()
 {
 	m_shapeComposition->Undo();
+	UpdateView();
 }
 
 void ShapePresenter::Redo()
 {
 	m_shapeComposition->Redo();
+	UpdateView();
 }
 
 bool presenter::ShapePresenter::CanUndo() const
@@ -383,5 +364,5 @@ bool presenter::ShapePresenter::CanRedo() const
 
 bool presenter::ShapePresenter::IsShapeSelected() const
 {
-	return (bool)m_selection.shape;
+	return (bool)m_shapeComposition->GetSelectedShape();
 }

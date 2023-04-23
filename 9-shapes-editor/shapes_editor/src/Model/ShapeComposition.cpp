@@ -14,16 +14,14 @@ std::shared_ptr<IShape> ShapeComposition::GetShapeById(ShapeId id)
 	}
 }
 
-std::shared_ptr<const IShape> ShapeComposition::GetShapeById(ShapeId id) const
+ShapePtr model::ShapeComposition::GetSelectedShape()
 {
-	if (m_shapes.contains(id))
+	if (m_selectedShapeId)
 	{
-		return m_shapes.at(id);
+		return m_shapes[*m_selectedShapeId];
 	}
-	else
-	{
-		throw std::out_of_range("Shape with id '" + std::to_string(id) + "' not found.");
-	}
+
+	return nullptr;
 }
 
 std::shared_ptr<IShape> ShapeComposition::FindShapeAtCoords(float x, float y)
@@ -45,23 +43,16 @@ std::shared_ptr<IShape> ShapeComposition::FindShapeAtCoords(float x, float y)
 	return shapePtr;
 }
 
-std::shared_ptr<const IShape> ShapeComposition::FindShapeAtCoords(float x, float y) const
+void model::ShapeComposition::SelectShapeAtCoords(float x, float y)
 {
-	std::shared_ptr<const Shape> shapePtr;
-	int maxZIndex = -INT_MIN;
-	std::for_each(m_shapes.begin(), m_shapes.end(),
-		[&](const std::unordered_map<size_t, std::shared_ptr<Shape>>::value_type& node) {
-		auto& shape = node.second;
-		if (shape->GetTopLeft().x <= x && x <= shape->GetBottomRight().x && 
-			shape->GetTopLeft().y <= y && y <= shape->GetBottomRight().y && 
-			shape->GetZIndex() > maxZIndex)
-		{
-			shapePtr = shape;
-			maxZIndex = shape->GetZIndex();
-		}
-	});
-
-	return shapePtr;
+	if (auto shape = FindShapeAtCoords(x, y))
+	{
+		m_selectedShapeId = shape->GetId();
+	}
+	else
+	{
+		m_selectedShapeId.reset();
+	}
 }
 
 ShapeId ShapeComposition::AddShape(ShapeType type)
@@ -75,9 +66,11 @@ ShapeId ShapeComposition::AddShape(ShapeType type)
 	auto command = std::make_unique<FunctionalCommand>(
 		[this, shape]() {
 			m_shapes.insert({ shape->GetId(), shape });
+			m_selectedShapeId = shape->GetId();
 		},
 		[this, id = shape->GetId()]() {
 			m_shapes.erase(id);
+			m_selectedShapeId.reset();
 		});
 
 	m_commandHistory.AddAndExecute(std::move(command));
@@ -86,26 +79,24 @@ ShapeId ShapeComposition::AddShape(ShapeType type)
 	return shape->GetId();
 }
 
-void ShapeComposition::RemoveShape(ShapeId id)
+void model::ShapeComposition::RemoveSelectedShape()
 {
-	if (m_shapes.contains(id))
+	if (m_selectedShapeId)
 	{
-		auto deletedShape = m_shapes[id];
+		auto deletedShape = m_shapes[*m_selectedShapeId];
 
 		auto command = std::make_unique<FunctionalCommand>(
-			[this, id]() {
+			[this, id = *m_selectedShapeId]() {
 				m_shapes.erase(id);
+				m_selectedShapeId.reset();
 			},
 			[this, deletedShape]() {
-				m_shapes.insert({deletedShape->GetId(), deletedShape});
+				m_shapes.insert({ deletedShape->GetId(), deletedShape });
+				m_selectedShapeId = deletedShape->GetId();
 			});
 
 		m_commandHistory.AddAndExecute(std::move(command));
 		NotifyObserversOnChange();
-	}
-	else
-	{
-		throw std::out_of_range("Failed to remove shape by id: no shape with such id available.");
 	}
 }
 
@@ -142,7 +133,7 @@ void model::ShapeComposition::RegisterOnChange(IShapeCompositionObserver* observ
 	m_observers.insert(observer);
 }
 
-std::vector<ShapePtr> ShapeComposition::GetShapesSortedByZIndex() const
+std::vector<ShapeConstPtr> ShapeComposition::GetShapesSortedByZIndex() const
 {
 	std::vector<std::shared_ptr<Shape>> sortedShapes;
 

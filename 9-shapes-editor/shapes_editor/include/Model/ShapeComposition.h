@@ -21,11 +21,10 @@ class ShapeComposition : public IShapeComposition
 public:
 	// <<interface>> IShapeComposition
 	ShapePtr GetShapeById(ShapeId id) override;
-	ShapeConstPtr GetShapeById(ShapeId id) const override;
-	ShapePtr FindShapeAtCoords(float x, float y) override;
-	ShapeConstPtr FindShapeAtCoords(float x, float y) const override;
+	ShapePtr GetSelectedShape();
+	void SelectShapeAtCoords(float x, float y) override;
 	ShapeId AddShape(ShapeType type) override;
-	void RemoveShape(ShapeId id) override;
+	void RemoveSelectedShape() override;
 	void Undo() override;
 	void Redo() override;
 	bool CanUndo() const override;
@@ -34,10 +33,12 @@ public:
 	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 private:
-	std::vector<ShapePtr> GetShapesSortedByZIndex() const;
+	ShapePtr FindShapeAtCoords(float x, float y);
+	std::vector<ShapeConstPtr> GetShapesSortedByZIndex() const;
 	int GetHighestShapeZIndex() const;
 	void NotifyObserversOnChange() const;
 
+	std::optional<ShapeId> m_selectedShapeId;
 	std::unordered_map<ShapeId, std::shared_ptr<Shape>> m_shapes;
 	CommandHistory m_commandHistory;
 	std::set<IShapeCompositionObserver*> m_observers;

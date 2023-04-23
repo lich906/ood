@@ -2,11 +2,11 @@
 
 using namespace model;
 
-Shape::Shape(ShapeType type, int zIndex, std::function<void(std::unique_ptr<Command>&&)> registerCommand)
+Shape::Shape(ShapeType type, int zIndex, RegisterCommandCallback registerCommand)
 	: m_type(type)
 	, m_id(++lastId)
 	, m_zIndex(zIndex)
-	, m_registerCommand(std::move(registerCommand))
+	, m_registerCmdCallback(std::move(registerCommand))
 {
 }
 
@@ -42,7 +42,7 @@ void Shape::Resize(const common::Point& topLeft, const common::Point& bottomRigh
 			m_bottomRight = prevBr;
 		});
 
-	m_registerCommand(std::move(command));
+	m_registerCmdCallback(std::move(command));
 }
 
 common::Color Shape::GetFillColor() const
@@ -60,7 +60,7 @@ void Shape::SetFillColor(const common::Color& color)
 			m_fillColor = prevColor;
 		});
 
-	m_registerCommand(std::move(command));
+	m_registerCmdCallback(std::move(command));
 }
 
 common::Color Shape::GetBorderColor() const
@@ -78,7 +78,7 @@ void Shape::SetBorderColor(const common::Color& color)
 			m_borderColor = prevColor;
 		});
 
-	m_registerCommand(std::move(command));
+	m_registerCmdCallback(std::move(command));
 }
 
 int Shape::GetZIndex() const
@@ -98,6 +98,6 @@ void Shape::SetZIndex(int zIndex)
 				m_zIndex = prevZIndex;
 			});
 
-		m_registerCommand(std::move(command));
+		m_registerCmdCallback(std::move(command));
 	}
 }

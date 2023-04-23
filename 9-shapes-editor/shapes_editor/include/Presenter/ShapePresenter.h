@@ -21,8 +21,9 @@ class ShapePresenter : public view::IShapePresenter, public model::IShapeComposi
 public:
 	ShapePresenter(model::IShapeComposition* shapeComposition, view::IView* view);
 
+private:
 	// <<interface>> IShapeCompositionObserver
-	void OnChange(const std::vector<model::ShapePtr>& shapes) override;
+	void OnChange(const std::vector<model::ShapeConstPtr>& shapes) override;
 	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 	// <<interface>> IShapePresenter
@@ -40,13 +41,10 @@ public:
 	bool IsShapeSelected() const override;
 	// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-
-private:
 	void OnShapeResize(float dx, float dy);
 	void OnShapeMove(float dx, float dy);
 
-	void UpdateSelectedShapeData();
-	void ChangeShapeSelection(float x, float y);
+	void UpdateSelectionBoundings(const common::Point& topLeft, const common::Point& bottomRight);
 	ResizeNode GetPressedResizeNode(float x, float y) const;
 	void FixShapeOutOfCanvasOverflow();
 
@@ -57,13 +55,12 @@ private:
 	void DrawEllipse(const common::Point& topLeft, const common::Point& bottomRight, const model::ShapeConstPtr& shape);
 	void DrawSelectionFrame(const common::Point& topLeft, const common::Point& bottomRight);
 
-	std::vector<model::ShapePtr> m_shapes;
+	std::vector<model::ShapeConstPtr> m_shapes;
 
 	view::IView* m_view;
 
 	struct Selection
 	{
-		model::ShapePtr shape;
 		common::Point topLeft;
 		common::Point bottomRight;
 	} m_selection;

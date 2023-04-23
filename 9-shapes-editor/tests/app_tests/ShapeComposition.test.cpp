@@ -39,24 +39,75 @@ TEST(AddShape, RedoAddingShape)
 }
 
 
-TEST(RemoveShape, RemoveShapeById)
+TEST(SelectShape, SelectShapeAtCoords)
+{
+	model::ShapeComposition composition;
+	model::ShapeId id = composition.AddShape(model::ShapeType::Triangle);
+	float x = (model::constants::BottomRightPoint.x - model::constants::TopLeftPoint.x) / 2;
+	float y = (model::constants::BottomRightPoint.y - model::constants::TopLeftPoint.y) / 2;
+	composition.SelectShapeAtCoords(x, y);
+
+	auto selectedShape = composition.GetSelectedShape();
+
+	ASSERT_TRUE((bool)selectedShape);
+	ASSERT_EQ(composition.GetShapeById(id), selectedShape);
+}
+
+TEST(SelectShape, SelectShapeOutOfShapeCoords)
+{
+	model::ShapeComposition composition;
+	model::ShapeId id = composition.AddShape(model::ShapeType::Triangle);
+	float x = (model::constants::BottomRightPoint.x - model::constants::TopLeftPoint.x) * 2;
+	float y = (model::constants::BottomRightPoint.y - model::constants::TopLeftPoint.y) * 2;
+	composition.SelectShapeAtCoords(x, y);
+
+	auto selectedShape = composition.GetSelectedShape();
+
+	ASSERT_FALSE((bool)selectedShape);
+}
+
+TEST(SelectShape, SelectSecondAddedShapeAtDefaultPosition)
 {
 	model::ShapeComposition composition;
 	model::ShapeId id1 = composition.AddShape(model::ShapeType::Triangle);
 	model::ShapeId id2 = composition.AddShape(model::ShapeType::Rectangle);
+	float x = (model::constants::BottomRightPoint.x - model::constants::TopLeftPoint.x) / 2;
+	float y = (model::constants::BottomRightPoint.y - model::constants::TopLeftPoint.y) / 2;
+	composition.SelectShapeAtCoords(x, y);
 
-	composition.RemoveShape(id1);
+	auto selectedShape = composition.GetSelectedShape();
 
-	ASSERT_THROW(composition.GetShapeById(id1), std::out_of_range);
-	ASSERT_TRUE((bool)composition.GetShapeById(id2));
+	ASSERT_TRUE((bool)selectedShape);
+	ASSERT_EQ(composition.GetShapeById(id2), selectedShape);
+}
+
+
+TEST(RemoveShape, RemoveSelectedShape)
+{
+	model::ShapeComposition composition;
+	model::ShapeId id1 = composition.AddShape(model::ShapeType::Triangle);
+	model::ShapeId id2 = composition.AddShape(model::ShapeType::Rectangle);
+	float x = (model::constants::BottomRightPoint.x - model::constants::TopLeftPoint.x) / 2;
+	float y = (model::constants::BottomRightPoint.y - model::constants::TopLeftPoint.y) / 2;
+
+	composition.SelectShapeAtCoords(x, y);
+
+	composition.RemoveSelectedShape();
+
+	ASSERT_THROW(composition.GetShapeById(id2), std::out_of_range);
+	ASSERT_TRUE((bool)composition.GetShapeById(id1));
 }
 
 TEST(RemoveShape, UndoRemoveShapeCommand)
 {
 	model::ShapeComposition composition;
 	model::ShapeId id = composition.AddShape(model::ShapeType::Triangle);
+	float x = (model::constants::BottomRightPoint.x - model::constants::TopLeftPoint.x) / 2;
+	float y = (model::constants::BottomRightPoint.y - model::constants::TopLeftPoint.y) / 2;
 
-	composition.RemoveShape(id);
+	composition.SelectShapeAtCoords(x, y);
+
+	composition.RemoveSelectedShape();
 	composition.Undo();
 
 	ASSERT_TRUE((bool)composition.GetShapeById(id));
@@ -66,8 +117,12 @@ TEST(RemoveShape, RedoRemoveShapeCommand)
 {
 	model::ShapeComposition composition;
 	model::ShapeId id = composition.AddShape(model::ShapeType::Triangle);
+	float x = (model::constants::BottomRightPoint.x - model::constants::TopLeftPoint.x) / 2;
+	float y = (model::constants::BottomRightPoint.y - model::constants::TopLeftPoint.y) / 2;
 
-	composition.RemoveShape(id);
+	composition.SelectShapeAtCoords(x, y);
+
+	composition.RemoveSelectedShape();
 	composition.Undo();
 	composition.Redo();
 
@@ -189,47 +244,4 @@ TEST(ChangeColors, RedoColorChanges)
 
 	ASSERT_EQ(shape->GetFillColor(), fillColor);
 	ASSERT_EQ(shape->GetBorderColor(), borderColor);
-}
-
-
-TEST(FindShapeByCoords, FindSingleByCoordsAtCenterOfShape)
-{
-	model::ShapeComposition composition;
-	model::ShapeId id = composition.AddShape(model::ShapeType::Triangle);
-	float x = (model::constants::BottomRightPoint.x - model::constants::TopLeftPoint.x) / 2;
-	float y = (model::constants::BottomRightPoint.y - model::constants::TopLeftPoint.y) / 2;
-	auto shape = composition.GetShapeById(id);
-
-	auto foundShape = composition.FindShapeAtCoords(x, y);
-
-	ASSERT_TRUE((bool)foundShape);
-	ASSERT_EQ(shape, foundShape);
-}
-
-TEST(FindShapeByCoords, FindByCoordsOutOfShape)
-{
-	model::ShapeComposition composition;
-	model::ShapeId id = composition.AddShape(model::ShapeType::Triangle);
-	float x = model::constants::BottomRightPoint.x * 2;
-	float y = model::constants::BottomRightPoint.y * 2;
-	auto shape = composition.GetShapeById(id);
-
-	auto foundShape = composition.FindShapeAtCoords(x, y);
-
-	ASSERT_FALSE((bool)foundShape);
-}
-
-TEST(FindShapeByCoords, SelectSecondAddedShapeAtDefaultPosition)
-{
-	model::ShapeComposition composition;
-	model::ShapeId id1 = composition.AddShape(model::ShapeType::Triangle);
-	model::ShapeId id2 = composition.AddShape(model::ShapeType::Rectangle);
-	float x = (model::constants::BottomRightPoint.x - model::constants::TopLeftPoint.x) / 2;
-	float y = (model::constants::BottomRightPoint.y - model::constants::TopLeftPoint.y) / 2;
-	auto shape = composition.GetShapeById(id2);
-
-	auto foundShape = composition.FindShapeAtCoords(x, y);
-
-	ASSERT_TRUE((bool)foundShape);
-	ASSERT_EQ(foundShape, shape);
 }

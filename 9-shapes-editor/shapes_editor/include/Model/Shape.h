@@ -10,10 +10,12 @@
 namespace model
 {
 
+using RegisterCommandCallback = std::function<void(std::unique_ptr<Command>&&)>;
+
 class Shape : public IShape
 {
 public:
-	Shape(ShapeType type, int zIndex, std::function<void(std::unique_ptr<Command>&&)> registerCommand);
+	Shape(ShapeType type, int zIndex, RegisterCommandCallback registerCommand);
 
 	ShapeId GetId() const override;
 
@@ -42,7 +44,7 @@ private:
 	common::Color m_borderColor = model::constants::BorderColor;
 	int m_zIndex;
 
-	std::function<void(std::unique_ptr<Command>&&)> m_registerCommand;
+	RegisterCommandCallback m_registerCmdCallback;
 
 	inline static ShapeId lastId = 0;
 };
